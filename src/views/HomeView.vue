@@ -1,7 +1,7 @@
 <script setup lang="ts"></script>
 
 <template>
-  <p>Hola mundo!</p>
+  <p>Home</p>
 </template>
 
 <style></style>

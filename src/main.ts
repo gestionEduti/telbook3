@@ -1,4 +1,4 @@
-import './style.css' // tailwind
+import './assets/index.css' // shadcn
 
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'

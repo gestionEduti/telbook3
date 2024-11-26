@@ -1,5 +1,7 @@
 <script setup lang="ts"></script>
 
 <template>
-  <RouterView />
+  <p>Login</p>
 </template>
+
+<style></style>
