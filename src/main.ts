@@ -1,3 +1,5 @@
+import './style.css' // tailwind
+
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 
