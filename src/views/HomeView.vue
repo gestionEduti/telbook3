@@ -1,7 +1,7 @@
 <script setup lang="ts"></script>
 
 <template>
-  <p>Hola Telbook</p>
+  <p>Hola mundo!</p>
 </template>
 
-<style scoped></style>
+<style></style>
