@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { onMounted, ref } from 'vue'
 
 // shadcn
 import Button from '@/components/ui/button/Button.vue'
@@ -20,23 +20,37 @@ import { Download, UserPlus, EllipsisVertical, UserX, UserPen, Trash2 } from 'lu
 // icons
 import DropdownMenuGroup from '@/components/ui/dropdown-menu/DropdownMenuGroup.vue'
 
+// supabase
+import { supabase } from '@/services/supabaseClient'
+import type { Tables } from '@/types/supabase'
+const query = supabase.from('mv_libro_matricula').select('*').order('id', { ascending: true })
+
 // data
-const alumnos = ref([])
-const ordenarPor = 'id'
-const alumnosOrdenados = computed(() => {
-  return [...alumnos.value].sort((a, b) => a[ordenarPor] - b[ordenarPor])
-})
+const alumnos = ref<Tables<'mv_libro_matricula'>[] | null>(null)
 
 // methods
-const formatearRut = (rut: string) => {
+const fetchSupabase = async () => {
+  const { data, error } = await query
+  if (error) {
+    console.error(error)
+  } else {
+    alumnos.value = data
+  }
+}
+
+const formatearRut = (rut: string | null) => {
   if (!rut) return ''
   const rutFormateado = rut.replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.')
   return rutFormateado
 }
+
+onMounted(async () => {
+  await fetchSupabase()
+})
 </script>
 
 <template>
-  <div class="flex-1 space-y-4 p-4 pt-6">
+  <div class="flex-1 space-y-4 p-8 pt-6">
     <div class="flex items-end justify-between space-y-2">
       <h2 class="text-3xl font-bold tracking-tight">Matriculas</h2>
       <div class="flex items-center space-x-2">
@@ -63,11 +77,9 @@ const formatearRut = (rut: string) => {
       </div>
     </div>
 
-    <Table class="border">
-      <TableCaption>{{
-        alumnosOrdenados.length ? 'Lista de matriculas.' : 'No hay alumnos'
-      }}</TableCaption>
-      <TableHeader>
+    <Table class="border bg-white shadow-xl">
+      <TableCaption>{{ alumnos?.length ? 'Lista de matriculas.' : 'No hay alumnos' }}</TableCaption>
+      <TableHeader class="bg-slate-50">
         <TableRow>
           <TableHead class="w-[10px] text-center"> Matricula </TableHead>
           <TableHead class="w-[130px] text-right">RUT</TableHead>
@@ -80,7 +92,7 @@ const formatearRut = (rut: string) => {
         </TableRow>
       </TableHeader>
       <TableBody>
-        <TableRow v-for="alumno in alumnosOrdenados" :key="alumno.id">
+        <TableRow v-for="alumno in alumnos" :key="alumno.id">
           <TableCell class="text-center font-medium"> {{ alumno.id }} </TableCell>
           <TableCell class="text-right">{{ formatearRut(alumno.rut_alumno) }}</TableCell>
           <TableCell class="text-left">{{ alumno.nombre_completo_alumno }}</TableCell>

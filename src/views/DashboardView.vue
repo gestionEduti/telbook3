@@ -21,7 +21,7 @@ const navLinks = [
 <template>
   <div class="flex flex-col">
     <header class="border-b">
-      <div class="flex h-16 items-center px-4">
+      <div class="flex h-16 items-center px-8">
         <nav class="flex items-center space-x-4 lg:space-x-6">
           <RouterLink
             v-for="{ to, text } in navLinks"
@@ -64,7 +64,7 @@ const navLinks = [
         </div>
       </div>
     </header>
-    <main>
+    <main class="bg-zinc-200">
       <RouterView />
     </main>
     <footer></footer>
