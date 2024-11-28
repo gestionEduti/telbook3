@@ -2,6 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
+/* talbook config */
+@layer base {
+  .contenedor {
+    @apply mx-auto w-full max-w-7xl;
+  }
+}
+
+/* shadcn-vue configuration */
 @layer base {
   :root {
     --background: 0 0% 100%;

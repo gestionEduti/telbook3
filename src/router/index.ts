@@ -6,6 +6,7 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
+      // component: () => import('../views/Home.vue'),
       redirect: 'dashboard',
     },
     {
@@ -16,17 +17,28 @@ const router = createRouter({
     {
       path: '/dashboard',
       name: 'dashboard',
-      component: () => import('../views/DashboardView.vue'),
+      component: () => import('../views/Dashboard/DashboardView.vue'),
+      redirect: '/dashboard/resumen',
       children: [
+        {
+          path: '/dashboard/resumen',
+          name: 'resumen',
+          component: () => import('../views/Dashboard/Resumen/ResumenView.vue'),
+        },
+        {
+          path: '/dashboard/cursos',
+          name: 'cursos',
+          component: () => import('../views/Dashboard/Cursos/CursosView.vue'),
+        },
         {
           path: '/dashboard/matriculas',
           name: 'matriculas',
-          component: () => import('../views/MatriculasView.vue'),
+          component: () => import('../views/Dashboard/Matriculas/MatriculasView.vue'),
         },
         {
           path: '/dashboard/matriculas/nueva',
           name: 'nueva-matricula',
-          component: () => import('../views/MatriculaNuevaView.vue'),
+          component: () => import('../views/Dashboard/Matriculas/NuevaMatricula.vue'),
         },
       ],
     },
