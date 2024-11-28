@@ -18,23 +18,51 @@ import TableHead from '@/components/ui/table/TableHead.vue'
 import TableHeader from '@/components/ui/table/TableHeader.vue'
 import TableRow from '@/components/ui/table/TableRow.vue'
 // icons
-import { Download, UserPlus, EllipsisVertical, UserX, UserPen, Trash2 } from 'lucide-vue-next'
+import {
+  Download,
+  UserPlus,
+  EllipsisVertical,
+  UserX,
+  UserPen,
+  Trash2,
+  BookCheck,
+  FileText,
+} from 'lucide-vue-next'
 
 // supabase
 import { supabase } from '@/services/supabaseClient'
 import type { Tables } from '@/types/supabase'
-const query = supabase.from('mv_libro_matricula').select('*').order('id', { ascending: true })
+import AlertDialog from '@/components/ui/alert-dialog/AlertDialog.vue'
+import AlertDialogTrigger from '@/components/ui/alert-dialog/AlertDialogTrigger.vue'
+import AlertDialogContent from '@/components/ui/alert-dialog/AlertDialogContent.vue'
+import AlertDialogHeader from '@/components/ui/alert-dialog/AlertDialogHeader.vue'
+import AlertDialogTitle from '@/components/ui/alert-dialog/AlertDialogTitle.vue'
+import AlertDialogDescription from '@/components/ui/alert-dialog/AlertDialogDescription.vue'
+import AlertDialogFooter from '@/components/ui/alert-dialog/AlertDialogFooter.vue'
+import AlertDialogCancel from '@/components/ui/alert-dialog/AlertDialogCancel.vue'
+import AlertDialogAction from '@/components/ui/alert-dialog/AlertDialogAction.vue'
+const querySelect = supabase.from('mv_libro_matricula').select('*').order('id', { ascending: true })
+const queryDelete = (id: number) => supabase.from('mv_libro_matricula').delete().eq('id', id)
 
 // data
 const alumnos = ref<Tables<'mv_libro_matricula'>[] | null>(null)
 
 // methods
 const fetchSupabase = async () => {
-  const { data, error } = await query
+  const { data, error } = await querySelect
   if (error) {
     console.error(error)
   } else {
     alumnos.value = data
+  }
+}
+
+const deleteSupabase = async (id: number) => {
+  const { error } = await queryDelete(id)
+  if (error) {
+    console.error(error)
+  } else {
+    await fetchSupabase()
   }
 }
 
@@ -51,6 +79,7 @@ onMounted(async () => {
 
 <template>
   <div class="flex-1 space-y-4 p-8 pt-6">
+    <!-- barra superior (titulo + botones) -->
     <div class="flex items-end justify-between space-y-2">
       <h2 class="text-3xl font-bold tracking-tight">Matriculas</h2>
       <div class="flex items-center space-x-2">
@@ -69,22 +98,29 @@ onMounted(async () => {
             <DropdownMenuLabel>Descargar Libro</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem> Libro completo </DropdownMenuItem>
-              <DropdownMenuItem> Resumen </DropdownMenuItem>
+              <DropdownMenuItem>
+                <BookCheck class="h-4 w-4" />
+                <span class="ml-2 hidden md:block">Libro completo</span>
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <FileText class="h-4 w-4" />
+                <span class="ml-2 hidden md:block">Resumen</span>
+              </DropdownMenuItem>
             </DropdownMenuGroup>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
     </div>
 
+    <!-- tabla -->
     <Transition name="fade" mode="out-in">
       <Table v-if="alumnos?.length" class="border border-slate-300 bg-white shadow-xl">
-        <TableCaption>{{
-          alumnos?.length ? 'Lista de matriculas.' : 'No hay alumnos'
-        }}</TableCaption>
+        <TableCaption>
+          {{ alumnos?.length ? 'Lista de matriculas.' : 'No hay alumnos' }}
+        </TableCaption>
         <TableHeader class="bg-slate-100">
           <TableRow>
-            <TableHead class="w-[10px] py-2 text-center"> Matricula </TableHead>
+            <TableHead class="w-[1px] py-2 text-center"> Nº </TableHead>
             <TableHead class="w-[130px] py-2 text-right">RUT</TableHead>
             <TableHead class="py-2 text-left">Nombre</TableHead>
             <TableHead class="w-[10px] py-2 text-center">Procedencia </TableHead>
@@ -94,46 +130,48 @@ onMounted(async () => {
             <TableHead class="w-[10px] py-2 text-center">Acciones</TableHead>
           </TableRow>
         </TableHeader>
-        <TableBody>
-          <TableRow v-for="alumno in alumnos" :key="alumno.id">
-            <TableCell class="text-center font-medium"> {{ alumno.id }} </TableCell>
-            <TableCell class="text-right">{{ formatearRut(alumno.rut_alumno) }}</TableCell>
-            <TableCell class="text-left">{{ alumno.nombre_completo_alumno }}</TableCell>
-            <TableCell class="text-center"> {{ alumno.procedencia_alumno }} </TableCell>
-            <TableCell class="text-center">{{ alumno.fecha_nacimiento_alumno }} </TableCell>
-            <TableCell class="text-center">{{ alumno.fecha_incorporacion_alumno }} </TableCell>
-            <TableCell class="text-center"> {{ alumno.estado_alumno }} </TableCell>
-            <TableCell class="text-center">
-              <div class="flex items-center justify-center space-x-2">
-                <DropdownMenu>
-                  <DropdownMenuTrigger as-child>
-                    <Button variant="outline">
-                      <EllipsisVertical class="h-4 w-4" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent class="w-56">
-                    <DropdownMenuLabel>Acciones</DropdownMenuLabel>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuGroup>
-                      <DropdownMenuItem>
-                        <Trash2 class="h-4 w-4" />
-                        <span>Eliminar</span>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem>
-                        <UserPen class="h-4 w-4" />
-                        <span>Editar</span>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem>
-                        <UserX class="h-4 w-4" />
-                        <span>Retirar</span>
-                      </DropdownMenuItem>
-                    </DropdownMenuGroup>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </div>
-            </TableCell>
-          </TableRow>
-        </TableBody>
+        <Transition name="fade" mode="out-in">
+          <TableBody>
+            <TableRow v-for="alumno in alumnos" :key="alumno.id">
+              <TableCell class="text-center font-medium"> {{ alumno.id }} </TableCell>
+              <TableCell class="text-right">{{ formatearRut(alumno.rut_alumno) }}</TableCell>
+              <TableCell class="text-left">{{ alumno.nombre_completo_alumno }}</TableCell>
+              <TableCell class="text-center"> {{ alumno.procedencia_alumno }} </TableCell>
+              <TableCell class="text-center">{{ alumno.fecha_nacimiento_alumno }} </TableCell>
+              <TableCell class="text-center">{{ alumno.fecha_incorporacion_alumno }} </TableCell>
+              <TableCell class="text-center"> {{ alumno.estado_alumno }} </TableCell>
+              <TableCell class="text-center">
+                <div class="flex items-center justify-center space-x-2">
+                  <DropdownMenu>
+                    <DropdownMenuTrigger as-child>
+                      <Button variant="outline">
+                        <EllipsisVertical class="h-4 w-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent class="w-56">
+                      <DropdownMenuLabel>Acciones</DropdownMenuLabel>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuGroup>
+                        <DropdownMenuItem @click.stop="deleteSupabase(alumno.id)">
+                          <Trash2 class="h-4 w-4" />
+                          <span>Eliminar</span>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem>
+                          <UserPen class="h-4 w-4" />
+                          <span>Editar</span>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem>
+                          <UserX class="h-4 w-4" />
+                          <span>Retirar</span>
+                        </DropdownMenuItem>
+                      </DropdownMenuGroup>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
+              </TableCell>
+            </TableRow>
+          </TableBody>
+        </Transition>
       </Table>
     </Transition>
   </div>
