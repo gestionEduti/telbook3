@@ -32,15 +32,6 @@ import {
 // supabase
 import { supabase } from '@/services/supabaseClient'
 import type { Tables } from '@/types/supabase'
-import AlertDialog from '@/components/ui/alert-dialog/AlertDialog.vue'
-import AlertDialogTrigger from '@/components/ui/alert-dialog/AlertDialogTrigger.vue'
-import AlertDialogContent from '@/components/ui/alert-dialog/AlertDialogContent.vue'
-import AlertDialogHeader from '@/components/ui/alert-dialog/AlertDialogHeader.vue'
-import AlertDialogTitle from '@/components/ui/alert-dialog/AlertDialogTitle.vue'
-import AlertDialogDescription from '@/components/ui/alert-dialog/AlertDialogDescription.vue'
-import AlertDialogFooter from '@/components/ui/alert-dialog/AlertDialogFooter.vue'
-import AlertDialogCancel from '@/components/ui/alert-dialog/AlertDialogCancel.vue'
-import AlertDialogAction from '@/components/ui/alert-dialog/AlertDialogAction.vue'
 const querySelect = supabase.from('mv_libro_matricula').select('*').order('id', { ascending: true })
 const queryDelete = (id: number) => supabase.from('mv_libro_matricula').delete().eq('id', id)
 
