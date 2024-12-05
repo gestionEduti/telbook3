@@ -1,7 +1,7 @@
 <script setup lang="ts">
+// shadcn
 import Card from '@/components/ui/card/Card.vue'
 import CardContent from '@/components/ui/card/CardContent.vue'
-import CardDescription from '@/components/ui/card/CardDescription.vue'
 import CardHeader from '@/components/ui/card/CardHeader.vue'
 import CardTitle from '@/components/ui/card/CardTitle.vue'
 import Tabs from '@/components/ui/tabs/Tabs.vue'
@@ -112,28 +112,7 @@ import TabsTrigger from '@/components/ui/tabs/TabsTrigger.vue'
             </CardContent>
           </Card>
         </div>
-        <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-          <Card class="col-span-4">
-            <CardHeader>
-              <CardTitle>Overview</CardTitle>
-            </CardHeader>
-            <CardContent class="pl-2">
-              <Overview />
-            </CardContent>
-          </Card>
-          <Card class="col-span-3">
-            <CardHeader>
-              <CardTitle>Recent Sales</CardTitle>
-              <CardDescription> You made 265 sales this month. </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <RecentSales />
-            </CardContent>
-          </Card>
-        </div>
       </TabsContent>
     </Tabs>
   </div>
 </template>
-
-<style></style>

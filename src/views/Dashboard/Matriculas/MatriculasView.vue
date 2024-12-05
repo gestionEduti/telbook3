@@ -1,5 +1,9 @@
 <script setup lang="ts">
+// vue imports
 import { onMounted, ref } from 'vue'
+
+// utils
+import { formatearRut } from '@/lib/formato'
 
 // shadcn
 import Button from '@/components/ui/button/Button.vue'
@@ -41,28 +45,17 @@ const alumnos = ref<Tables<'mv_libro_matricula'>[] | null>(null)
 // methods
 const fetchSupabase = async () => {
   const { data, error } = await querySelect
-  if (error) {
-    console.error(error)
-  } else {
-    alumnos.value = data
-  }
+  if (error) console.error(error)
+  else alumnos.value = data
 }
 
 const deleteSupabase = async (id: number) => {
   const { error } = await queryDelete(id)
-  if (error) {
-    console.error(error)
-  } else {
-    await fetchSupabase()
-  }
+  if (error) console.error(error)
+  else await fetchSupabase()
 }
 
-const formatearRut = (rut: string | null) => {
-  if (!rut) return ''
-  const rutFormateado = rut.replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.')
-  return rutFormateado
-}
-
+// lifecycle
 onMounted(async () => {
   await fetchSupabase()
 })
@@ -171,7 +164,7 @@ onMounted(async () => {
 <style scoped>
 .fade-enter-active,
 .fade-leave-active {
-  transition: opacity 0.4s ease;
+  transition: opacity 0.3s ease;
 }
 
 .fade-enter-from,

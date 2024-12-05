@@ -1,4 +1,5 @@
 <script setup lang="ts">
+// shadcn
 import Button from '@/components/ui/button/Button.vue'
 import Input from '@/components/ui/input/Input.vue'
 </script>
@@ -22,5 +23,3 @@ import Input from '@/components/ui/input/Input.vue'
     </div>
   </div>
 </template>
-
-<style></style>

@@ -241,6 +241,27 @@ export type Database = {
           },
         ]
       }
+      prueba: {
+        Row: {
+          created_at: string
+          cursos: string[]
+          id: number
+          nombre: string
+        }
+        Insert: {
+          created_at?: string
+          cursos?: string[]
+          id?: number
+          nombre: string
+        }
+        Update: {
+          created_at?: string
+          cursos?: string[]
+          id?: number
+          nombre?: string
+        }
+        Relationships: []
+      }
       tp_cursos: {
         Row: {
           anio_curso: number | null

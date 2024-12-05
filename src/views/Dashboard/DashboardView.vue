@@ -1,4 +1,5 @@
 <script setup lang="ts">
+// shadcn
 import { DropdownMenu } from '@/components/ui/dropdown-menu'
 import DropdownMenuTrigger from '@/components/ui/dropdown-menu/DropdownMenuTrigger.vue'
 import Button from '@/components/ui/button/Button.vue'
@@ -14,6 +15,7 @@ import DropdownMenuShortcut from '@/components/ui/dropdown-menu/DropdownMenuShor
 // icons
 import { CircleHelp, Contact, LogOut } from 'lucide-vue-next'
 
+// data
 const navLinks = [
   { routeName: 'cursos', text: 'Cursos' },
   { routeName: 'matriculas', text: 'Matriculas' },
@@ -97,7 +99,7 @@ const navLinks = [
 <style scoped>
 .fade-enter-active,
 .fade-leave-active {
-  transition: opacity 0.4s ease;
+  transition: opacity 0.3s ease;
 }
 
 .fade-enter-from,

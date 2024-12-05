@@ -31,6 +31,27 @@ const router = createRouter({
           component: () => import('../views/Dashboard/Cursos/CursosView.vue'),
         },
         {
+          path: '/dashboard/cursos/:siglaCurso',
+          name: 'curso',
+          component: () => import('../views/Dashboard/Cursos/Curso/CursoView.vue'),
+          props: true,
+          redirect: { name: 'alumnos' },
+          children: [
+            {
+              path: '/dashboard/cursos/:siglaCurso/alumnos',
+              name: 'alumnos',
+              component: () => import('../views/Dashboard/Cursos/Curso/Alumnos/AlumnosView.vue'),
+              props: true,
+            },
+            {
+              path: '/dashboard/cursos/:siglaCurso/alumnos/:rutAlumno',
+              name: 'alumno',
+              component: () => import('../views/Dashboard/Cursos/Curso/Alumnos/AlumnoView.vue'),
+              props: true,
+            },
+          ],
+        },
+        {
           path: '/dashboard/matriculas',
           name: 'matriculas',
           component: () => import('../views/Dashboard/Matriculas/MatriculasView.vue'),
