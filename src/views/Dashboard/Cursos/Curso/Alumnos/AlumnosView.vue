@@ -25,7 +25,7 @@ const querySelect = supabase
   .select('*')
   .eq('rbd_establecimiento', 26005)
   .eq('nivel_alumno', props.siglaCurso)
-  .order('apellidos_alumnos', { ascending: true })
+  .order('apellidos_alumno', { ascending: true })
 
 // data
 const alumnos = ref<Tables<'mv_libro_matricula'>[] | null>(null)
