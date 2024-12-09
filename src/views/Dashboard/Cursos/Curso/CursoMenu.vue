@@ -162,7 +162,7 @@ const menuEvaluaciones: { title: string; href: string; description: string }[] =
         </NavigationMenuItem>
 
         <!-- ejemplo -->
-        <NavigationMenuItem>
+        <!-- <NavigationMenuItem>
           <NavigationMenuTrigger>Menu ejemplo</NavigationMenuTrigger>
           <NavigationMenuContent>
             <ul
@@ -224,7 +224,7 @@ const menuEvaluaciones: { title: string; href: string; description: string }[] =
               </li>
             </ul>
           </NavigationMenuContent>
-        </NavigationMenuItem>
+        </NavigationMenuItem> -->
       </NavigationMenuList>
     </NavigationMenu>
   </div>
