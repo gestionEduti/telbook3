@@ -47,7 +47,7 @@ onMounted(async () => {
   <Transition name="fade" mode="out-in">
     <Table v-if="alumnos?.length" class="border border-slate-300 bg-white shadow-xl">
       <TableCaption>
-        {{ alumnos.length + ' alumnos' }}
+        {{ alumnos.length }} {{ alumnos.length > 1 ? 'alumnos en total' : 'alumno en total' }}
       </TableCaption>
       <TableHeader class="bg-slate-100">
         <TableRow>
@@ -75,3 +75,15 @@ onMounted(async () => {
     </Table>
   </Transition>
 </template>
+
+<style scoped>
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+</style>

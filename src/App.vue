@@ -4,7 +4,7 @@
   <div class="min-h-svh bg-zinc-200">
     <RouterView v-slot="{ Component }">
       <Transition name="fade" mode="out-in">
-        <component :is="Component" class="" />
+        <component :is="Component" />
       </Transition>
     </RouterView>
   </div>

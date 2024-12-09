@@ -39,9 +39,9 @@ onMounted(async () => {
 
     <!-- contenido -->
     <main class="contenedor">
-      <RouterView v-slot="{ Component }">
+      <RouterView v-slot="{ Component }" :key="$route.fullPath">
         <Transition name="fade" mode="out-in">
-          <component :is="Component" class="" />
+          <component :is="Component" />
         </Transition>
       </RouterView>
     </main>
