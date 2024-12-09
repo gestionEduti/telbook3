@@ -11,7 +11,7 @@ import TabsTrigger from '@/components/ui/tabs/TabsTrigger.vue'
 </script>
 
 <template>
-  <div class="flex-1 space-y-4 p-8 pt-6">
+  <div class="flex-1 space-y-4 px-4 py-8 pt-6">
     <div class="flex items-end justify-between space-y-2">
       <h2 class="text-3xl font-bold tracking-tight">Resumen</h2>
     </div>

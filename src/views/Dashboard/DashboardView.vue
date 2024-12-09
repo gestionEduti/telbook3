@@ -26,8 +26,8 @@ const navLinks = [
   <div class="flex flex-col">
     <!-- Header -->
     <div class="bg-white">
-      <header class="contenedor border-b">
-        <div class="flex h-16 items-center px-8">
+      <header class="contenedor">
+        <div class="flex h-16 items-center px-4">
           <nav class="flex items-baseline space-x-4 lg:space-x-6">
             <RouterLink to="/dashboard" class="transition-colors hover:text-primary">
               <p class="font-sans text-sm font-black">TEL<span class="text-red-500">BOOK</span></p>

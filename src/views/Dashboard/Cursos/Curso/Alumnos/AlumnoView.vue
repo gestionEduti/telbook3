@@ -22,6 +22,7 @@ import type { Tables } from '@/types/supabase'
 import Textarea from '@/components/ui/textarea/Textarea.vue'
 import Label from '@/components/ui/label/Label.vue'
 import Button from '@/components/ui/button/Button.vue'
+import CardDescription from '@/components/ui/card/CardDescription.vue'
 const querySelect = supabase
   .from('mv_libro_matricula')
   .select('*')
@@ -49,16 +50,14 @@ onMounted(async () => {
     <!-- Main card -->
     <Card v-if="alumno" class="shadow-xl">
       <CardHeader>
-        <CardTitle>
+        <CardTitle class="flex items-end justify-between">
+          <span> Ficha del alumno </span>
           <Button>
             <ArrowLeft />
             <RouterLink :to="{ name: 'alumnos' }">Volver al curso</RouterLink>
           </Button>
-          <!-- <Button @click="$router.go(-1)">
-          <ArrowLeft />
-          <span>Volver al curso</span>
-        </Button> -->
         </CardTitle>
+        <CardDescription>Informacion y observaciones del alumno.</CardDescription>
       </CardHeader>
 
       <!-- content -->

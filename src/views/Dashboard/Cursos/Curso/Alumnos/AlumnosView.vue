@@ -20,6 +20,11 @@ import TableRow from '@/components/ui/table/TableRow.vue'
 // supabase
 import { supabase } from '@/services/supabaseClient'
 import type { Tables } from '@/types/supabase'
+import Card from '@/components/ui/card/Card.vue'
+import CardContent from '@/components/ui/card/CardContent.vue'
+import CardHeader from '@/components/ui/card/CardHeader.vue'
+import CardDescription from '@/components/ui/card/CardDescription.vue'
+import CardTitle from '@/components/ui/card/CardTitle.vue'
 const querySelect = supabase
   .from('mv_libro_matricula')
   .select('*')
@@ -45,34 +50,42 @@ onMounted(async () => {
 
 <template>
   <Transition name="fade" mode="out-in">
-    <Table v-if="alumnos?.length" class="border border-slate-300 bg-white shadow-xl">
-      <TableCaption>
-        {{ alumnos.length }} {{ alumnos.length > 1 ? 'alumnos en total' : 'alumno en total' }}
-      </TableCaption>
-      <TableHeader class="bg-slate-100">
-        <TableRow>
-          <TableHead class="w-[1px] py-2 text-center"> Nº </TableHead>
-          <TableHead class="w-[130px] py-2 text-right">RUT</TableHead>
-          <TableHead class="py-2 text-left">Nombre</TableHead>
-        </TableRow>
-      </TableHeader>
-      <Transition name="fade" mode="out-in">
-        <TableBody as-child>
-          <TableRow
-            v-for="alumno in alumnos"
-            :key="alumno.id"
-            class="cursor-pointer"
-            @click="$router.push({ name: 'alumno', params: { rutAlumno: alumno.rut_alumno } })"
-          >
-            <TableCell class="text-center font-medium"> {{ alumno.id }} </TableCell>
-            <TableCell class="text-right">{{ formatearRut(alumno.rut_alumno) }}</TableCell>
-            <TableCell class="text-left capitalize">{{
-              alumno.nombre_completo_alumno?.toLowerCase()
-            }}</TableCell>
-          </TableRow>
-        </TableBody>
-      </Transition>
-    </Table>
+    <Card v-if="alumnos?.length">
+      <CardHeader>
+        <CardTitle>Alumnos</CardTitle>
+        <CardDescription>Lista de alumnos del curso.</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <Table class="border border-slate-300 bg-white">
+          <TableCaption>
+            {{ alumnos.length }} {{ alumnos.length > 1 ? 'alumnos en total' : 'alumno en total' }}
+          </TableCaption>
+          <TableHeader class="bg-slate-100">
+            <TableRow>
+              <TableHead class="w-[1px] py-2 text-center"> Nº </TableHead>
+              <TableHead class="w-[130px] py-2 text-right">RUT</TableHead>
+              <TableHead class="py-2 text-left">Nombre</TableHead>
+            </TableRow>
+          </TableHeader>
+          <Transition name="fade" mode="out-in">
+            <TableBody as-child>
+              <TableRow
+                v-for="alumno in alumnos"
+                :key="alumno.id"
+                class="cursor-pointer"
+                @click="$router.push({ name: 'alumno', params: { rutAlumno: alumno.rut_alumno } })"
+              >
+                <TableCell class="text-center font-medium"> {{ alumno.id }} </TableCell>
+                <TableCell class="text-right">{{ formatearRut(alumno.rut_alumno) }}</TableCell>
+                <TableCell class="text-left capitalize">{{
+                  alumno.nombre_completo_alumno?.toLowerCase()
+                }}</TableCell>
+              </TableRow>
+            </TableBody>
+          </Transition>
+        </Table>
+      </CardContent>
+    </Card>
   </Transition>
 </template>
 

@@ -44,16 +44,18 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="flex-1 space-y-4 p-8 pt-6">
-    <div class="flex items-end justify-between space-y-2">
-      <h2 class="text-3xl font-bold tracking-tight">Cursos</h2>
-    </div>
+  <div class="flex-1 space-y-3 px-4 py-8 pt-3">
+    <Card>
+      <CardContent class="mt-4 flex items-end justify-between space-y-2">
+        <h2 class="text-3xl font-bold tracking-tight">Cursos</h2>
+      </CardContent>
+    </Card>
 
     <Transition name="fade" mode="out-in">
       <Card class="shadow-xl" v-if="cursos">
         <CardHeader></CardHeader>
         <CardContent>
-          <ul class="grid gap-4 md:grid-cols-3 lg:grid-cols-4">
+          <ul class="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-5">
             <li v-for="curso in cursos" :key="curso.id">
               <RouterLink
                 :to="{
