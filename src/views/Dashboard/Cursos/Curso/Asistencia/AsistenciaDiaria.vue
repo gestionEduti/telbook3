@@ -1,4 +1,5 @@
 <script setup lang="ts">
+// shadcn
 import Card from '@/components/ui/card/Card.vue'
 import CardContent from '@/components/ui/card/CardContent.vue'
 import CardDescription from '@/components/ui/card/CardDescription.vue'
@@ -12,7 +13,11 @@ import CardTitle from '@/components/ui/card/CardTitle.vue'
       <CardTitle>Asistencia diaria</CardTitle>
       <CardDescription>Descripcion asistencia diaria.</CardDescription>
     </CardHeader>
-    <CardContent></CardContent>
+    <CardContent>
+      <ul>
+        <li></li>
+      </ul>
+    </CardContent>
   </Card>
 </template>
 

@@ -4,6 +4,9 @@ import { onMounted, ref } from 'vue'
 
 // components
 import CursoMenu from './CursoMenu.vue'
+// shadcn
+import Card from '@/components/ui/card/Card.vue'
+import CardContent from '@/components/ui/card/CardContent.vue'
 
 // props
 const props = defineProps<{ siglaCurso: string }>()
@@ -11,9 +14,6 @@ const props = defineProps<{ siglaCurso: string }>()
 // supabase
 import { supabase } from '@/services/supabaseClient'
 import type { Tables } from '@/types/supabase'
-import Card from '@/components/ui/card/Card.vue'
-import CardContent from '@/components/ui/card/CardContent.vue'
-import CardHeader from '@/components/ui/card/CardHeader.vue'
 const query = supabase.from('tp_cursos').select('*').eq('nombre_curso', props.siglaCurso).single()
 
 // data
@@ -44,7 +44,7 @@ onMounted(async () => {
 
     <!-- contenido -->
     <main class="contenedor">
-      <RouterView v-slot="{ Component }" :key="$route.fullPath">
+      <RouterView v-slot="{ Component }">
         <Transition name="fade" mode="out-in">
           <component :is="Component" />
         </Transition>
@@ -56,7 +56,7 @@ onMounted(async () => {
 <style scoped>
 .fade-enter-active,
 .fade-leave-active {
-  transition: opacity 0.3s ease;
+  transition: opacity 0.2s ease;
 }
 
 .fade-enter-from,

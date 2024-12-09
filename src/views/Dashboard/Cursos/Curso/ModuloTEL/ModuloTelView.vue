@@ -1,4 +1,5 @@
 <script setup lang="ts">
+// shadcn
 import Card from '@/components/ui/card/Card.vue'
 import CardContent from '@/components/ui/card/CardContent.vue'
 import CardDescription from '@/components/ui/card/CardDescription.vue'

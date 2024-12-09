@@ -16,15 +16,15 @@ import TableCell from '@/components/ui/table/TableCell.vue'
 import TableHead from '@/components/ui/table/TableHead.vue'
 import TableHeader from '@/components/ui/table/TableHeader.vue'
 import TableRow from '@/components/ui/table/TableRow.vue'
-
-// supabase
-import { supabase } from '@/services/supabaseClient'
-import type { Tables } from '@/types/supabase'
 import Card from '@/components/ui/card/Card.vue'
 import CardContent from '@/components/ui/card/CardContent.vue'
 import CardHeader from '@/components/ui/card/CardHeader.vue'
 import CardDescription from '@/components/ui/card/CardDescription.vue'
 import CardTitle from '@/components/ui/card/CardTitle.vue'
+
+// supabase
+import { supabase } from '@/services/supabaseClient'
+import type { Tables } from '@/types/supabase'
 const querySelect = supabase
   .from('mv_libro_matricula')
   .select('*')

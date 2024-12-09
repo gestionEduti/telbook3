@@ -7,11 +7,11 @@ import Card from '@/components/ui/card/Card.vue'
 import CardHeader from '@/components/ui/card/CardHeader.vue'
 import CardTitle from '@/components/ui/card/CardTitle.vue'
 import CardContent from '@/components/ui/card/CardContent.vue'
+import CardFooter from '@/components/ui/card/CardFooter.vue'
 
 // supabase
 import { supabase } from '@/services/supabaseClient'
 import type { Tables } from '@/types/supabase'
-import CardFooter from '@/components/ui/card/CardFooter.vue'
 const query = supabase.from('tp_cursos').select('*').order('id', { ascending: true })
 
 // data
