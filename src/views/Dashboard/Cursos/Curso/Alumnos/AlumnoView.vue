@@ -6,7 +6,7 @@ import { onMounted, ref } from 'vue'
 const props = defineProps<{ rutAlumno: string }>()
 
 // utils
-import { formatearFecha, formatearNacionalidad } from '@/lib/formato'
+import { formatearFechaNacimiento, formatearNacionalidad } from '@/lib/formato'
 
 // shadcn
 import Card from '@/components/ui/card/Card.vue'
@@ -118,7 +118,7 @@ onMounted(async () => {
                 Fecha nacimiento
               </div>
               <p v-if="alumno.fecha_nacimiento_alumno" class="mb-3 capitalize">
-                {{ formatearFecha(alumno.fecha_nacimiento_alumno) }}
+                {{ formatearFechaNacimiento(alumno.fecha_nacimiento_alumno) }}
               </p>
             </CardContent>
           </Card>

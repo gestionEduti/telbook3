@@ -1,22 +1,51 @@
 <script setup lang="ts">
+// vue imports
+import { ref, onMounted } from 'vue'
+
+// props
+const props = defineProps<{ siglaCurso: string }>()
+
 // shadcn
 import Card from '@/components/ui/card/Card.vue'
 import CardContent from '@/components/ui/card/CardContent.vue'
 import CardDescription from '@/components/ui/card/CardDescription.vue'
 import CardHeader from '@/components/ui/card/CardHeader.vue'
 import CardTitle from '@/components/ui/card/CardTitle.vue'
+
+// supabase
+import type { Tables } from '@/types/supabase'
+import { supabase } from '@/services/supabaseClient'
+const querySelect = supabase
+  .from('mv_libro_matricula')
+  .select('*')
+  .eq('rbd_establecimiento', 26005)
+  .eq('nivel_alumno', props.siglaCurso)
+  .order('apellidos_alumno', { ascending: true })
+
+// data
+const alumnos = ref<Tables<'mv_libro_matricula'>[] | null>(null)
+
+// methods
+const fetchSupabase = async () => {
+  const { data, error } = await querySelect
+  if (error) console.error(error)
+  else alumnos.value = data
+}
+
+// lifecycle
+onMounted(async () => {
+  await fetchSupabase()
+})
 </script>
 
 <template>
-  <div>
-    <Card>
-      <CardHeader>
-        <CardTitle>Asistencia mensual</CardTitle>
-        <CardDescription>Descripcion asistencia mensual.</CardDescription>
-      </CardHeader>
-      <CardContent></CardContent>
-    </Card>
-  </div>
+  <Card>
+    <CardHeader>
+      <CardTitle>Asistencia mensual</CardTitle>
+      <CardDescription>Descripcion asistencia mensual.</CardDescription>
+    </CardHeader>
+    <CardContent></CardContent>
+  </Card>
 </template>
 
 <style></style>

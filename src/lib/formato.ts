@@ -3,7 +3,7 @@ export function formatearRut(rut: string | null) {
   return rut.replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.')
 }
 
-export function formatearFecha(fecha: number | null) {
+export function formatearFechaNacimiento(fecha: number | null) {
   if (!fecha) return ''
   const year = String(fecha).substring(0, 4)
   const month = String(fecha).substring(4, 6)
@@ -14,6 +14,19 @@ export function formatearFecha(fecha: number | null) {
     weekday: 'long',
     month: 'long',
     year: 'numeric',
+    day: 'numeric',
+  })
+}
+
+export function formatearFechaPlanificacionLargoPlazo(fecha: number | null) {
+  if (!fecha) return ''
+  const year = String(fecha).substring(0, 4)
+  const month = String(fecha).substring(4, 6)
+  const day = String(fecha).substring(6, 8)
+
+  const date = new Date(parseInt(year), parseInt(month) - 1, parseInt(day))
+  return date.toLocaleString('es-CL', {
+    weekday: 'long',
     day: 'numeric',
   })
 }

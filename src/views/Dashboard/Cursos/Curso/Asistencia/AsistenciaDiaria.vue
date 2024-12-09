@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // vue imports
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, h } from 'vue'
 
 // props
 const props = defineProps<{ siglaCurso: string }>()
@@ -15,7 +15,16 @@ import CardFooter from '@/components/ui/card/CardFooter.vue'
 import Switch from '@/components/ui/switch/Switch.vue'
 import Input from '@/components/ui/input/Input.vue'
 import Button from '@/components/ui/button/Button.vue'
-import Badge from '@/components/ui/badge/Badge.vue'
+import Dialog from '@/components/ui/dialog/Dialog.vue'
+import DialogTrigger from '@/components/ui/dialog/DialogTrigger.vue'
+import DialogContent from '@/components/ui/dialog/DialogContent.vue'
+import DialogHeader from '@/components/ui/dialog/DialogHeader.vue'
+import DialogTitle from '@/components/ui/dialog/DialogTitle.vue'
+import DialogDescription from '@/components/ui/dialog/DialogDescription.vue'
+import Label from '@/components/ui/label/Label.vue'
+import DialogFooter from '@/components/ui/dialog/DialogFooter.vue'
+import DialogClose from '@/components/ui/dialog/DialogClose.vue'
+import { toast } from '@/components/ui/toast'
 // icons
 import { Pen } from 'lucide-vue-next'
 
@@ -74,14 +83,40 @@ onMounted(async () => {
       </ul>
     </CardContent>
     <CardFooter class="flex items-center justify-between">
-      <div class="flex flex-col space-y-2 sm:flex-row sm:space-x-2 sm:space-y-0">
+      <!-- <div class="flex flex-col space-y-2 sm:flex-row sm:space-x-2 sm:space-y-0">
         <Badge>{{ 10 }} presentes</Badge>
         <Badge>{{ 4 }} ausentes</Badge>
-      </div>
-      <Button>
-        <Pen />
-        <span>Firmar asistencia</span>
-      </Button>
+      </div> -->
+      <Dialog>
+        <DialogTrigger as-child>
+          <Button>
+            <Pen />
+            <span>Firmar asistencia</span>
+          </Button>
+        </DialogTrigger>
+        <DialogContent class="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Confirmar firma de asistencia</DialogTitle>
+            <DialogDescription>
+              Debes ingresar el codigo de verificacion para poder firmar la asistencia.
+            </DialogDescription>
+          </DialogHeader>
+          <div class="grid gap-4 py-4">
+            <div class="grid grid-cols-4 items-center gap-4">
+              <Label for="codigo" class="text-right"> Codigo </Label>
+              <Input id="codigo" class="col-span-3" />
+            </div>
+          </div>
+          <DialogFooter>
+            <DialogClose>
+              <Button type="submit" @click="toast({ title: 'Asistencia firmada exitosamente!' })">
+                <Pen />
+                <span>Firmar asistencia</span>
+              </Button>
+            </DialogClose>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </CardFooter>
   </Card>
 </template>

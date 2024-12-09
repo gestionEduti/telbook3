@@ -8,15 +8,13 @@ import CardTitle from '@/components/ui/card/CardTitle.vue'
 </script>
 
 <template>
-  <div>
-    <Card>
-      <CardHeader>
-        <CardTitle>Planificacion mediano plazo</CardTitle>
-        <CardDescription>Descripcion planificacion mediano plazo.</CardDescription>
-      </CardHeader>
-      <CardContent></CardContent>
-    </Card>
-  </div>
+  <Card>
+    <CardHeader>
+      <CardTitle>Planificacion mediano plazo</CardTitle>
+      <CardDescription>Descripcion planificacion mediano plazo.</CardDescription>
+    </CardHeader>
+    <CardContent></CardContent>
+  </Card>
 </template>
 
 <style></style>

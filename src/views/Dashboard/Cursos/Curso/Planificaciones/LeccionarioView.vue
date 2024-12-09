@@ -8,15 +8,13 @@ import CardTitle from '@/components/ui/card/CardTitle.vue'
 </script>
 
 <template>
-  <div>
-    <Card>
-      <CardHeader>
-        <CardTitle>Leccionario</CardTitle>
-        <CardDescription>Descripcion leccionario.</CardDescription>
-      </CardHeader>
-      <CardContent></CardContent>
-    </Card>
-  </div>
+  <Card>
+    <CardHeader>
+      <CardTitle>Leccionario</CardTitle>
+      <CardDescription>Descripcion leccionario.</CardDescription>
+    </CardHeader>
+    <CardContent></CardContent>
+  </Card>
 </template>
 
 <style></style>

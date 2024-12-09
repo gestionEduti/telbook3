@@ -1,7 +1,10 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import Toaster from '@/components/ui/toast/Toaster.vue'
+</script>
 
 <template>
   <div class="min-h-svh bg-zinc-200">
+    <Toaster />
     <RouterView v-slot="{ Component }">
       <Transition name="fade" mode="out-in">
         <component :is="Component" />
