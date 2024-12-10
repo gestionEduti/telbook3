@@ -89,11 +89,11 @@ onMounted(async () => {
                   <DropdownMenuLabel>Descargar Libro</DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuGroup>
-                    <DropdownMenuItem>
+                    <DropdownMenuItem disabled>
                       <BookCheck class="h-4 w-4" />
                       <span class="ml-2 hidden md:block">Libro completo</span>
                     </DropdownMenuItem>
-                    <DropdownMenuItem>
+                    <DropdownMenuItem disabled>
                       <FileText class="h-4 w-4" />
                       <span class="ml-2 hidden md:block">Resumen</span>
                     </DropdownMenuItem>
@@ -145,15 +145,15 @@ onMounted(async () => {
                           <DropdownMenuLabel>Acciones</DropdownMenuLabel>
                           <DropdownMenuSeparator />
                           <DropdownMenuGroup>
-                            <DropdownMenuItem @click.stop="deleteSupabase(alumno.id)">
+                            <DropdownMenuItem disabled @click.stop="deleteSupabase(alumno.id)">
                               <Trash2 class="h-4 w-4" />
                               <span>Eliminar</span>
                             </DropdownMenuItem>
-                            <DropdownMenuItem>
+                            <DropdownMenuItem disabled>
                               <UserPen class="h-4 w-4" />
                               <span>Editar</span>
                             </DropdownMenuItem>
-                            <DropdownMenuItem>
+                            <DropdownMenuItem disabled>
                               <UserX class="h-4 w-4" />
                               <span>Retirar</span>
                             </DropdownMenuItem>

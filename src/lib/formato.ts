@@ -3,7 +3,7 @@ export function formatearRut(rut: string | null) {
   return rut.replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.')
 }
 
-export function formatearFechaNacimiento(fecha: number | null) {
+export function formatearFechaNacimiento(fecha: string | null) {
   if (!fecha) return ''
   const year = String(fecha).substring(0, 4)
   const month = String(fecha).substring(4, 6)

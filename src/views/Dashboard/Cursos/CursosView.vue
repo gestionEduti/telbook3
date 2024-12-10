@@ -12,7 +12,6 @@ import CardFooter from '@/components/ui/card/CardFooter.vue'
 // supabase
 import { supabase } from '@/services/supabaseClient'
 import type { Tables } from '@/types/supabase'
-import AspectRatio from '@/components/ui/aspect-ratio/AspectRatio.vue'
 const query = supabase.from('tp_cursos').select('*').order('id', { ascending: true })
 
 // data
@@ -61,10 +60,10 @@ onMounted(async () => {
               <RouterLink
                 :to="{
                   name: 'curso',
-                  params: { siglaCurso: curso.sigla_nivel_curso + curso.letra_nivel_curso },
+                  params: { siglaCurso: `${curso.sigla_nivel_curso}${curso.letra_nivel_curso}` },
                 }"
               >
-                <Card :class="[colorCurso(curso.sigla_nivel_curso)]">
+                <Card :class="[colorCurso(curso.sigla_nivel_curso || '')]">
                   <CardHeader>
                     <CardTitle class="text-center text-sm font-medium">
                       {{ curso.sigla_nivel_curso }}

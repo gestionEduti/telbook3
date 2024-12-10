@@ -85,13 +85,13 @@ onMounted(async () => {
                 {{ alumno.nombres_alumno?.toLocaleLowerCase() }}
               </p>
               <div
-                v-if="alumno.apellidos_alumnos"
+                v-if="alumno.apellidos_alumno"
                 class="text-sm font-semibold tracking-tighter text-gray-400"
               >
                 Apellidos
               </div>
-              <p v-if="alumno.apellidos_alumnos" class="mb-3 capitalize">
-                {{ alumno.apellidos_alumnos?.toLocaleLowerCase() }}
+              <p v-if="alumno.apellidos_alumno" class="mb-3 capitalize">
+                {{ alumno.apellidos_alumno?.toLocaleLowerCase() }}
               </p>
               <div
                 v-if="alumno.nacionalidad_alumno"
