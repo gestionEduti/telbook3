@@ -7,6 +7,7 @@ import type { Tables } from '@/types/supabase'
 export const useAuthStore = defineStore('auth-store', () => {
   const usuario = ref<User | null>(null)
   const perfil = ref<Tables<'mv_usuario'> | null>(null)
+  const establecimiento = ref<Tables<'tp_establecimientos'> | null>(null)
   const escuchandoCambiosAuth = ref(false)
 
   const escucharCambios = () => {
@@ -27,6 +28,7 @@ export const useAuthStore = defineStore('auth-store', () => {
     }
     usuario.value = sesionUsuario.user
     await setPerfil()
+    await setEstablecimiento()
   }
 
   const setPerfil = async () => {
@@ -38,6 +40,23 @@ export const useAuthStore = defineStore('auth-store', () => {
         const query = supabase.from('mv_usuario').select().eq('id', usuario.value.id).single()
         const { data } = await query
         perfil.value = data || null
+      }
+    }
+  }
+
+  const setEstablecimiento = async () => {
+    if (!perfil.value) {
+      establecimiento.value = null
+      return
+    } else {
+      if (!establecimiento.value) {
+        const query = supabase
+          .from('tp_establecimientos')
+          .select()
+          .eq('rbd', perfil.value.rbd_usuario)
+          .single()
+        const { data } = await query
+        establecimiento.value = data || null
       }
     }
   }
@@ -69,6 +88,7 @@ export const useAuthStore = defineStore('auth-store', () => {
   return {
     usuario,
     perfil,
+    establecimiento,
     escucharCambios,
     obtenerSesion,
     logout,
