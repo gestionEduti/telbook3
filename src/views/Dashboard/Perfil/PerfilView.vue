@@ -47,6 +47,7 @@ import Separator from '@/components/ui/separator/Separator.vue'
           </CardContent>
         </Card>
       </Transition>
+
       <Transition name="fade" mode="out-in">
         <Card v-if="establecimiento" class="shadow-xl">
           <CardHeader>
@@ -62,8 +63,9 @@ import Separator from '@/components/ui/separator/Separator.vue'
           </CardContent>
         </Card>
       </Transition>
+
       <Transition name="fade" mode="out-in">
-        <Card v-if="establecimiento" class="col-span-2 shadow-xl">
+        <Card v-if="establecimiento" class="shadow-xl sm:col-span-2">
           <CardHeader>
             <CardTitle>Ultimas actividades</CardTitle>
             <Separator />

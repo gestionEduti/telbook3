@@ -12,6 +12,7 @@ import CardFooter from '@/components/ui/card/CardFooter.vue'
 // supabase
 import { supabase } from '@/services/supabaseClient'
 import type { Tables } from '@/types/supabase'
+import AspectRatio from '@/components/ui/aspect-ratio/AspectRatio.vue'
 const query = supabase.from('tp_cursos').select('*').order('id', { ascending: true })
 
 // data
@@ -70,7 +71,9 @@ onMounted(async () => {
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <div class="text-center text-2xl font-bold">{{ curso.letra_nivel_curso }}</div>
+                    <div class="text-center text-2xl font-bold">
+                      {{ curso.letra_nivel_curso }}
+                    </div>
                   </CardContent>
                   <CardFooter class="justify-center text-xs text-muted-foreground">
                     Nombre profesor jefe
