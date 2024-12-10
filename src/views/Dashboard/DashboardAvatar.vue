@@ -21,7 +21,9 @@ const router = useRouter()
 
 // store
 import { useAuthStore } from '@/stores/auth'
+import { storeToRefs } from 'pinia'
 const store = useAuthStore()
+const { perfil } = storeToRefs(useAuthStore())
 
 // methods
 const logout = async () => {
@@ -43,8 +45,10 @@ const logout = async () => {
     <DropdownMenuContent class="w-56" align="end">
       <DropdownMenuLabel class="flex font-normal">
         <div class="flex flex-col space-y-1">
-          <p class="text-sm font-medium leading-none">Sergio Rodriguez</p>
-          <p class="text-xs leading-none text-muted-foreground">sergio@eduti.cl</p>
+          <p class="text-sm font-medium leading-none">
+            {{ perfil?.nombre_usuario }} {{ perfil?.apellido_usuario }}
+          </p>
+          <p class="text-xs leading-none text-muted-foreground">{{ perfil?.email }}</p>
         </div>
       </DropdownMenuLabel>
       <DropdownMenuSeparator />
