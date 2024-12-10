@@ -1,5 +1,13 @@
 <script setup lang="ts">
+import { onMounted } from 'vue'
+import { useAuthStore } from './stores/auth'
+
+// shadcn
 import Toaster from '@/components/ui/toast/Toaster.vue'
+
+onMounted(() => {
+  useAuthStore().escucharCambios()
+})
 </script>
 
 <template>

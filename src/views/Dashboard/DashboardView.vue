@@ -1,4 +1,11 @@
 <script setup lang="ts">
+// vue router
+import { useRouter } from 'vue-router'
+const router = useRouter()
+
+import { useAuthStore } from '@/stores/auth'
+const store = useAuthStore()
+
 // shadcn
 import { DropdownMenu } from '@/components/ui/dropdown-menu'
 import DropdownMenuTrigger from '@/components/ui/dropdown-menu/DropdownMenuTrigger.vue'
@@ -20,6 +27,11 @@ const navLinks = [
   { routeName: 'cursos', text: 'Cursos' },
   { routeName: 'matriculas', text: 'Matriculas' },
 ]
+
+const logout = async () => {
+  await store.logout()
+  router.push({ name: 'login' })
+}
 </script>
 
 <template>
@@ -60,7 +72,7 @@ const navLinks = [
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuGroup>
-                  <DropdownMenuItem>
+                  <DropdownMenuItem @click="$router.push('perfil')">
                     <Contact class="h-4 w-4" />
                     <span class="ml-2 hidden md:block">Perfil</span>
                   </DropdownMenuItem>
@@ -70,7 +82,7 @@ const navLinks = [
                   </DropdownMenuItem>
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem>
+                <DropdownMenuItem @click.stop="logout">
                   <LogOut class="h-4 w-4" />
                   <span class="ml-2 hidden md:block">Salir</span>
                   <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>

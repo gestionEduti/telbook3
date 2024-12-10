@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { useAuthStore } from '@/stores/auth'
 
 const routes = [
   {
@@ -121,6 +122,11 @@ const routes = [
         name: 'nueva-matricula',
         component: () => import('../views/Dashboard/Matriculas/NuevaMatricula.vue'),
       },
+      {
+        path: '/dashboard/perfil',
+        name: 'perfil',
+        component: () => import('../views/Dashboard/Perfil/PerfilView.vue'),
+      },
     ],
   },
 ]
@@ -128,6 +134,19 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes,
+})
+
+router.beforeEach(async (to, from) => {
+  const authStore = useAuthStore()
+  await authStore.obtenerSesion()
+
+  const paginaConAutenticacion = ['/login'].includes(to.path)
+  if (!authStore.usuario && !paginaConAutenticacion) {
+    return { name: 'login' }
+  }
+  if (authStore.usuario && paginaConAutenticacion) {
+    return { name: 'dashboard' }
+  }
 })
 
 export default router

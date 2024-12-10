@@ -14,7 +14,7 @@
     "type-check": "vue-tsc --build --force",
     "lint": "eslint . --fix",
     "format": "prettier --write src/",
-    "supabase:types": "supabase gen types --lang=typescript --project-id xgpcoekacmkpwafqnuxt --schema public > src/types/supabase.ts"
+    "supabase:types": "supabase gen types --lang=typescript --project-id jhzweohhdshzyvjmkhce --schema public > src/types/supabase.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.46.1",
