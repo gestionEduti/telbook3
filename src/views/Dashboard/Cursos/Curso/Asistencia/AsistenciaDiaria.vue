@@ -56,10 +56,10 @@ onMounted(async () => {
 </script>
 
 <template>
-  <Card>
+  <Card v-if="alumnos">
     <CardHeader>
       <CardTitle>Asistencia diaria</CardTitle>
-      <CardDescription>Descripcion asistencia diaria.</CardDescription>
+      <CardDescription>Pasa la asistencia del dia actual.</CardDescription>
       <Separator />
     </CardHeader>
     <CardContent>

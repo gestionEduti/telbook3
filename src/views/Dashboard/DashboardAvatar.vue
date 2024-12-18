@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { computed } from 'vue'
+
 // shadcn
 import { DropdownMenu } from '@/components/ui/dropdown-menu'
 import DropdownMenuTrigger from '@/components/ui/dropdown-menu/DropdownMenuTrigger.vue'
@@ -13,7 +15,7 @@ import DropdownMenuGroup from '@/components/ui/dropdown-menu/DropdownMenuGroup.v
 import DropdownMenuItem from '@/components/ui/dropdown-menu/DropdownMenuItem.vue'
 import DropdownMenuShortcut from '@/components/ui/dropdown-menu/DropdownMenuShortcut.vue'
 // icons
-import { CircleHelp, Contact, LogOut } from 'lucide-vue-next'
+import { CircleHelp, Contact, FileSliders, LogOut } from 'lucide-vue-next'
 
 // vue router
 import { useRouter } from 'vue-router'
@@ -30,6 +32,11 @@ const logout = async () => {
   await store.logout()
   router.push({ name: 'login' })
 }
+
+// computed
+const esAdmin = computed(() => {
+  return perfil.value?.codigo_perfil_usuario === 1 || perfil.value?.codigo_perfil_usuario === 2
+})
 </script>
 
 <template>
@@ -55,7 +62,11 @@ const logout = async () => {
       <DropdownMenuGroup>
         <DropdownMenuItem @click="$router.push({ name: 'perfil' })">
           <Contact class="h-4 w-4" />
-          <span class="ml-2">Perfil</span>
+          <span class="ml-2">Mi perfil</span>
+        </DropdownMenuItem>
+        <DropdownMenuItem @click="$router.push({ name: 'perfil' })" v-if="esAdmin">
+          <FileSliders class="h-4 w-4" />
+          <span class="ml-2">Panel administracion</span>
         </DropdownMenuItem>
         <DropdownMenuItem disabled>
           <CircleHelp class="h-4 w-4" />

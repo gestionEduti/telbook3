@@ -50,10 +50,10 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="flex-1 space-y-3 px-4 py-8 pt-3">
+  <div class="flex-1 space-y-3 px-4 py-8 pt-3" v-if="curso">
     <!-- menu superior -->
     <Card>
-      <CardContent v-if="curso" class="mt-4 flex items-end justify-between space-y-2">
+      <CardContent class="mt-4 flex items-end justify-between space-y-2">
         <h2 class="text-3xl font-bold tracking-tight">
           {{ curso?.sigla_nivel_curso }}{{ curso?.letra_nivel_curso }}
         </h2>

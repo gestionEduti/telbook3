@@ -263,7 +263,9 @@ const planificacionesPorMes = (mes: number) => {
           </Button>
         </div>
       </CardTitle>
-      <CardDescription>Descripcion planificacion largo plazo.</CardDescription>
+      <CardDescription
+        >Crea ó visualiza las planificaciones a largo plazo del establecimiento.
+      </CardDescription>
       <Separator />
     </CardHeader>
     <CardContent>
