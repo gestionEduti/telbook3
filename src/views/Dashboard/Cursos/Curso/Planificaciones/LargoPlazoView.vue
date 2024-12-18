@@ -268,36 +268,43 @@ const planificacionesPorMes = (mes: number) => {
     </CardHeader>
     <CardContent>
       <!-- lista meses -->
-      <ul>
+      <ul class="space-y-8">
         <template v-for="mes in meses" :key="mes.numero">
-          <li class="mb-8 pt-4" v-if="planificacionesPorMes(mes.numero).length">
-            <!-- lista planificaciones por mes -->
-            <Table>
-              <TableBody>
-                <TableRow>
-                  <TableCell class="text-sm font-semibold tracking-tighter text-gray-400">
-                    {{ mes.nombre }}
-                  </TableCell>
-                </TableRow>
-                <TableRow
-                  v-for="planificacion in planificacionesPorMes(mes.numero)"
-                  :key="planificacion.id"
-                  class="group h-20"
-                >
-                  <TableCell class="w-32 capitalize">
-                    {{ formatearFechaPlanificacionLargoPlazo(planificacion.fecha) }}
-                  </TableCell>
-                  <TableCell>{{ planificacion.descripcion }}</TableCell>
-                  <TableCell>
-                    <Button variant="destructive" class="hidden group-hover:flex">
-                      <Trash2 />
-                      <span>Eliminar</span>
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
-          </li>
+          <Card v-if="planificacionesPorMes(mes.numero).length">
+            <CardHeader>
+              <CardTitle>
+                <span>{{ mes.nombre }}</span>
+              </CardTitle>
+              <CardDescription>
+                {{ planificacionesPorMes(mes.numero).length }} planificaciones
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <li>
+                <!-- lista planificaciones por mes -->
+                <Table>
+                  <TableBody>
+                    <TableRow
+                      v-for="planificacion in planificacionesPorMes(mes.numero)"
+                      :key="planificacion.id"
+                      class="group h-20"
+                    >
+                      <TableCell class="w-32 capitalize">
+                        {{ formatearFechaPlanificacionLargoPlazo(planificacion.fecha) }}
+                      </TableCell>
+                      <TableCell>{{ planificacion.descripcion }}</TableCell>
+                      <TableCell>
+                        <Button variant="destructive" class="hidden group-hover:flex">
+                          <Trash2 />
+                          <span>Eliminar</span>
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  </TableBody>
+                </Table>
+              </li>
+            </CardContent>
+          </Card>
         </template>
       </ul>
     </CardContent>
