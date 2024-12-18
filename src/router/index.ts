@@ -127,6 +127,13 @@ const routes = [
         name: 'perfil',
         component: () => import('../views/Dashboard/Perfil/PerfilView.vue'),
       },
+
+      // solo para admin
+      {
+        path: '/dashboard/prematricula',
+        name: 'prematricula',
+        component: () => import('../views/Dashboard/Prematricula/PreMatriculaView.vue'),
+      },
     ],
   },
 ]
