@@ -8,27 +8,44 @@ import CursoMenu from './CursoMenu.vue'
 import Card from '@/components/ui/card/Card.vue'
 import CardContent from '@/components/ui/card/CardContent.vue'
 
+// store
+import { useAuthStore } from '@/stores/auth'
+const { establecimiento } = useAuthStore()
+
 // props
 const props = defineProps<{ siglaCurso: string }>()
 
 // supabase
 import { supabase } from '@/services/supabaseClient'
 import type { Tables } from '@/types/supabase'
-const query = supabase.from('tp_cursos').select('*').eq('nombre_curso', props.siglaCurso).single()
+const queryNiveles = supabase.from('tp_niveles').select()
+const queryCurso = supabase
+  .from('tp_cursos')
+  .select()
+  .eq('rbd_establecimiento', String(establecimiento?.rbd))
+  .eq('nombre_curso', props.siglaCurso)
+  .single()
 
 // data
 const curso = ref<Tables<'tp_cursos'> | null>(null)
+const niveles = ref<Tables<'tp_niveles'>[] | null>([])
 
 // methods
-const fetchSupabase = async () => {
-  const { data, error } = await query
+const fetchCurso = async () => {
+  const { data, error } = await queryCurso
   if (error) console.error(error)
   else curso.value = data
+}
+const fetchNiveles = async () => {
+  const { data, error } = await queryNiveles
+  if (error) console.error(error)
+  else niveles.value = data
 }
 
 // lifecycle
 onMounted(async () => {
-  await fetchSupabase()
+  await fetchNiveles()
+  await fetchCurso()
 })
 </script>
 
@@ -36,8 +53,10 @@ onMounted(async () => {
   <div class="flex-1 space-y-3 px-4 py-8 pt-3">
     <!-- menu superior -->
     <Card>
-      <CardContent class="mt-4 flex items-end justify-between space-y-2">
-        <h2 class="text-3xl font-bold tracking-tight">Curso {{ props.siglaCurso }}</h2>
+      <CardContent v-if="curso" class="mt-4 flex items-end justify-between space-y-2">
+        <h2 class="text-3xl font-bold tracking-tight">
+          {{ curso?.sigla_nivel_curso }}{{ curso?.letra_nivel_curso }}
+        </h2>
         <CursoMenu :siglaCurso />
       </CardContent>
     </Card>

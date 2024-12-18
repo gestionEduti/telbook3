@@ -483,7 +483,7 @@ export type Database = {
           apellidos_alumno: string
           dia: number
           estado: number
-          fecha_creacion: string | null
+          fecha_creacion: string
           fecha_modificacion: string | null
           id: number
           mes: number
@@ -500,7 +500,7 @@ export type Database = {
           apellidos_alumno: string
           dia: number
           estado: number
-          fecha_creacion?: string | null
+          fecha_creacion?: string
           fecha_modificacion?: string | null
           id?: number
           mes: number
@@ -517,7 +517,7 @@ export type Database = {
           apellidos_alumno?: string
           dia?: number
           estado?: number
-          fecha_creacion?: string | null
+          fecha_creacion?: string
           fecha_modificacion?: string | null
           id?: number
           mes?: number
@@ -550,7 +550,7 @@ export type Database = {
           id: number
           id_planificacion: number
           mes: number
-          rut_usuario: string | null
+          rut_usuario: string
         }
         Insert: {
           anio: number
@@ -562,7 +562,7 @@ export type Database = {
           id?: number
           id_planificacion: number
           mes: number
-          rut_usuario?: string | null
+          rut_usuario: string
         }
         Update: {
           anio?: number
@@ -574,7 +574,7 @@ export type Database = {
           id?: number
           id_planificacion?: number
           mes?: number
-          rut_usuario?: string | null
+          rut_usuario?: string
         }
         Relationships: [
           {
@@ -1469,29 +1469,37 @@ export type Database = {
           created_at: string | null
           id: number
           letra_nivel_curso: string | null
-          nombre_curso: string | null
-          rbd_establecimiento: number | null
-          sigla_nivel_curso: string | null
+          nombre_curso: string
+          rbd_establecimiento: number
+          sigla_nivel_curso: string
         }
         Insert: {
           anio_curso?: number | null
           created_at?: string | null
           id?: number
           letra_nivel_curso?: string | null
-          nombre_curso?: string | null
-          rbd_establecimiento?: number | null
-          sigla_nivel_curso?: string | null
+          nombre_curso: string
+          rbd_establecimiento: number
+          sigla_nivel_curso: string
         }
         Update: {
           anio_curso?: number | null
           created_at?: string | null
           id?: number
           letra_nivel_curso?: string | null
-          nombre_curso?: string | null
-          rbd_establecimiento?: number | null
-          sigla_nivel_curso?: string | null
+          nombre_curso?: string
+          rbd_establecimiento?: number
+          sigla_nivel_curso?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "tp_cursos_tp_niveles__fk"
+            columns: ["sigla_nivel_curso"]
+            isOneToOne: false
+            referencedRelation: "tp_niveles"
+            referencedColumns: ["sigla_nivel"]
+          },
+        ]
       }
       tp_establecimientos: {
         Row: {
@@ -1518,7 +1526,15 @@ export type Database = {
           razon_social?: string | null
           rbd?: number | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "tp_establecimientos___fk_codigo_perfil"
+            columns: ["codigo_perfil"]
+            isOneToOne: false
+            referencedRelation: "tp_perfil_establecimiento"
+            referencedColumns: ["codigo_perfil"]
+          },
+        ]
       }
       tp_estado_usuario: {
         Row: {
@@ -1586,21 +1602,21 @@ export type Database = {
       tp_nacionalidad_alumno: {
         Row: {
           created_at: string | null
-          descripcion_nacionalidad: string | null
+          descripcion_nacionalidad: string
           id: number
-          tipo_nacionalidad: number | null
+          tipo_nacionalidad: number
         }
         Insert: {
           created_at?: string | null
-          descripcion_nacionalidad?: string | null
+          descripcion_nacionalidad: string
           id: number
-          tipo_nacionalidad?: number | null
+          tipo_nacionalidad: number
         }
         Update: {
           created_at?: string | null
-          descripcion_nacionalidad?: string | null
+          descripcion_nacionalidad?: string
           id?: number
-          tipo_nacionalidad?: number | null
+          tipo_nacionalidad?: number
         }
         Relationships: []
       }
@@ -1630,24 +1646,24 @@ export type Database = {
           created_at: string | null
           id: number
           nivel_nombre_alternativo: string | null
-          nombre_nivel: string | null
-          numero_nivel: number | null
+          nombre_nivel: string
+          numero_nivel: number
           sigla_nivel: string | null
         }
         Insert: {
           created_at?: string | null
           id: number
           nivel_nombre_alternativo?: string | null
-          nombre_nivel?: string | null
-          numero_nivel?: number | null
+          nombre_nivel: string
+          numero_nivel: number
           sigla_nivel?: string | null
         }
         Update: {
           created_at?: string | null
           id?: number
           nivel_nombre_alternativo?: string | null
-          nombre_nivel?: string | null
-          numero_nivel?: number | null
+          nombre_nivel?: string
+          numero_nivel?: number
           sigla_nivel?: string | null
         }
         Relationships: []
@@ -1675,19 +1691,19 @@ export type Database = {
       }
       tp_perfil_establecimiento: {
         Row: {
-          codigo_perfil: number | null
+          codigo_perfil: number
           created_at: string | null
           descripcion_perfil: string | null
           id: number
         }
         Insert: {
-          codigo_perfil?: number | null
+          codigo_perfil: number
           created_at?: string | null
           descripcion_perfil?: string | null
           id: number
         }
         Update: {
-          codigo_perfil?: number | null
+          codigo_perfil?: number
           created_at?: string | null
           descripcion_perfil?: string | null
           id?: number
@@ -1889,61 +1905,44 @@ export type Database = {
       }
       gestionar_alumnos_pre_matricula: {
         Args: {
-          p_anio: number
-          p_rbd: number
-          p_descripcion_nivel: string
-          p_letra_nivel: string
-          p_rut_alumno: string
-          p_genero: string
-          p_nombres_alumno: string
-          p_apellido_paterno: string
-          p_apellido_materno: string
-          p_direccion_alumno: string
-          p_comuna: string
-          p_email: string
-          p_telefono: string
-          p_fecha_nacimiento: string
-          p_fecha_incorporacion_escuela: string
-          p_fecha_retiro_escuela: string
-          p_rut_usuario: string
+          v_anio: number
+          v_rbd: number
+          v_descripcion_nivel: string
+          v_letra_nivel: string
+          v_rut_alumno: string
+          v_genero: string
+          v_nombres_alumno: string
+          v_apellido_paterno: string
+          v_apellido_materno: string
+          v_direccion_alumno: string
+          v_comuna: string
+          v_email: string
+          v_telefono: string
+          v_fecha_nacimiento: string
+          v_fecha_incorporacion_escuela: string
+          v_fecha_retiro_escuela: string
+          v_rut_usuario: string
         }
         Returns: string
       }
-      gestionar_pla_corto_plazo:
-        | {
-            Args: {
-              p_id_planificacion?: number
-              p_rbd?: number
-              p_nivel_planificacion?: string
-              p_id_planificacion_mediano_plazo?: number
-              p_recursos?: string
-              p_instrumentos_evaluacion?: string
-              p_inicio_desarrollo_cierre?: string
-              p_estado_planificacion?: number
-              p_anio?: number
-              p_mes?: number
-              p_dia?: number
-              p_datos_codigos?: Json
-              p_rut_usuario?: string
-            }
-            Returns: string
-          }
-        | {
-            Args: {
-              p_id_planificacion?: number
-              p_rbd?: number
-              p_nivel_planificacion?: string
-              p_id_planificacion_mediano_plazo?: number
-              p_recursos?: string
-              p_instrumentos_evaluacion?: string
-              p_inicio_desarrollo_cierre?: string
-              p_estado_planificacion?: number
-              p_fecha_planificacion?: string
-              p_datos_codigos?: Json
-              p_rut_usuario?: string
-            }
-            Returns: string
-          }
+      gestionar_pla_corto_plazo: {
+        Args: {
+          p_id_planificacion?: number
+          p_rbd?: number
+          p_nivel_planificacion?: string
+          p_id_planificacion_mediano_plazo?: number
+          p_recursos?: string
+          p_instrumentos_evaluacion?: string
+          p_inicio_desarrollo_cierre?: string
+          p_estado_planificacion?: number
+          p_anio?: number
+          p_mes?: number
+          p_dia?: number
+          p_datos_codigos?: Json
+          p_rut_usuario?: string
+        }
+        Returns: string
+      }
       gestionar_pla_largo_plazo: {
         Args: {
           p_accion: string
@@ -1961,45 +1960,26 @@ export type Database = {
         }
         Returns: string
       }
-      gestionar_pla_mediano_plazo:
-        | {
-            Args: {
-              p_id_planificacion?: number
-              p_rbd?: number
-              p_nivel_planificacion?: string
-              p_proyecto_eje?: string
-              p_anio?: number
-              p_mes?: number
-              p_dia?: number
-              p_objetivos_generales?: string
-              p_estrategias?: string
-              p_cierre_proyecto?: string
-              p_cantidad_semanas?: number
-              p_fecha_inicio?: string
-              p_estado_planificacion?: number
-              p_datos_bases_curriculares?: Json
-              p_rut_usuario?: string
-            }
-            Returns: string
-          }
-        | {
-            Args: {
-              p_id_planificacion?: number
-              p_rbd?: number
-              p_nivel_planificacion?: string
-              p_proyecto_eje?: string
-              p_anio?: number
-              p_objetivos_generales?: string
-              p_estrategias?: string
-              p_cierre_proyecto?: string
-              p_cantidad_semanas?: number
-              p_fecha_inicio?: string
-              p_estado_planificacion?: number
-              p_datos_bases_curriculares?: Json
-              p_rut_usuario?: string
-            }
-            Returns: string
-          }
+      gestionar_pla_mediano_plazo: {
+        Args: {
+          p_id_planificacion?: number
+          p_rbd?: number
+          p_nivel_planificacion?: string
+          p_proyecto_eje?: string
+          p_anio?: number
+          p_mes?: number
+          p_dia?: number
+          p_objetivos_generales?: string
+          p_estrategias?: string
+          p_cierre_proyecto?: string
+          p_cantidad_semanas?: number
+          p_fecha_inicio?: string
+          p_estado_planificacion?: number
+          p_datos_bases_curriculares?: Json
+          p_rut_usuario?: string
+        }
+        Returns: string
+      }
       registrar_o_modificar_asistencia: {
         Args: {
           p_id_asistencia?: number

@@ -12,16 +12,27 @@ import CardFooter from '@/components/ui/card/CardFooter.vue'
 // supabase
 import { supabase } from '@/services/supabaseClient'
 import type { Tables } from '@/types/supabase'
-const query = supabase.from('tp_cursos').select('*').order('id', { ascending: true })
+const queryNiveles = supabase.from('tp_niveles').select()
+const queryCursos = supabase
+  .from('tp_cursos')
+  .select('*')
+  .order('sigla_nivel_curso', { ascending: true })
+  .order('letra_nivel_curso', { ascending: true })
 
 // data
-const cursos = ref<Tables<'tp_cursos'>[] | null>(null)
+const cursos = ref<Tables<'tp_cursos'>[] | null>([])
+const niveles = ref<Tables<'tp_niveles'>[] | null>([])
 
 // methods
-const fetchSupabase = async () => {
-  const { data, error } = await query
+const fetchCursos = async () => {
+  const { data, error } = await queryCursos
   if (error) console.error(error)
   else cursos.value = data
+}
+const fetchNiveles = async () => {
+  const { data, error } = await queryNiveles
+  if (error) console.error(error)
+  else niveles.value = data
 }
 
 const colorCurso = (nivel: string) => {
@@ -37,9 +48,15 @@ const colorCurso = (nivel: string) => {
   }
 }
 
+const nombreNivel = (sigla: string) => {
+  const nivel = niveles.value?.find((nivel) => nivel.sigla_nivel === sigla)
+  return nivel?.nombre_nivel.toLocaleLowerCase() || ''
+}
+
 // lifecycle
 onMounted(async () => {
-  await fetchSupabase()
+  await fetchNiveles()
+  await fetchCursos()
 })
 </script>
 
@@ -52,7 +69,7 @@ onMounted(async () => {
     </Card>
 
     <Transition name="fade" mode="out-in">
-      <Card class="shadow-xl" v-if="cursos">
+      <Card class="shadow-xl" v-if="cursos?.length">
         <CardHeader></CardHeader>
         <CardContent>
           <ul class="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-5">
@@ -60,13 +77,15 @@ onMounted(async () => {
               <RouterLink
                 :to="{
                   name: 'curso',
-                  params: { siglaCurso: `${curso.sigla_nivel_curso}${curso.letra_nivel_curso}` },
+                  params: {
+                    siglaCurso: curso.nombre_curso,
+                  },
                 }"
               >
                 <Card :class="[colorCurso(curso.sigla_nivel_curso || '')]">
                   <CardHeader>
-                    <CardTitle class="text-center text-sm font-medium">
-                      {{ curso.sigla_nivel_curso }}
+                    <CardTitle class="h-12 text-center text-sm font-medium capitalize">
+                      {{ nombreNivel(curso.sigla_nivel_curso) || '' }}
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
@@ -74,7 +93,7 @@ onMounted(async () => {
                       {{ curso.letra_nivel_curso }}
                     </div>
                   </CardContent>
-                  <CardFooter class="justify-center text-xs text-muted-foreground">
+                  <CardFooter class="h-12 justify-center text-xs text-muted-foreground">
                     Nombre profesor jefe
                   </CardFooter>
                 </Card>

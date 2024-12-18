@@ -8,13 +8,16 @@ const props = defineProps<{ rutAlumno: string }>()
 // utils
 import { formatearFechaNacimiento, formatearNacionalidad } from '@/lib/formato'
 
+// components
+import FormularioObservacionesFonoaudiologicas from './AlumnoComponentObervacionesFonoaudiologicas.vue'
+import FormularioObservacionesConvivencia from './AlumnoComponentObervacionesConvivencia.vue'
+
 // shadcn
 import Card from '@/components/ui/card/Card.vue'
 import CardContent from '@/components/ui/card/CardContent.vue'
 import CardHeader from '@/components/ui/card/CardHeader.vue'
 import CardTitle from '@/components/ui/card/CardTitle.vue'
-import Textarea from '@/components/ui/textarea/Textarea.vue'
-import Label from '@/components/ui/label/Label.vue'
+
 import Button from '@/components/ui/button/Button.vue'
 import CardDescription from '@/components/ui/card/CardDescription.vue'
 // icons
@@ -173,32 +176,10 @@ onMounted(async () => {
           </CardHeader>
           <CardContent class="grid grid-cols-1 gap-4 lg:grid-cols-2">
             <!-- Observaciones fonoaudiológicas -->
-            <div class="grid w-full gap-1.5">
-              <Label for="message-2">
-                <div class="text-sm font-semibold tracking-tighter text-gray-400">
-                  Fonoaudiológicas
-                </div>
-              </Label>
-              <Textarea id="message-2" placeholder="Escribe la observacion acá." rows="6" />
-              <div class="flex gap-1">
-                <Button>Guardar</Button>
-                <Button variant="outline">Ver todas las observaciones</Button>
-              </div>
-            </div>
+            <FormularioObservacionesFonoaudiologicas :alumno />
 
             <!-- Registro de convivencia escolar -->
-            <div class="grid w-full gap-1.5">
-              <Label for="message-2">
-                <div class="text-sm font-semibold tracking-tighter text-gray-400">
-                  Convivencia escolar
-                </div>
-              </Label>
-              <Textarea id="message-2" placeholder="Escribe la observacion acá." rows="6" />
-              <div class="flex gap-1">
-                <Button>Guardar</Button>
-                <Button variant="outline">Ver todas las observaciones</Button>
-              </div>
-            </div>
+            <FormularioObservacionesConvivencia :alumno />
           </CardContent>
         </Card>
       </CardContent>
