@@ -1,10 +1,38 @@
 <script setup lang="ts">
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import Button from '@/components/ui/button/Button.vue'
 import CardDescription from '@/components/ui/card/CardDescription.vue'
 import Separator from '@/components/ui/separator/Separator.vue'
+import { Loader } from 'lucide-vue-next'
+
+import * as XLSX from 'xlsx'
+
+const submitHandler = async (data) => {
+  new Promise<void>((resolve, reject) => {
+    const firstFile = data.license[0].file
+    console.log(firstFile)
+    const reader = new FileReader()
+    reader.readAsArrayBuffer(firstFile)
+    reader.onload = (event) => {
+      // evento que se dispara cuando el archivo es leido correctamente
+      if (!event.target) {
+        // si no hay un evento, no hago nada
+        reject(new Error('Error al leer el archivo'))
+        return
+      }
+      const workbook = XLSX.read(event.target.result, {
+        type: 'binary',
+        cellText: false,
+        cellDates: true,
+      }) // creo un nuevo libro de excel
+      const firstSheetName = workbook.SheetNames[0] // obtengo el nombre de la primera hoja
+      const firstSheet = workbook.Sheets[firstSheetName] // obtengo la primera hoja
+      const sheetData = XLSX.utils.sheet_to_json(firstSheet, { raw: false, dateNF: 'yyyymmdd' }) // convierto la data de la hoja en un arreglo de objetos
+      console.log(sheetData)
+      resolve()
+    }
+  })
+}
 </script>
 
 <template>
@@ -20,13 +48,22 @@ import Separator from '@/components/ui/separator/Separator.vue'
         <Separator />
       </CardHeader>
       <CardContent>
-        <div class="grid w-full max-w-sm items-center gap-1.5">
-          <Label for="picture">Nomina (Archivo excel)</Label>
-          <div class="flex w-full max-w-sm items-center gap-1.5">
-            <Input id="picture" type="file" />
-            <Button> Procesar </Button>
-          </div>
-        </div>
+        <FormKit id="licenseForm" type="form" @submit="submitHandler" :actions="false">
+          <template #default="{ state }">
+            <FormKit
+              type="file"
+              label="Nomina"
+              name="license"
+              help="Solo un archivo a la vez del tipo .xls"
+              accept=".xls"
+              validation="required"
+            />
+            <Button :disabled="state.loading" class="mx-auto">
+              <Loader v-if="state.loading" class="mr-2 h-6 w-6 animate-spin" />
+              Procesar
+            </Button>
+          </template>
+        </FormKit>
       </CardContent>
     </Card>
   </div>
