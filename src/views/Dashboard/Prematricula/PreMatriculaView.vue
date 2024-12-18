@@ -3,6 +3,8 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import Button from '@/components/ui/button/Button.vue'
+import CardDescription from '@/components/ui/card/CardDescription.vue'
+import Separator from '@/components/ui/separator/Separator.vue'
 </script>
 
 <template>
@@ -12,6 +14,10 @@ import Button from '@/components/ui/button/Button.vue'
         <CardTitle>
           <p>Pre matricula</p>
         </CardTitle>
+        <CardDescription>
+          Realiza la carga de una nomina de alumnos para la pre-matricula.
+        </CardDescription>
+        <Separator />
       </CardHeader>
       <CardContent>
         <div class="grid w-full max-w-sm items-center gap-1.5">

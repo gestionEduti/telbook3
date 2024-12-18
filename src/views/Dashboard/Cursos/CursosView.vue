@@ -12,6 +12,8 @@ import CardFooter from '@/components/ui/card/CardFooter.vue'
 // supabase
 import { supabase } from '@/services/supabaseClient'
 import type { Tables } from '@/types/supabase'
+import CardDescription from '@/components/ui/card/CardDescription.vue'
+import Separator from '@/components/ui/separator/Separator.vue'
 const queryNiveles = supabase.from('tp_niveles').select()
 const queryCursos = supabase
   .from('tp_cursos')
@@ -62,15 +64,13 @@ onMounted(async () => {
 
 <template>
   <div class="flex-1 space-y-3 px-4 py-8 pt-3">
-    <Card>
-      <CardContent class="mt-4 flex items-end justify-between space-y-2">
-        <h2 class="text-3xl font-bold tracking-tight">Cursos</h2>
-      </CardContent>
-    </Card>
-
     <Transition name="fade" mode="out-in">
       <Card class="shadow-xl" v-if="cursos?.length">
-        <CardHeader></CardHeader>
+        <CardHeader>
+          <CardTitle class="flex items-center justify-between"> Cursos </CardTitle>
+          <CardDescription>Todos los cursos del establecimiento.</CardDescription>
+          <Separator />
+        </CardHeader>
         <CardContent>
           <ul class="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-5">
             <li v-for="curso in cursos" :key="curso.id">
@@ -101,7 +101,9 @@ onMounted(async () => {
             </li>
           </ul>
         </CardContent>
-        <CardFooter></CardFooter>
+        <CardFooter>
+          <p class="mx-auto text-sm text-muted-foreground">{{ cursos.length }} cursos en total.</p>
+        </CardFooter>
       </Card>
     </Transition>
   </div>

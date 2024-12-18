@@ -26,6 +26,7 @@ import CardContent from '@/components/ui/card/CardContent.vue'
 import CardHeader from '@/components/ui/card/CardHeader.vue'
 import CardTitle from '@/components/ui/card/CardTitle.vue'
 import CardDescription from '@/components/ui/card/CardDescription.vue'
+import Separator from '@/components/ui/separator/Separator.vue'
 // icons
 import {
   Download,
@@ -103,6 +104,7 @@ onMounted(async () => {
             </div>
           </CardTitle>
           <CardDescription>Lista de matriculas del establecimiento.</CardDescription>
+          <Separator />
         </CardHeader>
         <CardContent>
           <Table class="border border-slate-300 bg-white">

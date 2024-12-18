@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { ref } from 'vue'
 
 // shadcn
 import Button from '@/components/ui/button/Button.vue'
@@ -14,6 +14,17 @@ import AlertDialogDescription from '@/components/ui/alert-dialog/AlertDialogDesc
 import AlertDialogFooter from '@/components/ui/alert-dialog/AlertDialogFooter.vue'
 import AlertDialogCancel from '@/components/ui/alert-dialog/AlertDialogCancel.vue'
 import AlertDialogAction from '@/components/ui/alert-dialog/AlertDialogAction.vue'
+import Dialog from '@/components/ui/dialog/Dialog.vue'
+import DialogTrigger from '@/components/ui/dialog/DialogTrigger.vue'
+import DialogContent from '@/components/ui/dialog/DialogContent.vue'
+import DialogHeader from '@/components/ui/dialog/DialogHeader.vue'
+import DialogTitle from '@/components/ui/dialog/DialogTitle.vue'
+import DialogDescription from '@/components/ui/dialog/DialogDescription.vue'
+import Card from '@/components/ui/card/Card.vue'
+import CardContent from '@/components/ui/card/CardContent.vue'
+import CardHeader from '@/components/ui/card/CardHeader.vue'
+import CardDescription from '@/components/ui/card/CardDescription.vue'
+import { ArchiveX } from 'lucide-vue-next'
 import { useToast } from '@/components/ui/toast/use-toast'
 const { toast } = useToast()
 
@@ -37,22 +48,8 @@ const fecha_anotacion = useDateFormat(useNow(), 'YYYYMMDD')
 const props = defineProps<{ alumno: Tables<'mv_libro_matricula'> }>()
 
 // supabase
-import Dialog from '@/components/ui/dialog/Dialog.vue'
-import DialogTrigger from '@/components/ui/dialog/DialogTrigger.vue'
-import DialogContent from '@/components/ui/dialog/DialogContent.vue'
-import DialogHeader from '@/components/ui/dialog/DialogHeader.vue'
-import DialogTitle from '@/components/ui/dialog/DialogTitle.vue'
-import DialogDescription from '@/components/ui/dialog/DialogDescription.vue'
-import DialogFooter from '@/components/ui/dialog/DialogFooter.vue'
-
-// supabase
 import { supabase } from '@/services/supabaseClient'
 import type { Tables } from '@/types/supabase'
-import Card from '@/components/ui/card/Card.vue'
-import CardContent from '@/components/ui/card/CardContent.vue'
-import CardHeader from '@/components/ui/card/CardHeader.vue'
-import CardTitle from '@/components/ui/card/CardTitle.vue'
-import CardDescription from '@/components/ui/card/CardDescription.vue'
 
 // methods
 const insertar = async () => {
@@ -144,14 +141,15 @@ const fetchObsevacionesFonoaudiologicas = async () => {
           class="max-h-[90dvh] grid-rows-[auto_minmax(0,1fr)_auto] p-0 sm:max-w-[425px]"
         >
           <DialogHeader class="p-6 pb-0">
-            <DialogTitle>Todas las observaciones</DialogTitle>
+            <DialogTitle>Observaciones</DialogTitle>
             <DialogDescription>
-              Make changes to your profile here. Click save when you're done.
+              Lista de todas las observaciones fonoaudiologicas realizadas al alumno durante el año
+              actual.
             </DialogDescription>
           </DialogHeader>
           <div class="grid gap-4 overflow-y-auto px-6 py-4">
             <div class="flex h-[300dvh] flex-col justify-between">
-              <ul class="grid gap-4">
+              <ul class="grid gap-4" v-if="observacionesFonoaudiologicas?.length">
                 <li v-for="item in observacionesFonoaudiologicas" :key="item.id">
                   <Card>
                     <CardHeader>
@@ -163,6 +161,12 @@ const fetchObsevacionesFonoaudiologicas = async () => {
                   </Card>
                 </li>
               </ul>
+              <div v-else class="flex flex-col items-center justify-center py-8">
+                <ArchiveX clip="text-gray-100" />
+                <p class="mx-auto text-sm text-muted-foreground">
+                  El alumno no tiene observaciones registradas.
+                </p>
+              </div>
             </div>
           </div>
         </DialogContent>

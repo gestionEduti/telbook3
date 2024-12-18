@@ -17,7 +17,7 @@ import Card from '@/components/ui/card/Card.vue'
 import CardContent from '@/components/ui/card/CardContent.vue'
 import CardHeader from '@/components/ui/card/CardHeader.vue'
 import CardTitle from '@/components/ui/card/CardTitle.vue'
-
+import Separator from '@/components/ui/separator/Separator.vue'
 import Button from '@/components/ui/button/Button.vue'
 import CardDescription from '@/components/ui/card/CardDescription.vue'
 // icons
@@ -36,7 +36,7 @@ const querySelect = supabase
 const alumno = ref<Tables<'mv_libro_matricula'> | null>(null)
 
 // methods
-const fetchAlumnoSupabase = async () => {
+const fetchAlumno = async () => {
   const { data, error } = await querySelect
   if (error) console.error(error)
   else alumno.value = data
@@ -44,7 +44,7 @@ const fetchAlumnoSupabase = async () => {
 
 // lifecycle
 onMounted(async () => {
-  await fetchAlumnoSupabase()
+  await fetchAlumno()
 })
 </script>
 
@@ -63,6 +63,7 @@ onMounted(async () => {
           </RouterLink>
         </CardTitle>
         <CardDescription>Informacion y observaciones del alumno.</CardDescription>
+        <Separator />
       </CardHeader>
 
       <!-- content -->

@@ -60,6 +60,7 @@ import Separator from '@/components/ui/separator/Separator.vue'
               {{ establecimiento?.razon_social?.toLocaleLowerCase() }}
             </p>
             <div class="text-sm font-semibold tracking-tighter text-gray-400">Cursos</div>
+            <p class="mb-3 capitalize">No tienes cursos asignados</p>
           </CardContent>
         </Card>
       </Transition>
@@ -70,7 +71,7 @@ import Separator from '@/components/ui/separator/Separator.vue'
             <CardTitle>Ultimas actividades</CardTitle>
             <Separator />
           </CardHeader>
-          <CardContent> </CardContent>
+          <CardContent> No se registran actividades recientemente. </CardContent>
         </Card>
       </Transition>
     </div>

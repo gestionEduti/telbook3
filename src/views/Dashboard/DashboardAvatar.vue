@@ -53,7 +53,7 @@ const logout = async () => {
       </DropdownMenuLabel>
       <DropdownMenuSeparator />
       <DropdownMenuGroup>
-        <DropdownMenuItem @click="$router.push('perfil')">
+        <DropdownMenuItem @click="$router.push({ name: 'perfil' })">
           <Contact class="h-4 w-4" />
           <span class="ml-2">Perfil</span>
         </DropdownMenuItem>

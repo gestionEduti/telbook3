@@ -21,6 +21,7 @@ import CardContent from '@/components/ui/card/CardContent.vue'
 import CardHeader from '@/components/ui/card/CardHeader.vue'
 import CardDescription from '@/components/ui/card/CardDescription.vue'
 import CardTitle from '@/components/ui/card/CardTitle.vue'
+import Separator from '@/components/ui/separator/Separator.vue'
 
 // supabase
 import { supabase } from '@/services/supabaseClient'
@@ -54,6 +55,7 @@ onMounted(async () => {
       <CardHeader>
         <CardTitle>Alumnos</CardTitle>
         <CardDescription>Lista de alumnos del curso.</CardDescription>
+        <Separator />
       </CardHeader>
       <CardContent>
         <Table class="border border-slate-300 bg-white">
