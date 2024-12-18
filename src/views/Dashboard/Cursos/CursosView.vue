@@ -57,8 +57,7 @@ const nombreNivel = (sigla: string) => {
 
 // lifecycle
 onMounted(async () => {
-  await fetchNiveles()
-  await fetchCursos()
+  await Promise.all([fetchNiveles(), fetchCursos()])
 })
 </script>
 

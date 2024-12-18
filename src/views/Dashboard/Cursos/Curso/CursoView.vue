@@ -44,8 +44,7 @@ const fetchNiveles = async () => {
 
 // lifecycle
 onMounted(async () => {
-  await fetchNiveles()
-  await fetchCurso()
+  await Promise.all([fetchNiveles(), fetchCurso()])
 })
 </script>
 
