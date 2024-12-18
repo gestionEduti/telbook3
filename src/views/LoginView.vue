@@ -11,19 +11,32 @@ const { login } = useAuthStore()
 
 // shadcn
 import Button from '@/components/ui/button/Button.vue'
-import Input from '@/components/ui/input/Input.vue'
-import Label from '@/components/ui/label/Label.vue'
+import { Loader } from 'lucide-vue-next'
+import { useToast } from '@/components/ui/toast/use-toast'
+const { toast } = useToast()
 
 // data
-const loginForm = ref({
-  email: 'sergrodrig@gmail.com',
-  password: '123456',
-})
+const dataFormulario = ref({ email: '', password: '' })
+
+// TS interface
+interface FormData {
+  email: string
+  password: string
+}
 
 // methods
-const handleForm = async () => {
-  const error = await login(loginForm.value)
+const handleForm = async (formData: FormData) => {
+  const error = await login(formData)
   if (!error) return router.push({ name: 'dashboard' })
+  else {
+    toast({
+      duration: 2000,
+      title: 'Error',
+      description: 'Email ó contrasesa incorrectos',
+      variant: 'destructive',
+    })
+    dataFormulario.value.password = ''
+  }
 }
 </script>
 
@@ -65,25 +78,38 @@ const handleForm = async () => {
           <h1 class="text-3xl font-bold">Bienvenido</h1>
           <p class="text-balance text-muted-foreground">Ingresa a tu cuenta para continuar</p>
         </div>
-        <div class="grid gap-4">
-          <div class="grid gap-2">
-            <Label for="email">Email</Label>
-            <Input
-              id="email"
+        <FormKit
+          v-model="dataFormulario"
+          type="form"
+          @submit="handleForm"
+          :config="{ validationVisibility: 'submit' }"
+          :actions="false"
+        >
+          <template #default="{ state }">
+            <FormKit
               type="email"
-              placeholder="m@example.com"
-              required
-              v-model="loginForm.email"
+              name="email"
+              id="email"
+              label="Email"
+              placeholder="profesor@mail.com"
+              validation="required|email"
             />
-          </div>
-          <div class="grid gap-2">
-            <div class="flex items-center">
-              <Label for="password">Password</Label>
+            <FormKit
+              type="password"
+              name="password"
+              id="password"
+              label="Contraseña"
+              placeholder="tu contraseña"
+              validation="required"
+            />
+            <div class="flex">
+              <Button :disabled="state.loading" class="mx-auto">
+                <Loader v-if="state.loading" class="mr-2 h-6 w-6 animate-spin" />
+                Ingresar
+              </Button>
             </div>
-            <Input id="password" type="password" required v-model="loginForm.password" />
-          </div>
-          <Button class="w-full" @click.stop="handleForm"> Ingresar </Button>
-        </div>
+          </template>
+        </FormKit>
       </div>
     </div>
   </div>

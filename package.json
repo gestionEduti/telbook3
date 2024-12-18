@@ -17,6 +17,7 @@
     "supabase:types": "supabase gen types --lang=typescript --project-id jhzweohhdshzyvjmkhce --schema public > src/types/supabase.ts"
   },
   "dependencies": {
+    "@formkit/vue": "^1.6.9",
     "@supabase/supabase-js": "^2.46.1",
     "@vueuse/core": "^11.3.0",
     "class-variance-authority": "^0.7.1",
