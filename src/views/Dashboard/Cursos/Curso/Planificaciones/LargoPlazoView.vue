@@ -12,7 +12,7 @@ import TableCell from '@/components/ui/table/TableCell.vue'
 import TableRow from '@/components/ui/table/TableRow.vue'
 import Separator from '@/components/ui/separator/Separator.vue'
 // icons
-import { CalendarPlus2, Download, Trash2 } from 'lucide-vue-next'
+import { CalendarPlus2, Download, Save, Trash2 } from 'lucide-vue-next'
 
 // utils
 import { formatearFechaPlanificacionLargoPlazo } from '@/lib/formato'
