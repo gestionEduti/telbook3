@@ -10,6 +10,7 @@ import Table from '@/components/ui/table/Table.vue'
 import TableBody from '@/components/ui/table/TableBody.vue'
 import TableCell from '@/components/ui/table/TableCell.vue'
 import TableRow from '@/components/ui/table/TableRow.vue'
+import Separator from '@/components/ui/separator/Separator.vue'
 // icons
 import { CalendarPlus2, Download, Trash2 } from 'lucide-vue-next'
 
@@ -263,6 +264,7 @@ const planificacionesPorMes = (mes: number) => {
         </div>
       </CardTitle>
       <CardDescription>Descripcion planificacion largo plazo.</CardDescription>
+      <Separator />
     </CardHeader>
     <CardContent>
       <!-- lista meses -->

@@ -5,6 +5,7 @@ import CardContent from '@/components/ui/card/CardContent.vue'
 import CardDescription from '@/components/ui/card/CardDescription.vue'
 import CardHeader from '@/components/ui/card/CardHeader.vue'
 import CardTitle from '@/components/ui/card/CardTitle.vue'
+import Separator from '@/components/ui/separator/Separator.vue'
 </script>
 
 <template>
@@ -12,6 +13,7 @@ import CardTitle from '@/components/ui/card/CardTitle.vue'
     <CardHeader>
       <CardTitle>Evaluaciones personalizadas</CardTitle>
       <CardDescription>Descripcion evaluaciones personalizadas.</CardDescription>
+      <Separator />
     </CardHeader>
     <CardContent></CardContent>
   </Card>

@@ -25,6 +25,7 @@ import Label from '@/components/ui/label/Label.vue'
 import DialogFooter from '@/components/ui/dialog/DialogFooter.vue'
 import DialogClose from '@/components/ui/dialog/DialogClose.vue'
 import { toast } from '@/components/ui/toast'
+import Separator from '@/components/ui/separator/Separator.vue'
 // icons
 import { Pen } from 'lucide-vue-next'
 
@@ -59,6 +60,7 @@ onMounted(async () => {
     <CardHeader>
       <CardTitle>Asistencia diaria</CardTitle>
       <CardDescription>Descripcion asistencia diaria.</CardDescription>
+      <Separator />
     </CardHeader>
     <CardContent>
       <ul class="mb-3 divide-y">
