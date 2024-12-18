@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 
 // shadcn
 import Button from '@/components/ui/button/Button.vue'
@@ -23,7 +23,8 @@ import { useAuthStore } from '@/stores/auth'
 const { establecimiento, perfil } = storeToRefs(useAuthStore())
 
 // data
-const observacionFonoaudiologica = ref<string>('')
+const nuevaObservacion = ref<string>('')
+const observacionesFonoaudiologicas = ref<Tables<'mv_anotaciones_fonoaudiologicas'>[] | null>([])
 
 // vueuse
 import { useDateFormat, useNow } from '@vueuse/core'
@@ -36,23 +37,35 @@ const fecha_anotacion = useDateFormat(useNow(), 'YYYYMMDD')
 const props = defineProps<{ alumno: Tables<'mv_libro_matricula'> }>()
 
 // supabase
+import Dialog from '@/components/ui/dialog/Dialog.vue'
+import DialogTrigger from '@/components/ui/dialog/DialogTrigger.vue'
+import DialogContent from '@/components/ui/dialog/DialogContent.vue'
+import DialogHeader from '@/components/ui/dialog/DialogHeader.vue'
+import DialogTitle from '@/components/ui/dialog/DialogTitle.vue'
+import DialogDescription from '@/components/ui/dialog/DialogDescription.vue'
+import DialogFooter from '@/components/ui/dialog/DialogFooter.vue'
+
+// supabase
 import { supabase } from '@/services/supabaseClient'
 import type { Tables } from '@/types/supabase'
-const insertar = async () => {
-  const { data, error } = await supabase
-    .from('mv_anotaciones_fonoaudiologicas')
-    .insert({
-      anio: parseInt(anio.value),
-      descripcion_anotacion: observacionFonoaudiologica.value,
-      dia: parseInt(dia.value),
-      fecha_anotacion: String(fecha_anotacion.value),
-      mes: parseInt(mes.value),
-      numero_matricula: props.alumno.numero_matricula_alumno,
-      rbd_escuela: establecimiento.value?.rbd,
-      rut_anotador: perfil.value?.rut_usuario,
-    })
-    .select()
+import Card from '@/components/ui/card/Card.vue'
+import CardContent from '@/components/ui/card/CardContent.vue'
+import CardHeader from '@/components/ui/card/CardHeader.vue'
+import CardTitle from '@/components/ui/card/CardTitle.vue'
+import CardDescription from '@/components/ui/card/CardDescription.vue'
 
+// methods
+const insertar = async () => {
+  const { error } = await supabase.from('mv_anotaciones_fonoaudiologicas').insert({
+    anio: parseInt(anio.value),
+    descripcion_anotacion: nuevaObservacion.value,
+    dia: parseInt(dia.value),
+    fecha_anotacion: String(fecha_anotacion.value),
+    mes: parseInt(mes.value),
+    numero_matricula: props.alumno.numero_matricula_alumno,
+    rbd_escuela: establecimiento.value?.rbd,
+    rut_anotador: perfil.value?.rut_usuario,
+  })
   if (error) {
     console.error(error)
     toast({
@@ -70,6 +83,22 @@ const insertar = async () => {
     })
   }
 }
+const fetchObsevacionesFonoaudiologicas = async () => {
+  if (props.alumno.numero_matricula_alumno) {
+    const { data, error } = await supabase
+      .from('mv_anotaciones_fonoaudiologicas')
+      .select()
+      .eq('numero_matricula', props.alumno.numero_matricula_alumno)
+    if (error) console.error(error)
+    else observacionesFonoaudiologicas.value = data
+  } else {
+    console.error('No se pudo obtener el numero de matricula del alumno.')
+  }
+}
+
+// onMounted(async () => {
+//   await fetchObsevacionesFonoaudiologicas()
+// })
 </script>
 
 <template>
@@ -78,12 +107,13 @@ const insertar = async () => {
       <div class="text-sm font-semibold tracking-tighter text-gray-400">Fonoaudiológicas</div>
     </Label>
     <Textarea
-      v-model="observacionFonoaudiologica"
+      v-model="nuevaObservacion"
       id="message-2"
       placeholder="Escribe la observacion acá."
       rows="6"
     />
     <div class="flex gap-1">
+      <!-- boton guardar -->
       <AlertDialog>
         <AlertDialogTrigger>
           <Button>Guardar</Button>
@@ -102,7 +132,41 @@ const insertar = async () => {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-      <Button variant="outline">Ver todas las observaciones</Button>
+
+      <!-- boton ver todo -->
+      <Dialog>
+        <DialogTrigger as-child>
+          <Button variant="outline" @click="fetchObsevacionesFonoaudiologicas"
+            >Ver todas las observaciones</Button
+          >
+        </DialogTrigger>
+        <DialogContent
+          class="max-h-[90dvh] grid-rows-[auto_minmax(0,1fr)_auto] p-0 sm:max-w-[425px]"
+        >
+          <DialogHeader class="p-6 pb-0">
+            <DialogTitle>Todas las observaciones</DialogTitle>
+            <DialogDescription>
+              Make changes to your profile here. Click save when you're done.
+            </DialogDescription>
+          </DialogHeader>
+          <div class="grid gap-4 overflow-y-auto px-6 py-4">
+            <div class="flex h-[300dvh] flex-col justify-between">
+              <ul class="grid gap-4">
+                <li v-for="item in observacionesFonoaudiologicas" :key="item.id">
+                  <Card>
+                    <CardHeader>
+                      <CardDescription> Observacion de {{ item.rut_anotador }} </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      {{ item.descripcion_anotacion || 'Sin observaciones' }}
+                    </CardContent>
+                  </Card>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   </div>
 </template>
