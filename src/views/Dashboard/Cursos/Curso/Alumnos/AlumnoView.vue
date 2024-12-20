@@ -161,6 +161,7 @@ onMounted(async () => {
                     ', ' +
                     alumno.region_alumno?.toLowerCase()
                   }}
+                  <!-- TODO: manejar de mejor manera cuando no venga un dato como la region por que me aparee UNDEFINED -->
                 </p>
               </div>
             </CardContent>

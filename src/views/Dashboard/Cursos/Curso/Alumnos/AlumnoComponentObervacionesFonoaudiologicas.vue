@@ -24,7 +24,7 @@ import Card from '@/components/ui/card/Card.vue'
 import CardContent from '@/components/ui/card/CardContent.vue'
 import CardHeader from '@/components/ui/card/CardHeader.vue'
 import CardDescription from '@/components/ui/card/CardDescription.vue'
-import { ArchiveX } from 'lucide-vue-next'
+import { ListX } from 'lucide-vue-next'
 import { useToast } from '@/components/ui/toast/use-toast'
 const { toast } = useToast()
 
@@ -159,11 +159,9 @@ const fetchObsevacionesFonoaudiologicas = async () => {
                   </Card>
                 </li>
               </ul>
-              <div v-else class="flex flex-col items-center justify-center py-8">
-                <ArchiveX clip="text-gray-100" />
-                <p class="mx-auto text-sm text-muted-foreground">
-                  El alumno no tiene observaciones registradas.
-                </p>
+              <div v-else class="flex flex-col items-center justify-center space-y-2 py-8">
+                <ListX :size="32" class="text-gray-500" />
+                <p class="text-muted-foreground">No tiene observaciones.</p>
               </div>
             </div>
           </div>
