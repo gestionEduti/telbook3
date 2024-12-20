@@ -30,7 +30,6 @@ const handleForm = async (formData: FormData) => {
   if (!error) return router.push({ name: 'dashboard' })
   else {
     toast({
-      duration: 2000,
       title: 'Error',
       description: 'Email ó contrasesa incorrectos',
       variant: 'destructive',
