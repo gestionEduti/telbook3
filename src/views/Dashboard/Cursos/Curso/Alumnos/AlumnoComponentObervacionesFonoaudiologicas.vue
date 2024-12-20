@@ -39,9 +39,9 @@ const observacionesFonoaudiologicas = ref<Tables<'mv_anotaciones_fonoaudiologica
 
 // vueuse
 import { useDateFormat, useNow } from '@vueuse/core'
-const anio = useDateFormat(useNow(), 'YYYY')
-const mes = useDateFormat(useNow(), 'MM')
-const dia = useDateFormat(useNow(), 'DD')
+const year = useDateFormat(useNow(), 'YYYY')
+const month = useDateFormat(useNow(), 'MM')
+const day = useDateFormat(useNow(), 'DD')
 const fecha_anotacion = useDateFormat(useNow(), 'YYYYMMDD')
 
 // props
@@ -54,11 +54,11 @@ import type { Tables } from '@/types/supabase'
 // methods
 const insertar = async () => {
   const { error } = await supabase.from('mv_anotaciones_fonoaudiologicas').insert({
-    anio: parseInt(anio.value),
+    anio: year.value, // TODO: revisar por que anio sale con error
     descripcion_anotacion: nuevaObservacion.value,
-    dia: parseInt(dia.value),
+    dia: day.value,
     fecha_anotacion: String(fecha_anotacion.value),
-    mes: parseInt(mes.value),
+    mes: month.value,
     numero_matricula: props.alumno.numero_matricula_alumno,
     rbd_escuela: establecimiento.value?.rbd,
     rut_anotador: perfil.value?.rut_usuario,
@@ -66,14 +66,12 @@ const insertar = async () => {
   if (error) {
     console.error(error)
     toast({
-      duration: 2000,
       title: 'Error',
       description: 'Hubo un problema en la creacion de la observación.',
       variant: 'destructive',
     })
   } else {
     toast({
-      duration: 2000,
       title: 'Exito',
       description: 'Observacion creada exitosamente.',
       variant: 'exitoso',
