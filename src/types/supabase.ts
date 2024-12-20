@@ -121,7 +121,15 @@ export type Database = {
           tipo_tel_alumno?: string | null
           vive_con_alumno?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "alumnos_2024_tp_nivel_educacional_padres__fk"
+            columns: ["nivel_educacional_padre"]
+            isOneToOne: false
+            referencedRelation: "tp_nivel_educacional_padres"
+            referencedColumns: ["descripcion_educacion"]
+          },
+        ]
       }
       log_asistencia_modificaciones: {
         Row: {
@@ -653,7 +661,7 @@ export type Database = {
           email_apoderado_alumno: string | null
           estado_alumno: string | null
           fecha_incorporacion_alumno: string | null
-          fecha_nacimiento_alumno: string | null
+          fecha_nacimiento_alumno: string
           fecha_retiro_escuela: string | null
           id: number
           jornada_alumno: string | null
@@ -692,7 +700,7 @@ export type Database = {
           email_apoderado_alumno?: string | null
           estado_alumno?: string | null
           fecha_incorporacion_alumno?: string | null
-          fecha_nacimiento_alumno?: string | null
+          fecha_nacimiento_alumno: string
           fecha_retiro_escuela?: string | null
           id?: number
           jornada_alumno?: string | null
@@ -731,7 +739,7 @@ export type Database = {
           email_apoderado_alumno?: string | null
           estado_alumno?: string | null
           fecha_incorporacion_alumno?: string | null
-          fecha_nacimiento_alumno?: string | null
+          fecha_nacimiento_alumno?: string
           fecha_retiro_escuela?: string | null
           id?: number
           jornada_alumno?: string | null
@@ -845,211 +853,6 @@ export type Database = {
           },
           {
             foreignKeyName: "fk_mv_libro_matricula_vive_con"
-            columns: ["vive_con_alumno"]
-            isOneToOne: false
-            referencedRelation: "tp_vive_con"
-            referencedColumns: ["descripcion_vive_con"]
-          },
-        ]
-      }
-      mv_libro_matricula_pm: {
-        Row: {
-          anio_libro: number | null
-          apellidos_alumno: string | null
-          apoderado_tutor_alumno: string | null
-          causa_retiro_alumno: string | null
-          codigo_estado_alumno: number | null
-          comuna_alumno: string | null
-          created_at: string | null
-          domicilio_alumno: string | null
-          email_apoderado_alumno: string | null
-          estado_alumno: string | null
-          fecha_incorporacion_alumno: string | null
-          fecha_nacimiento_alumno: string | null
-          fecha_retiro_escuela: string | null
-          id: number
-          jornada_alumno: string | null
-          nacionalidad_alumno: string | null
-          nivel_alumno: string | null
-          nivel_educacional_madre: string | null
-          nivel_educacional_padre: string | null
-          nombre_apoderado_alumno: string | null
-          nombre_completo_alumno: string | null
-          nombres_alumno: string | null
-          numero_lista_nivel_alumno: number | null
-          numero_matricula_alumno: number | null
-          parentezco_con_alumno: string | null
-          problema_aprendizaje_alumno: string | null
-          procedencia_alumno: string | null
-          pueblo_originario_alumno: string | null
-          rbd_establecimiento: number | null
-          region_alumno: string | null
-          rut_alumno: string | null
-          rut_profesor_alumno: string | null
-          sexo_alumno: string | null
-          situacion_social_alumno: string | null
-          telefono_apoderado_alumno: string | null
-          tipo_tel_alumno: string | null
-          vive_con_alumno: string | null
-        }
-        Insert: {
-          anio_libro?: number | null
-          apellidos_alumno?: string | null
-          apoderado_tutor_alumno?: string | null
-          causa_retiro_alumno?: string | null
-          codigo_estado_alumno?: number | null
-          comuna_alumno?: string | null
-          created_at?: string | null
-          domicilio_alumno?: string | null
-          email_apoderado_alumno?: string | null
-          estado_alumno?: string | null
-          fecha_incorporacion_alumno?: string | null
-          fecha_nacimiento_alumno?: string | null
-          fecha_retiro_escuela?: string | null
-          id?: number
-          jornada_alumno?: string | null
-          nacionalidad_alumno?: string | null
-          nivel_alumno?: string | null
-          nivel_educacional_madre?: string | null
-          nivel_educacional_padre?: string | null
-          nombre_apoderado_alumno?: string | null
-          nombre_completo_alumno?: string | null
-          nombres_alumno?: string | null
-          numero_lista_nivel_alumno?: number | null
-          numero_matricula_alumno?: number | null
-          parentezco_con_alumno?: string | null
-          problema_aprendizaje_alumno?: string | null
-          procedencia_alumno?: string | null
-          pueblo_originario_alumno?: string | null
-          rbd_establecimiento?: number | null
-          region_alumno?: string | null
-          rut_alumno?: string | null
-          rut_profesor_alumno?: string | null
-          sexo_alumno?: string | null
-          situacion_social_alumno?: string | null
-          telefono_apoderado_alumno?: string | null
-          tipo_tel_alumno?: string | null
-          vive_con_alumno?: string | null
-        }
-        Update: {
-          anio_libro?: number | null
-          apellidos_alumno?: string | null
-          apoderado_tutor_alumno?: string | null
-          causa_retiro_alumno?: string | null
-          codigo_estado_alumno?: number | null
-          comuna_alumno?: string | null
-          created_at?: string | null
-          domicilio_alumno?: string | null
-          email_apoderado_alumno?: string | null
-          estado_alumno?: string | null
-          fecha_incorporacion_alumno?: string | null
-          fecha_nacimiento_alumno?: string | null
-          fecha_retiro_escuela?: string | null
-          id?: number
-          jornada_alumno?: string | null
-          nacionalidad_alumno?: string | null
-          nivel_alumno?: string | null
-          nivel_educacional_madre?: string | null
-          nivel_educacional_padre?: string | null
-          nombre_apoderado_alumno?: string | null
-          nombre_completo_alumno?: string | null
-          nombres_alumno?: string | null
-          numero_lista_nivel_alumno?: number | null
-          numero_matricula_alumno?: number | null
-          parentezco_con_alumno?: string | null
-          problema_aprendizaje_alumno?: string | null
-          procedencia_alumno?: string | null
-          pueblo_originario_alumno?: string | null
-          rbd_establecimiento?: number | null
-          region_alumno?: string | null
-          rut_alumno?: string | null
-          rut_profesor_alumno?: string | null
-          sexo_alumno?: string | null
-          situacion_social_alumno?: string | null
-          telefono_apoderado_alumno?: string | null
-          tipo_tel_alumno?: string | null
-          vive_con_alumno?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "fk_mv_libro_matricula_descripcion_comuna_lm"
-            columns: ["comuna_alumno"]
-            isOneToOne: false
-            referencedRelation: "tp_regiones_comunas_chile"
-            referencedColumns: ["nombre_comuna"]
-          },
-          {
-            foreignKeyName: "fk_mv_libro_matricula_genero_alumno_lm"
-            columns: ["sexo_alumno"]
-            isOneToOne: false
-            referencedRelation: "tp_genero_alumno"
-            referencedColumns: ["descripcion_genero_alumno"]
-          },
-          {
-            foreignKeyName: "fk_mv_libro_matricula_nacionalidad_alumno_lm"
-            columns: ["nacionalidad_alumno"]
-            isOneToOne: false
-            referencedRelation: "tp_nacionalidad_alumno"
-            referencedColumns: ["descripcion_nacionalidad"]
-          },
-          {
-            foreignKeyName: "fk_mv_libro_matricula_nivel_edu_madre_lm"
-            columns: ["nivel_educacional_madre"]
-            isOneToOne: false
-            referencedRelation: "tp_nivel_educacional_padres"
-            referencedColumns: ["descripcion_educacion"]
-          },
-          {
-            foreignKeyName: "fk_mv_libro_matricula_nivel_edu_padre_lm"
-            columns: ["nivel_educacional_padre"]
-            isOneToOne: false
-            referencedRelation: "tp_nivel_educacional_padres"
-            referencedColumns: ["descripcion_educacion"]
-          },
-          {
-            foreignKeyName: "fk_mv_libro_matricula_parentezco_alumno_lm"
-            columns: ["parentezco_con_alumno"]
-            isOneToOne: false
-            referencedRelation: "tp_parentezco_alumno"
-            referencedColumns: ["descripcion_parentezco_alumno"]
-          },
-          {
-            foreignKeyName: "fk_mv_libro_matricula_pertenece_pueblo_originario_lm"
-            columns: ["pueblo_originario_alumno"]
-            isOneToOne: false
-            referencedRelation: "tp_pueblo_originario"
-            referencedColumns: ["descripcion_pertenece"]
-          },
-          {
-            foreignKeyName: "fk_mv_libro_matricula_problemas_aprendizaje_lm"
-            columns: ["problema_aprendizaje_alumno"]
-            isOneToOne: false
-            referencedRelation: "tp_problemas_aprendizaje"
-            referencedColumns: ["descripcion_problema_aprendizaje"]
-          },
-          {
-            foreignKeyName: "fk_mv_libro_matricula_procedencia_alumno_lm"
-            columns: ["procedencia_alumno"]
-            isOneToOne: false
-            referencedRelation: "tp_procedencia_alumno"
-            referencedColumns: ["descripcion_procedencia"]
-          },
-          {
-            foreignKeyName: "fk_mv_libro_matricula_situacion_social_lm"
-            columns: ["situacion_social_alumno"]
-            isOneToOne: false
-            referencedRelation: "tp_situacion_social"
-            referencedColumns: ["descripcion_situacion_social"]
-          },
-          {
-            foreignKeyName: "fk_mv_libro_matricula_tipo_tel_lm"
-            columns: ["tipo_tel_alumno"]
-            isOneToOne: false
-            referencedRelation: "tp_tipo_tel"
-            referencedColumns: ["descripcion_tel"]
-          },
-          {
-            foreignKeyName: "fk_mv_libro_matricula_vive_con_lm"
             columns: ["vive_con_alumno"]
             isOneToOne: false
             referencedRelation: "tp_vive_con"
