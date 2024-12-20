@@ -115,7 +115,9 @@ onMounted(async () => {
           </div>
         </CardContent>
         <CardFooter v-if="cursos.length">
-          <p class="mx-auto text-sm text-muted-foreground">{{ cursos.length }} cursos en total.</p>
+          <p class="mx-auto text-sm text-muted-foreground">
+            {{ cursos.length }} curso(s) en total.
+          </p>
         </CardFooter>
       </Card>
     </Transition>
