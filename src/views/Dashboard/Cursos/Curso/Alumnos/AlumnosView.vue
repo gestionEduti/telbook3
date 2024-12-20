@@ -8,6 +8,10 @@ const props = defineProps<{ siglaCurso: string }>()
 // utils
 import { formatearRut } from '@/lib/formato'
 
+// store
+import { useAuthStore } from '@/stores/auth'
+const authStore = useAuthStore()
+
 // shadcn
 import Table from '@/components/ui/table/Table.vue'
 import TableCaption from '@/components/ui/table/TableCaption.vue'
@@ -22,19 +26,21 @@ import CardHeader from '@/components/ui/card/CardHeader.vue'
 import CardDescription from '@/components/ui/card/CardDescription.vue'
 import CardTitle from '@/components/ui/card/CardTitle.vue'
 import Separator from '@/components/ui/separator/Separator.vue'
+import { ListX, UserPlus } from 'lucide-vue-next'
+
+// data
+const alumnos = ref<Tables<'mv_libro_matricula'>[] | null>(null)
 
 // supabase
 import { supabase } from '@/services/supabaseClient'
 import type { Tables } from '@/types/supabase'
+import Button from '@/components/ui/button/Button.vue'
 const querySelect = supabase
   .from('mv_libro_matricula')
   .select('*')
-  .eq('rbd_establecimiento', 26005)
+  .eq('rbd_establecimiento', authStore.perfil!.rbd_usuario)
   .eq('nivel_alumno', props.siglaCurso)
   .order('apellidos_alumno', { ascending: true })
-
-// data
-const alumnos = ref<Tables<'mv_libro_matricula'>[] | null>(null)
 
 // methods
 const fetchSupabase = async () => {
@@ -51,13 +57,13 @@ onMounted(async () => {
 
 <template>
   <Transition name="fade" mode="out-in">
-    <Card v-if="alumnos?.length">
+    <Card v-if="alumnos !== null">
       <CardHeader>
         <CardTitle>Alumnos</CardTitle>
         <CardDescription>Lista de alumnos del curso.</CardDescription>
         <Separator />
       </CardHeader>
-      <CardContent>
+      <CardContent v-if="alumnos?.length">
         <Table class="border border-slate-300 bg-white">
           <TableCaption>
             {{ alumnos.length }} {{ alumnos.length > 1 ? 'alumnos en total' : 'alumno en total' }}
@@ -86,6 +92,17 @@ onMounted(async () => {
             </TableBody>
           </Transition>
         </Table>
+      </CardContent>
+      <CardContent v-else>
+        <!-- TODO: extraer a un componente de cuando no hay resultados -->
+        <div class="flex flex-col items-center justify-center space-y-2 py-8">
+          <ListX :size="32" class="text-gray-500" />
+          <p class="pb-4 text-muted-foreground">No hay alumnos en el curso.</p>
+          <Button @click="$router.push('/dashboard/matriculas/nueva')">
+            <UserPlus class="h-4 w-4" />
+            <span class="ml-2 hidden md:block">Matricular alumno</span>
+          </Button>
+        </div>
       </CardContent>
     </Card>
   </Transition>

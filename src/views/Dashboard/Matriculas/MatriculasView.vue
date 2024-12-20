@@ -37,16 +37,25 @@ import {
   Trash2,
   BookCheck,
   FileText,
+  ListX,
 } from 'lucide-vue-next'
+
+// store
+import { useAuthStore } from '@/stores/auth'
+const authStore = useAuthStore()
+
+// data
+const alumnos = ref<Tables<'mv_libro_matricula'>[] | null>(null)
 
 // supabase
 import { supabase } from '@/services/supabaseClient'
 import type { Tables } from '@/types/supabase'
-const querySelect = supabase.from('mv_libro_matricula').select('*').order('id', { ascending: true })
+const querySelect = supabase
+  .from('mv_libro_matricula')
+  .select('*')
+  .eq('rbd_establecimiento', authStore.perfil!.rbd_usuario) // // TODO: setear error si es que el perfil no existe
+  .order('id', { ascending: true })
 const queryDelete = (id: number) => supabase.from('mv_libro_matricula').delete().eq('id', id)
-
-// data
-const alumnos = ref<Tables<'mv_libro_matricula'>[] | null>(null)
 
 // methods
 const fetchSupabase = async () => {
@@ -70,7 +79,7 @@ onMounted(async () => {
 <template>
   <div class="flex-1 space-y-3 px-4 py-8 pt-3">
     <Transition name="fade" mode="out-in">
-      <Card v-if="alumnos?.length">
+      <Card v-if="alumnos">
         <CardHeader>
           <CardTitle class="flex items-center justify-between">
             <span> Matriculas </span>
@@ -79,7 +88,7 @@ onMounted(async () => {
                 <UserPlus class="h-4 w-4" />
                 <span class="ml-2 hidden md:block">Nuevo alumno</span>
               </Button>
-              <DropdownMenu>
+              <DropdownMenu v-if="alumnos.length">
                 <DropdownMenuTrigger as-child>
                   <Button>
                     <Download class="h-4 w-4" />
@@ -106,7 +115,7 @@ onMounted(async () => {
           <CardDescription>Lista de matriculas del establecimiento.</CardDescription>
           <Separator />
         </CardHeader>
-        <CardContent>
+        <CardContent v-if="alumnos?.length">
           <Table class="border border-slate-300 bg-white">
             <TableCaption>
               {{ alumnos?.length ? 'Lista de matriculas.' : 'No hay alumnos' }}
@@ -168,6 +177,13 @@ onMounted(async () => {
               </TableBody>
             </Transition>
           </Table>
+        </CardContent>
+        <CardContent v-else>
+          <!-- TODO: extraer a un componente de cuando no hay resultados -->
+          <div class="flex flex-col items-center justify-center space-y-2 py-8">
+            <ListX :size="32" class="text-gray-500" />
+            <p class="text-muted-foreground">No hay alumnos matriculados.</p>
+          </div>
         </CardContent>
       </Card>
     </Transition>
