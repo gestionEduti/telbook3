@@ -9,8 +9,8 @@ const props = defineProps<{ rutAlumno: string }>()
 import { formatearFechaNacimiento, formatearNacionalidad } from '@/lib/formato'
 
 // components
-import FormularioObservacionesFonoaudiologicas from './AlumnoComponentObervacionesFonoaudiologicas.vue'
-import FormularioObservacionesConvivencia from './AlumnoComponentObervacionesConvivencia.vue'
+import FormularioObservacionesFonoaudiologicas from './AlumnoComponenteObservacionesFonoaudiologicas.vue'
+import FormularioObservacionesConvivencia from './AlumnoComponenteObservacionesConvivencia.vue'
 
 // shadcn
 import Card from '@/components/ui/card/Card.vue'

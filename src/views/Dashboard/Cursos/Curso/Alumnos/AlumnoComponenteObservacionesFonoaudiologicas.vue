@@ -14,17 +14,6 @@ import AlertDialogDescription from '@/components/ui/alert-dialog/AlertDialogDesc
 import AlertDialogFooter from '@/components/ui/alert-dialog/AlertDialogFooter.vue'
 import AlertDialogCancel from '@/components/ui/alert-dialog/AlertDialogCancel.vue'
 import AlertDialogAction from '@/components/ui/alert-dialog/AlertDialogAction.vue'
-import Dialog from '@/components/ui/dialog/Dialog.vue'
-import DialogTrigger from '@/components/ui/dialog/DialogTrigger.vue'
-import DialogContent from '@/components/ui/dialog/DialogContent.vue'
-import DialogHeader from '@/components/ui/dialog/DialogHeader.vue'
-import DialogTitle from '@/components/ui/dialog/DialogTitle.vue'
-import DialogDescription from '@/components/ui/dialog/DialogDescription.vue'
-import Card from '@/components/ui/card/Card.vue'
-import CardContent from '@/components/ui/card/CardContent.vue'
-import CardHeader from '@/components/ui/card/CardHeader.vue'
-import CardDescription from '@/components/ui/card/CardDescription.vue'
-import { ListX } from 'lucide-vue-next'
 import { useToast } from '@/components/ui/toast/use-toast'
 const { toast } = useToast()
 
@@ -50,6 +39,18 @@ const props = defineProps<{ alumno: Tables<'mv_libro_matricula'> }>()
 // supabase
 import { supabase } from '@/services/supabaseClient'
 import type { Tables } from '@/types/supabase'
+import Sheet from '@/components/ui/sheet/Sheet.vue'
+import SheetTrigger from '@/components/ui/sheet/SheetTrigger.vue'
+import SheetContent from '@/components/ui/sheet/SheetContent.vue'
+import SheetTitle from '@/components/ui/sheet/SheetTitle.vue'
+import SheetHeader from '@/components/ui/sheet/SheetHeader.vue'
+import SheetDescription from '@/components/ui/sheet/SheetDescription.vue'
+import Card from '@/components/ui/card/Card.vue'
+import CardContent from '@/components/ui/card/CardContent.vue'
+import ScrollArea from '@/components/ui/scroll-area/ScrollArea.vue'
+import ScrollBar from '@/components/ui/scroll-area/ScrollBar.vue'
+import CardFooter from '@/components/ui/card/CardFooter.vue'
+import SheetFooter from '@/components/ui/sheet/SheetFooter.vue'
 
 // methods
 const insertar = async () => {
@@ -77,6 +78,7 @@ const insertar = async () => {
       variant: 'exitoso',
     })
   }
+  nuevaObservacion.value = ''
 }
 const fetchObsevacionesFonoaudiologicas = async () => {
   if (props.alumno.numero_matricula_alumno) {
@@ -90,10 +92,6 @@ const fetchObsevacionesFonoaudiologicas = async () => {
     console.error('No se pudo obtener el numero de matricula del alumno.')
   }
 }
-
-// onMounted(async () => {
-//   await fetchObsevacionesFonoaudiologicas()
-// })
 </script>
 
 <template>
@@ -129,46 +127,44 @@ const fetchObsevacionesFonoaudiologicas = async () => {
       </AlertDialog>
 
       <!-- boton ver todo -->
-      <Dialog>
-        <DialogTrigger as-child>
-          <Button variant="outline" @click="fetchObsevacionesFonoaudiologicas"
-            >Ver todas las observaciones</Button
-          >
-        </DialogTrigger>
-        <DialogContent
-          class="max-h-[90dvh] grid-rows-[auto_minmax(0,1fr)_auto] p-0 sm:max-w-[425px]"
-        >
-          <DialogHeader class="p-6 pb-0">
-            <DialogTitle>Observaciones</DialogTitle>
-            <DialogDescription>
+      <Sheet>
+        <SheetTrigger>
+          <Button variant="outline" @click="fetchObsevacionesFonoaudiologicas">
+            Ver todas las observaciones
+          </Button>
+        </SheetTrigger>
+        <SheetContent class="flex h-full flex-col">
+          <SheetHeader>
+            <SheetTitle>Observaciones</SheetTitle>
+            <SheetDescription>
               Lista de todas las observaciones fonoaudiologicas realizadas al alumno durante el año
               actual.
-            </DialogDescription>
-          </DialogHeader>
-          <div class="grid gap-4 overflow-y-auto px-6 py-4">
-            <div class="flex h-[300dvh] flex-col justify-between">
-              <ul class="grid gap-4" v-if="observacionesFonoaudiologicas?.length">
+            </SheetDescription>
+          </SheetHeader>
+          <div class="flex-1 overflow-y-auto border p-2 shadow-inner">
+            <ScrollArea>
+              <ul class="grid gap-2" v-if="observacionesFonoaudiologicas?.length">
                 <li v-for="item in observacionesFonoaudiologicas" :key="item.id">
                   <Card>
-                    <CardHeader>
-                      <CardDescription> Observacion de {{ item.rut_anotador }} </CardDescription>
-                    </CardHeader>
-                    <CardContent>
+                    <CardContent class="w-full px-2 pb-0 pt-2 text-left">
                       {{ item.descripcion_anotacion || 'Sin observaciones' }}
                     </CardContent>
+                    <CardFooter
+                      class="px-2 pb-2 text-sm font-medium tracking-tighter text-gray-400"
+                    >
+                      Realizada por: {{ item.rut_anotador }}</CardFooter
+                    >
                   </Card>
                 </li>
               </ul>
-              <div v-else class="flex flex-col items-center justify-center space-y-2 py-8">
-                <ListX :size="32" class="text-gray-500" />
-                <p class="text-muted-foreground">No tiene observaciones.</p>
-              </div>
-            </div>
+              <ScrollBar />
+            </ScrollArea>
           </div>
-        </DialogContent>
-      </Dialog>
+          <SheetFooter class="text-sm tracking-tighter text-gray-400">
+            El alumno tiene {{ observacionesFonoaudiologicas?.length }} observación(es).
+          </SheetFooter>
+        </SheetContent>
+      </Sheet>
     </div>
   </div>
 </template>
-
-<style></style>
