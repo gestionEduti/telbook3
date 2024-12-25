@@ -1,7 +1,7 @@
 <script setup lang="ts">
 // prematricula store
 import { usePrematriculaStore } from '@/stores/prematricula'
-const { procesarAlumnos, procesarExcel, procesarUnAlumno } = usePrematriculaStore()
+const prematriculaStore = usePrematriculaStore()
 const { nomina, totalAlumnos } = storeToRefs(usePrematriculaStore())
 
 // shadcn
@@ -16,9 +16,8 @@ import type { FormKitFormData } from '@/types/nomina'
 import { storeToRefs } from 'pinia'
 
 const submitHandler = async (data: FormKitFormData) => {
-  const firstFile = data.license[0].file
-  await procesarExcel(firstFile)
-  // if (nomina) await procesarAlumnos()
+  const primerArchivo = data.license[0].file // viene 1 o mas archivos en un array. este es el primero
+  await prematriculaStore.procesarNomina(primerArchivo)
 }
 </script>
 
@@ -43,7 +42,7 @@ const submitHandler = async (data: FormKitFormData) => {
               label="Nomina"
               name="license"
               help="Solo un archivo a la vez del tipo .xls"
-              accept=".xls,.xlsx,.xltx"
+              accept=".xls,.xlsx,.xltx,.xhtml"
               validation="required"
             />
             <Button :disabled="state.loading" class="mx-auto">

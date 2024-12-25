@@ -1,29 +1,9 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
-import * as XLSX from 'xlsx'
 import { supabase } from '@/services/supabaseClient'
 import type { NominaAlumnoInterface } from '@/types/nomina'
-
-const funcionProcesarAlumno = (alumno: NominaAlumnoInterface) =>
-  supabase.rpc('gestionar_alumnos_pre_matricula', {
-    v_anio: alumno.Año,
-    v_apellido_materno: alumno['Apellido Materno'],
-    v_apellido_paterno: alumno['Apellido Paterno'],
-    v_comuna: alumno['Comuna Residencia'],
-    v_descripcion_nivel: alumno['Desc Grado'],
-    v_direccion_alumno: alumno.Dirección,
-    v_email: alumno.Email,
-    v_fecha_incorporacion_escuela: alumno['Fecha Incorporación Curso'],
-    v_fecha_nacimiento: alumno['Fecha Nacimiento'],
-    v_fecha_retiro_escuela: alumno['Fecha Retiro'],
-    v_genero: alumno.Genero,
-    v_letra_nivel: alumno['Letra Curso'],
-    v_nombres_alumno: alumno.Nombres,
-    v_rbd: alumno.RBD,
-    v_rut_alumno: '', // completar con el rut del usuario autenticado
-    v_rut_usuario: alumno.Run,
-    v_telefono: alumno.Telefono,
-  })
+import { useAuthStore } from '@/stores/auth'
+const authStore = useAuthStore()
 
 export const usePrematriculaStore = defineStore('prematricula', () => {
   // data
@@ -33,71 +13,88 @@ export const usePrematriculaStore = defineStore('prematricula', () => {
   const totalAlumnos = computed(() => nomina.value?.length || 0)
 
   // methods
-  async function procesarExcel(f: File) {
-    // extraigo la data del archivo excel mediante una promesa que se resuelve con la data extraida ó se rechaza con null
-    const dataExtraida = await new Promise<NominaAlumnoInterface[] | null>((resolve, reject) => {
-      // creo un nuevo lector de archivos
+  async function procesarNomina(f: File) {
+    const contenidoArchivo = await leerArchivo(f) // lee el archivo
+    if (!contenidoArchivo) return
+    nomina.value = await parsearXHTML(contenidoArchivo) // actualiza el estado
+    if (!nomina.value) return
+    await procesarTodosLosAlumnos(nomina.value)
+  }
+
+  async function leerArchivo(f: File): Promise<string | null> {
+    return new Promise<string | null>((resolve, reject) => {
       const reader = new FileReader()
-
-      // leo el archivo como un array buffer
-      reader.readAsArrayBuffer(f)
-
-      // onload se ejecuta cuando el archivo se ha leido
-      // y se ha convertido en un array buffer
+      reader.readAsText(f, 'ISO-8859-1')
       reader.onload = (event) => {
-        if (!event.target) {
-          // si no hay un evento, rechazo la promesa
-          reject(null)
-          return
-        }
-
-        // creo un nuevo libro de excel
-        const workbook = XLSX.read(event.target.result, {
-          type: 'binary',
-          cellText: false,
-          cellDates: true,
-        })
-
-        // obtengo el nombre de la primera hoja
-        const firstSheetName = workbook.SheetNames[0]
-
-        // obtengo la primera hoja
-        const firstSheet = workbook.Sheets[firstSheetName]
-
-        // convierto la data de la hoja en un arreglo de objetos
-        // cada objeto
-        const sheetData = XLSX.utils.sheet_to_json(firstSheet, {}) as NominaAlumnoInterface[]
-
-        // resuelvo la promesa con la data extraida
-        resolve(sheetData)
+        const text = event.target?.result as string
+        if (!text) reject(null)
+        resolve(text)
       }
+      reader.onerror = () => reject(null)
+    })
+  }
+
+  function parsearXHTML(fileContent: string): NominaAlumnoInterface[] {
+    // Creo un parseador
+    const parser = new DOMParser()
+
+    // Parseo el contenido del archivo
+    const xhtml = parser.parseFromString(fileContent, 'application/xhtml+xml')
+
+    // Extraigo los nodos que corresponden a las filas de la tabla
+    const rows = Array.from(xhtml.querySelectorAll('table tr'))
+
+    // Separo la primera fila que corresponde a los headers
+    const headerRow = rows.shift()
+    if (!headerRow) return
+
+    // Extraigo los headers de la tabla
+    const headers = Array.from(headerRow.querySelectorAll('th, td')).map((cell) =>
+      cell.textContent.trim(),
+    )
+
+    // Procesa cada fila de la tabla
+    const result = rows.map((row) => {
+      const cells = Array.from(row.querySelectorAll('td'))
+      const rowData = {}
+      headers.forEach((header, index) => {
+        rowData[header] = cells[index]?.textContent.trim() || null // Match cells with headers
+      })
+      return rowData
     })
 
-    // si la data extraida es null, no hago nada
-    if (!dataExtraida) return
-
-    // si hay data, la almaceno en el state
-    nomina.value = dataExtraida
+    // Devuelvo el resultado
+    return result as NominaAlumnoInterface[]
   }
 
-  async function procesarAlumnos() {
-    if (nomina.value) {
-      nomina.value.forEach(async (alumno) => {
-        const { data, error } = await funcionProcesarAlumno(alumno)
-        if (error) {
-          console.error(error)
-          return
-        }
-        console.log(data)
-      })
+  async function procesarTodosLosAlumnos(alumnos: NominaAlumnoInterface[]) {
+    for (const alumno of alumnos) {
+      // await queryMatricularAlumno(alumno)
+      console.log(alumno)
     }
   }
 
-  // PRUEBA DESARROLLO
-  async function procesarUnAlumno() {
-    if (nomina.value) {
-      console.log(nomina.value[0].Año)
-    }
+  async function queryMatricularAlumno(alumno: NominaAlumnoInterface) {
+    const { data, error } = await supabase.rpc('gestionar_alumnos_pre_matricula', {
+      v_anio: alumno.Año,
+      v_apellido_materno: alumno['Apellido Materno'],
+      v_apellido_paterno: alumno['Apellido Paterno'],
+      v_comuna: alumno['Comuna Residencia'],
+      v_descripcion_nivel: alumno['Desc Grado'],
+      v_direccion_alumno: alumno.Dirección,
+      v_email: alumno.Email,
+      v_fecha_incorporacion_escuela: alumno['Fecha Incorporación Curso'],
+      v_fecha_nacimiento: alumno['Fecha Nacimiento'],
+      v_fecha_retiro_escuela: alumno['Fecha Retiro'],
+      v_genero: alumno.Genero,
+      v_letra_nivel: alumno['Letra Curso'],
+      v_nombres_alumno: alumno.Nombres,
+      v_rbd: alumno.RBD,
+      v_rut_alumno: alumno.Run,
+      v_rut_usuario: authStore.perfil!.rut_usuario,
+      v_telefono: alumno.Telefono,
+    })
+    return error || data
   }
 
   return {
@@ -108,8 +105,6 @@ export const usePrematriculaStore = defineStore('prematricula', () => {
     totalAlumnos,
 
     // methods
-    procesarAlumnos,
-    procesarExcel,
-    procesarUnAlumno,
+    procesarNomina,
   }
 })
