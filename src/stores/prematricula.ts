@@ -8,20 +8,46 @@ const authStore = useAuthStore()
 export const usePrematriculaStore = defineStore('prematricula', () => {
   // data
   const nomina = ref<NominaAlumnoInterface[] | null>(null)
+  const nombreArchivo = ref<string | null>(null)
+  const loading = ref(false)
 
   // getters
+  const nombreEstablecimiento = computed(() =>
+    !nombreArchivo.value
+      ? ''
+      : nombreArchivo.value.match(/SIGE (.*?)(\.xls)/)?.[1].toLowerCase() || '',
+  )
   const totalAlumnos = computed(() => nomina.value?.length || 0)
+  const totalCursos = computed(
+    () =>
+      Array.from(
+        new Set(nomina.value?.map((alumno) => alumno['Desc Grado'] + alumno['Letra Curso'])),
+      ).length || 0,
+  )
 
   // methods
-  async function procesarNomina(f: File) {
+  async function procesarArchivo(f: File) {
+    loading.value = true
     const contenidoArchivo = await leerArchivo(f) // lee el archivo
-    if (!contenidoArchivo) return
+    if (!contenidoArchivo) return // si no hay archivo, termina
     nomina.value = await parsearXHTML(contenidoArchivo) // actualiza el estado
+    if (!nomina.value) return // si no se pudo parsear, termina
+    await new Promise((resolve) => setTimeout(resolve, 800))
+    loading.value = false
+  }
+
+  async function cargarAlumnos() {
+    loading.value = true
+    await new Promise((resolve) => setTimeout(resolve, 2000))
     if (!nomina.value) return
-    await procesarTodosLosAlumnos(nomina.value)
+    for (const alumno of nomina.value) {
+      // await queryMatricularAlumno(alumno)
+    }
+    loading.value = false
   }
 
   async function leerArchivo(f: File): Promise<string | null> {
+    nombreArchivo.value = f.name
     return new Promise<string | null>((resolve, reject) => {
       const reader = new FileReader()
       reader.readAsText(f, 'ISO-8859-1')
@@ -67,13 +93,6 @@ export const usePrematriculaStore = defineStore('prematricula', () => {
     return result as NominaAlumnoInterface[]
   }
 
-  async function procesarTodosLosAlumnos(alumnos: NominaAlumnoInterface[]) {
-    for (const alumno of alumnos) {
-      // await queryMatricularAlumno(alumno)
-      console.log(alumno)
-    }
-  }
-
   async function queryMatricularAlumno(alumno: NominaAlumnoInterface) {
     const { data, error } = await supabase.rpc('gestionar_alumnos_pre_matricula', {
       v_anio: alumno.Año,
@@ -100,11 +119,15 @@ export const usePrematriculaStore = defineStore('prematricula', () => {
   return {
     // data
     nomina,
+    loading,
 
     // getters
+    nombreEstablecimiento,
     totalAlumnos,
+    totalCursos,
 
     // methods
-    procesarNomina,
+    procesarArchivo,
+    cargarAlumnos,
   }
 })
