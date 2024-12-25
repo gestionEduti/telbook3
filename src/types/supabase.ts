@@ -651,36 +651,36 @@ export type Database = {
       mv_libro_matricula: {
         Row: {
           anio_libro: number | null
-          apellidos_alumno: string | null
+          apellidos_alumno: string
           apoderado_tutor_alumno: string | null
           causa_retiro_alumno: string | null
-          codigo_estado_alumno: number | null
+          codigo_estado_alumno: number
           comuna_alumno: string | null
-          created_at: string | null
+          created_at: string
           domicilio_alumno: string | null
           email_apoderado_alumno: string | null
-          estado_alumno: string | null
-          fecha_incorporacion_alumno: string | null
+          estado_alumno: string
+          fecha_incorporacion_alumno: string
           fecha_nacimiento_alumno: string
           fecha_retiro_escuela: string | null
           id: number
           jornada_alumno: string | null
           nacionalidad_alumno: string | null
-          nivel_alumno: string | null
+          nivel_alumno: string
           nivel_educacional_madre: string | null
           nivel_educacional_padre: string | null
           nombre_apoderado_alumno: string | null
           nombre_completo_alumno: string | null
-          nombres_alumno: string | null
-          numero_lista_nivel_alumno: number | null
-          numero_matricula_alumno: number | null
+          nombres_alumno: string
+          numero_lista_nivel_alumno: number
+          numero_matricula_alumno: number
           parentezco_con_alumno: string | null
           problema_aprendizaje_alumno: string | null
           procedencia_alumno: string | null
           pueblo_originario_alumno: string | null
-          rbd_establecimiento: number | null
+          rbd_establecimiento: number
           region_alumno: string | null
-          rut_alumno: string | null
+          rut_alumno: string
           rut_profesor_alumno: string | null
           sexo_alumno: string | null
           situacion_social_alumno: string | null
@@ -690,36 +690,36 @@ export type Database = {
         }
         Insert: {
           anio_libro?: number | null
-          apellidos_alumno?: string | null
+          apellidos_alumno: string
           apoderado_tutor_alumno?: string | null
           causa_retiro_alumno?: string | null
-          codigo_estado_alumno?: number | null
+          codigo_estado_alumno: number
           comuna_alumno?: string | null
-          created_at?: string | null
+          created_at: string
           domicilio_alumno?: string | null
           email_apoderado_alumno?: string | null
-          estado_alumno?: string | null
-          fecha_incorporacion_alumno?: string | null
+          estado_alumno: string
+          fecha_incorporacion_alumno: string
           fecha_nacimiento_alumno: string
           fecha_retiro_escuela?: string | null
           id?: number
           jornada_alumno?: string | null
           nacionalidad_alumno?: string | null
-          nivel_alumno?: string | null
+          nivel_alumno: string
           nivel_educacional_madre?: string | null
           nivel_educacional_padre?: string | null
           nombre_apoderado_alumno?: string | null
           nombre_completo_alumno?: string | null
-          nombres_alumno?: string | null
-          numero_lista_nivel_alumno?: number | null
-          numero_matricula_alumno?: number | null
+          nombres_alumno: string
+          numero_lista_nivel_alumno: number
+          numero_matricula_alumno: number
           parentezco_con_alumno?: string | null
           problema_aprendizaje_alumno?: string | null
           procedencia_alumno?: string | null
           pueblo_originario_alumno?: string | null
-          rbd_establecimiento?: number | null
+          rbd_establecimiento: number
           region_alumno?: string | null
-          rut_alumno?: string | null
+          rut_alumno: string
           rut_profesor_alumno?: string | null
           sexo_alumno?: string | null
           situacion_social_alumno?: string | null
@@ -729,36 +729,36 @@ export type Database = {
         }
         Update: {
           anio_libro?: number | null
-          apellidos_alumno?: string | null
+          apellidos_alumno?: string
           apoderado_tutor_alumno?: string | null
           causa_retiro_alumno?: string | null
-          codigo_estado_alumno?: number | null
+          codigo_estado_alumno?: number
           comuna_alumno?: string | null
-          created_at?: string | null
+          created_at?: string
           domicilio_alumno?: string | null
           email_apoderado_alumno?: string | null
-          estado_alumno?: string | null
-          fecha_incorporacion_alumno?: string | null
+          estado_alumno?: string
+          fecha_incorporacion_alumno?: string
           fecha_nacimiento_alumno?: string
           fecha_retiro_escuela?: string | null
           id?: number
           jornada_alumno?: string | null
           nacionalidad_alumno?: string | null
-          nivel_alumno?: string | null
+          nivel_alumno?: string
           nivel_educacional_madre?: string | null
           nivel_educacional_padre?: string | null
           nombre_apoderado_alumno?: string | null
           nombre_completo_alumno?: string | null
-          nombres_alumno?: string | null
-          numero_lista_nivel_alumno?: number | null
-          numero_matricula_alumno?: number | null
+          nombres_alumno?: string
+          numero_lista_nivel_alumno?: number
+          numero_matricula_alumno?: number
           parentezco_con_alumno?: string | null
           problema_aprendizaje_alumno?: string | null
           procedencia_alumno?: string | null
           pueblo_originario_alumno?: string | null
-          rbd_establecimiento?: number | null
+          rbd_establecimiento?: number
           region_alumno?: string | null
-          rut_alumno?: string | null
+          rut_alumno?: string
           rut_profesor_alumno?: string | null
           sexo_alumno?: string | null
           situacion_social_alumno?: string | null
@@ -786,7 +786,7 @@ export type Database = {
             columns: ["jornada_alumno"]
             isOneToOne: false
             referencedRelation: "tp_jornada_alumno"
-            referencedColumns: ["descripción_jornada"]
+            referencedColumns: ["descripcion_jornada"]
           },
           {
             foreignKeyName: "fk_mv_libro_matricula_nacionalidad_alumno"
@@ -1271,7 +1271,7 @@ export type Database = {
           anio_curso: number | null
           created_at: string | null
           id: number
-          letra_nivel_curso: string | null
+          letra_nivel_curso: string
           nombre_curso: string
           rbd_establecimiento: number
           sigla_nivel_curso: string
@@ -1280,7 +1280,7 @@ export type Database = {
           anio_curso?: number | null
           created_at?: string | null
           id?: number
-          letra_nivel_curso?: string | null
+          letra_nivel_curso: string
           nombre_curso: string
           rbd_establecimiento: number
           sigla_nivel_curso: string
@@ -1289,12 +1289,19 @@ export type Database = {
           anio_curso?: number | null
           created_at?: string | null
           id?: number
-          letra_nivel_curso?: string | null
+          letra_nivel_curso?: string
           nombre_curso?: string
           rbd_establecimiento?: number
           sigla_nivel_curso?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "tp_cursos_tp_establecimientos__fk"
+            columns: ["rbd_establecimiento"]
+            isOneToOne: false
+            referencedRelation: "tp_establecimientos"
+            referencedColumns: ["rbd"]
+          },
           {
             foreignKeyName: "tp_cursos_tp_niveles__fk"
             columns: ["sigla_nivel_curso"]
@@ -1384,19 +1391,19 @@ export type Database = {
       tp_jornada_alumno: {
         Row: {
           created_at: string | null
-          descripción_jornada: string | null
+          descripcion_jornada: string | null
           id: number
           tipo_jornada: number | null
         }
         Insert: {
           created_at?: string | null
-          descripción_jornada?: string | null
+          descripcion_jornada?: string | null
           id: number
           tipo_jornada?: number | null
         }
         Update: {
           created_at?: string | null
-          descripción_jornada?: string | null
+          descripcion_jornada?: string | null
           id?: number
           tipo_jornada?: number | null
         }
