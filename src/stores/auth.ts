@@ -33,9 +33,9 @@ export const useAuthStore = defineStore('auth-store', () => {
 
   /**
    * Esta funcion es llamada cuando el authStateChange se dispara.
-   * Se encarga de setear el state usuario, perfil y establecimiento.
+   * Se encarga de setear el state usuario y luego el perfil.
    * Si no se pasa un usuario (logout), se limpian los states.
-   * De lo contrario, se setea el usuario recibido (login) y se llama a setPerfil y setEstablecimiento.
+   * De lo contrario, se setea el usuario recibido (login) y se llama a setPerfil.
    * @param sesionUsuario
    * @returns
    */
@@ -47,8 +47,7 @@ export const useAuthStore = defineStore('auth-store', () => {
       return
     }
     usuario.value = sesionUsuario.user
-    if (usuario.value) await setPerfil(usuario.value)
-    if (perfil.value) await setEstablecimiento(perfil.value)
+    await setPerfil()
   }
 
   /**
@@ -57,14 +56,24 @@ export const useAuthStore = defineStore('auth-store', () => {
    * De lo contrario, si el perfil no existe o el id es diferente al usuario, se busca el perfil en la base de datos.
    * Si no se encuentra en la DB, se limpia el perfil.
    * De lo contrario, se setea el perfil.
+   * Finalmente se llama a setEstablecimiento.
    * @returns
    */
-  const setPerfil = async (usuario: User) => {
-    if (!perfil.value || perfil.value.id !== usuario.id) {
+  const setPerfil = async () => {
+    if (!usuario.value) {
+      await limipiarSesion()
+      toast({
+        title: 'Error',
+        description: 'Tu usuario no esta creado correctamente. Contacta a soporte.',
+        variant: 'destructive',
+      })
+      return
+    }
+    if (!perfil.value || perfil.value.id !== usuario.value.id) {
       const { data, error } = await supabase
         .from('mv_usuario')
         .select()
-        .eq('id', usuario.id)
+        .eq('id', usuario.value.id)
         .single()
       if (error) {
         // TODO validar y mejorar este flujo para cuando no exista el perfil de un usuario
@@ -77,6 +86,7 @@ export const useAuthStore = defineStore('auth-store', () => {
         return
       }
       perfil.value = data || null
+      await setEstablecimiento()
     }
   }
 
@@ -84,11 +94,15 @@ export const useAuthStore = defineStore('auth-store', () => {
    * Setea el state establecimiento que contiene la informacion del establecimiento asociado al usuario.
    * @returns
    */
-  const setEstablecimiento = async (perfil: Tables<'mv_usuario'>) => {
+  const setEstablecimiento = async () => {
+    if (!perfil.value) {
+      establecimiento.value = null
+      return
+    }
     const { data, error, status } = await supabase
       .from('tp_establecimientos')
       .select()
-      .eq('rbd', perfil.rbd_usuario)
+      .eq('rbd', perfil.value.rbd_usuario)
       .single()
     if (error) useErrorStore().setError({ error, customCode: status })
     establecimiento.value = data || null

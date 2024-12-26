@@ -67,7 +67,7 @@ const fetchSupabase = async () => {
 }
 
 const deleteSupabase = async (id: number) => {
-  const { error } = await queryDelete(id)
+  const { error, status } = await queryDelete(id)
   if (error) errorStore.setError({ error: error, customCode: status })
   else await fetchSupabase()
 }
