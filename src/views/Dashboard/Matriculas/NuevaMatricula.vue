@@ -23,6 +23,8 @@ import { useAuthStore } from '@/stores/auth'
 import { useNuevaMatriculaLoaderStore } from '@/stores/loaders/nuevaMatricula'
 const authStore = useAuthStore()
 const loaderStore = useNuevaMatriculaLoaderStore()
+import { useErrorStore } from '@/stores/error'
+const errorStore = useErrorStore()
 
 // formkit
 import { reset } from '@formkit/vue'
@@ -42,24 +44,38 @@ const handleForm = async (data: Tables<'mv_libro_matricula'>) => {
   }
 
   // obtener ultimo numero de matricula
-  const { data: ultimoNumeroMatricula, error: errorUltimoNumeroMatricula } = await supabase
+  const {
+    data: dataUnm,
+    error: errorUnm,
+    status: statusUnm,
+  } = await supabase
     .from('mv_libro_matricula')
     .select('numero_matricula_alumno')
     .order('numero_matricula_alumno', { ascending: false })
     .limit(1)
 
-  const { data: ultimoNumeroLista, error: errorUltimoNumeroLista } = await supabase
+  const {
+    data: dataUnl,
+    error: errorUnl,
+    status: statusUnl,
+  } = await supabase
     .from('mv_libro_matricula')
     .select('numero_lista_nivel_alumno')
     .order('numero_lista_nivel_alumno', { ascending: false })
     .limit(1)
 
-  // seteando datos extras que no vienen del formulario
-  data.estado_alumno = 'ACTIVO'
-  data.nombre_completo_alumno = `${data.apellidos_alumno} ${data.nombres_alumno}`
-  data.rbd_establecimiento = authStore.perfil?.rbd_usuario || 0
-  data.numero_matricula_alumno = ultimoNumeroMatricula[0].numero_matricula_alumno + 1 // TODO: corregir en la DB que sea NOT NULL
-  data.numero_lista_nivel_alumno = ultimoNumeroLista[0].numero_lista_nivel_alumno + 1 // TODO: corregir en la DB que sea NOT NULL
+  if (errorUnm) {
+    errorStore.setError({ error: errorUnm, customCode: statusUnm })
+  } else if (errorUnl) {
+    errorStore.setError({ error: errorUnl, customCode: statusUnl })
+  } else {
+    // seteando datos extras que no vienen del formulario
+    data.estado_alumno = 'ACTIVO'
+    data.nombre_completo_alumno = `${data.apellidos_alumno} ${data.nombres_alumno}`
+    data.rbd_establecimiento = authStore.perfil?.rbd_usuario || 0
+    data.numero_matricula_alumno = dataUnm[0].numero_matricula_alumno + 1 // TODO: corregir en la DB que sea NOT NULL
+    data.numero_lista_nivel_alumno = dataUnl[0].numero_lista_nivel_alumno + 1 // TODO: corregir en la DB que sea NOT NULL
+  }
 
   // insert en supabase
   const { error } = await supabase.from('mv_libro_matricula').insert(data)

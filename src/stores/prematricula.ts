@@ -88,9 +88,9 @@ export const usePrematriculaStore = defineStore('prematricula', () => {
     const headers: string[] = nodesArray.map((cell) => cell.textContent?.trim() || '')
 
     // Procesa cada fila de la tabla
-    const result = rows.map((row: HTMLTableRowElement) => {
+    const result: NominaAlumnoInterface[] = rows.map((row: HTMLTableRowElement) => {
       const cells: HTMLTableCellElement[] = Array.from(row.querySelectorAll('td'))
-      const rowData: Record<string, string | null> = {}
+      const rowData = {} as NominaAlumnoInterface
       headers.forEach((header: string, index: number) => {
         rowData[header] = cells[index]?.textContent.trim() || null // Match cells with headers
       })
@@ -98,7 +98,7 @@ export const usePrematriculaStore = defineStore('prematricula', () => {
     })
 
     // Devuelvo el resultado
-    return result as NominaAlumnoInterface[]
+    return result
   }
 
   async function queryMatricularAlumno(alumno: NominaAlumnoInterface) {
@@ -123,6 +123,12 @@ export const usePrematriculaStore = defineStore('prematricula', () => {
     })
   }
 
+  async function reiniciarStore() {
+    nomina.value = null
+    nombreArchivo.value = null
+    loading.value = false
+  }
+
   return {
     // data
     nomina,
@@ -137,5 +143,6 @@ export const usePrematriculaStore = defineStore('prematricula', () => {
     // methods
     procesarArchivo,
     cargarAlumnos,
+    reiniciarStore,
   }
 })

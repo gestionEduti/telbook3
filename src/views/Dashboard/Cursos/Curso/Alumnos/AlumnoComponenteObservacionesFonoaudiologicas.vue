@@ -54,25 +54,29 @@ import ScrollBar from '@/components/ui/scroll-area/ScrollBar.vue'
 import CardFooter from '@/components/ui/card/CardFooter.vue'
 import SheetFooter from '@/components/ui/sheet/SheetFooter.vue'
 
+import type { Database } from '@/types/supabase'
+type InsertType = Database['public']['Tables']['mv_anotaciones_fonoaudiologicas']['Insert']
+// TODO investigar mas de este tipo de tipado
+
 // methods
 const insertar = async () => {
-  const { error } = await supabase.from('mv_anotaciones_fonoaudiologicas').insert({
-    anio: year.value, // TODO: revisar por que anio sale con error
-    descripcion_anotacion: nuevaObservacion.value,
-    dia: day.value,
+  const newObservacion: InsertType = {
+    dia: parseInt(day.value), // TODO corregir modelo
+    mes: parseInt(month.value), // TODO corregir modelo
+    anio: parseInt(year.value), // TODO corregir modelo
     fecha_anotacion: String(fecha_anotacion.value),
-    mes: month.value,
+    descripcion_anotacion: nuevaObservacion.value,
     numero_matricula: props.alumno.numero_matricula_alumno,
-    rbd_escuela: establecimiento.value?.rbd,
-    rut_anotador: perfil.value?.rut_usuario,
-  })
+    rbd_escuela: establecimiento.value!.rbd!, // TODO corregir modelo
+    rut_anotador: perfil.value!.rut_usuario!, // TODO corregir modelo
+  }
+
+  const { error, status } = await supabase
+    .from('mv_anotaciones_fonoaudiologicas')
+    .insert(newObservacion)
+
   if (error) {
-    console.error(error)
-    toast({
-      title: 'Error',
-      description: 'Hubo un problema en la creacion de la observación.',
-      variant: 'destructive',
-    })
+    errorStore.setError({ error: error, customCode: status })
   } else {
     toast({
       title: 'Exito',

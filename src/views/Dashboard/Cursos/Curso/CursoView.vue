@@ -35,12 +35,12 @@ const niveles = ref<Tables<'tp_niveles'>[] | null>([])
 // methods
 const fetchCurso = async () => {
   const { data, error, status } = await queryCurso
-  if (error) errorStore.setError({ error, statusCode: status })
+  if (error) errorStore.setError({ error, customCode: status })
   else curso.value = data
 }
 const fetchNiveles = async () => {
   const { data, error, status } = await queryNiveles
-  if (error) errorStore.setError({ error, statusCode: status })
+  if (error) errorStore.setError({ error, customCode: status })
   else niveles.value = data
 }
 
