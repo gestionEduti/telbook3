@@ -14,7 +14,15 @@ import {
   StepperTitle,
   StepperTrigger,
 } from '@/components/ui/stepper'
-import { ArrowLeft, ArrowRight, Check, Info, Loader } from 'lucide-vue-next'
+import {
+  ArrowLeft,
+  ArrowRight,
+  Check,
+  FileSpreadsheet,
+  Info,
+  ListTodo,
+  Loader,
+} from 'lucide-vue-next'
 
 // types
 import type { FormKitFormData } from '@/types/nomina'
@@ -68,7 +76,9 @@ const cargarAlumnos = async () => {
         <Stepper v-model="pasoActual">
           <StepperItem :step="1" disabled>
             <StepperTrigger>
-              <StepperIndicator>1</StepperIndicator>
+              <StepperIndicator>
+                <FileSpreadsheet />
+              </StepperIndicator>
               <StepperTitle>Paso 1</StepperTitle>
               <StepperDescription>Cargar archivo</StepperDescription>
             </StepperTrigger>
@@ -76,14 +86,18 @@ const cargarAlumnos = async () => {
           </StepperItem>
           <StepperItem :step="2" disabled>
             <StepperTrigger>
-              <StepperIndicator>2</StepperIndicator>
+              <StepperIndicator>
+                <ListTodo />
+              </StepperIndicator>
               <StepperTitle>Paso 2</StepperTitle>
               <StepperDescription>Confirmar</StepperDescription>
             </StepperTrigger>
           </StepperItem>
           <StepperItem :step="3" disabled>
             <StepperTrigger>
-              <StepperIndicator>3</StepperIndicator>
+              <StepperIndicator>
+                <Check />
+              </StepperIndicator>
               <StepperTitle>Paso 3</StepperTitle>
               <StepperDescription>Finalizar</StepperDescription>
             </StepperTrigger>
