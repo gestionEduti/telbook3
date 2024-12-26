@@ -20,6 +20,7 @@ import './commands'
 // require('./commands')
 
 import { mount } from 'cypress/vue'
+import '../../src/assets/index.css' // tailwind
 
 // Augment the Cypress namespace to include type definitions for
 // your custom command.

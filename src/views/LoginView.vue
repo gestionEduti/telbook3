@@ -31,7 +31,7 @@ const handleForm = async (formData: FormData) => {
   else {
     toast({
       title: 'Error',
-      description: 'Email ó contrasesa incorrectos',
+      description: 'Email ó contraseña incorrectos',
       variant: 'destructive',
     })
     dataFormulario.value.password = ''
