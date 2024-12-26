@@ -19,6 +19,8 @@ import { ListX } from 'lucide-vue-next'
 // store
 import { useAuthStore } from '@/stores/auth'
 const authStore = useAuthStore()
+import { useErrorStore } from '@/stores/error'
+const errorStore = useErrorStore()
 
 // supabase
 import { supabase } from '@/services/supabaseClient'
@@ -37,13 +39,13 @@ const niveles = ref<Tables<'tp_niveles'>[] | null>(null)
 
 // methods
 const fetchCursos = async () => {
-  const { data, error } = await queryCursos
-  if (error) console.error(error)
+  const { data, error, status } = await queryCursos
+  if (error) errorStore.setError({ error: error, customCode: status })
   else cursos.value = data
 }
 const fetchNiveles = async () => {
-  const { data, error } = await queryNiveles
-  if (error) console.error(error)
+  const { data, error, status } = await queryNiveles
+  if (error) errorStore.setError({ error: error, customCode: status })
   else niveles.value = data
 }
 

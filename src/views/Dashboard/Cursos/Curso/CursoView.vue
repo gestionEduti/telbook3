@@ -10,6 +10,8 @@ import CardContent from '@/components/ui/card/CardContent.vue'
 
 // store
 import { useAuthStore } from '@/stores/auth'
+import { useErrorStore } from '@/stores/error'
+const errorStore = useErrorStore()
 const { establecimiento } = useAuthStore()
 
 // props
@@ -32,13 +34,13 @@ const niveles = ref<Tables<'tp_niveles'>[] | null>([])
 
 // methods
 const fetchCurso = async () => {
-  const { data, error } = await queryCurso
-  if (error) console.error(error)
+  const { data, error, status } = await queryCurso
+  if (error) errorStore.setError({ error, statusCode: status })
   else curso.value = data
 }
 const fetchNiveles = async () => {
-  const { data, error } = await queryNiveles
-  if (error) console.error(error)
+  const { data, error, status } = await queryNiveles
+  if (error) errorStore.setError({ error, statusCode: status })
   else niveles.value = data
 }
 

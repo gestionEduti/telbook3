@@ -21,6 +21,8 @@ const { toast } = useToast()
 import { storeToRefs } from 'pinia'
 import { useAuthStore } from '@/stores/auth'
 const { establecimiento, perfil } = storeToRefs(useAuthStore())
+import { useErrorStore } from '@/stores/error'
+const errorStore = useErrorStore()
 
 // data
 const nuevaObservacion = ref<string>('')
@@ -82,11 +84,11 @@ const insertar = async () => {
 }
 const fetchObsevacionesFonoaudiologicas = async () => {
   if (props.alumno.numero_matricula_alumno) {
-    const { data, error } = await supabase
+    const { data, error, status } = await supabase
       .from('mv_anotaciones_fonoaudiologicas')
       .select()
       .eq('numero_matricula', props.alumno.numero_matricula_alumno)
-    if (error) console.error(error)
+    if (error) errorStore.setError({ error: error, customCode: status })
     else observacionesFonoaudiologicas.value = data
   } else {
     console.error('No se pudo obtener el numero de matricula del alumno.')

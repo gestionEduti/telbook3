@@ -29,6 +29,10 @@ import Separator from '@/components/ui/separator/Separator.vue'
 // icons
 import { Pen } from 'lucide-vue-next'
 
+// store
+import { useErrorStore } from '@/stores/error'
+const errorStore = useErrorStore()
+
 // supabase
 import type { Tables } from '@/types/supabase'
 import { supabase } from '@/services/supabaseClient'
@@ -44,8 +48,8 @@ const alumnos = ref<Tables<'mv_libro_matricula'>[] | null>(null)
 
 // methods
 const fetchSupabase = async () => {
-  const { data, error } = await querySelect
-  if (error) console.error(error)
+  const { data, error, status } = await querySelect
+  if (error) errorStore.setError({ error: error, customCode: status })
   else alumnos.value = data
 }
 

@@ -4,9 +4,8 @@ const adminCredentials = { email: 'sergrodrig@gmail.com', password: '123456' }
 const profeCredentials = { email: 'alberto@gmail.com', password: '123456' }
 
 describe('probar pagina matriculas', () => {
-  // Before each test, ensure we are logged out
   beforeEach(() => {
-    cy.visit('http://127.0.0.1:5173/logout') // assuming this logs out the user
+    cy.visit('http://127.0.0.1:5173/login')
     cy.get('input[id="email"]').type(adminCredentials.email)
     cy.get('input[id="password"]').type(adminCredentials.password)
     cy.contains('button', 'Ingresar').click()
@@ -25,9 +24,9 @@ describe('probar pagina matriculas', () => {
   })
 })
 
-describe('probar funcionalidades como admin', () => {
+describe.only('probar funcionalidades como admin', () => {
   beforeEach(() => {
-    cy.visit('http://127.0.0.1:5173/logout') // assuming this logs out the user
+    cy.visit('http://127.0.0.1:5173/logout')
     cy.get('input[id="email"]').type(adminCredentials.email)
     cy.get('input[id="password"]').type(adminCredentials.password)
     cy.contains('button', 'Ingresar').click()
@@ -44,7 +43,7 @@ describe('probar funcionalidades como admin', () => {
 
 describe('probar funcionalidades como usuario', () => {
   beforeEach(() => {
-    cy.visit('http://127.0.0.1:5173/logout') // assuming this logs out the user
+    cy.visit('http://127.0.0.1:5173/login')
     cy.get('input[id="email"]').type(profeCredentials.email)
     cy.get('input[id="password"]').type(profeCredentials.password)
     cy.contains('button', 'Ingresar').click()

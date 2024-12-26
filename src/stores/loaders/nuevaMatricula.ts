@@ -3,6 +3,7 @@ import { ref } from 'vue'
 import { supabase } from '@/services/supabaseClient'
 import type { Tables } from '@/types/supabase'
 import { useAuthStore } from '@/stores/auth'
+import { useErrorStore } from '../error'
 
 export const useNuevaMatriculaLoaderStore = defineStore('nuevaMatriculaLoader-store', () => {
   const authStore = useAuthStore()
@@ -22,130 +23,130 @@ export const useNuevaMatriculaLoaderStore = defineStore('nuevaMatriculaLoader-st
   const tp_nivel_educacional_padres = ref<string[]>([])
 
   const poblar_tp_cursos = async () => {
-    const { data, error } = await supabase
+    const { data, error, status } = await supabase
       .from('tp_cursos')
       .select()
       .eq('rbd_establecimiento', authStore.perfil?.rbd_usuario || 0)
       .order('sigla_nivel_curso', { ascending: true })
       .order('letra_nivel_curso', { ascending: true })
-    if (error) console.error(error)
+    if (error) useErrorStore().setError({ error: error, customCode: status })
     else {
-      tp_cursos.value = data.map((item: Tables<'tp_cursos'>) => item.nombre_curso || '')
+      tp_cursos.value = data.map((item: Tables<'tp_cursos'>) => item.nombre_curso)
     }
   }
 
   const poblar_tp_jornada_alumno = async () => {
-    const { data, error } = await supabase.from('tp_jornada_alumno').select()
-    if (error) console.error(error)
+    const { data, error, status } = await supabase.from('tp_jornada_alumno').select()
+    if (error) useErrorStore().setError({ error: error, customCode: status })
     else {
       tp_jornada_alumno.value = data.map(
-        (item: Tables<'tp_jornada_alumno'>) => item.descripción_jornada || '',
+        (item: Tables<'tp_jornada_alumno'>) => item.descripcion_jornada || '', // TODO corregir modelo
       )
     }
   }
 
   const poblar_tp_procedencia_alumno = async () => {
-    const { data, error } = await supabase.from('tp_procedencia_alumno').select()
-    if (error) console.error(error)
+    const { data, error, status } = await supabase.from('tp_procedencia_alumno').select()
+    if (error) useErrorStore().setError({ error: error, customCode: status })
     else {
       tp_procedencia_alumno.value = data.map(
-        (item: Tables<'tp_procedencia_alumno'>) => item.descripcion_procedencia || '',
+        (item: Tables<'tp_procedencia_alumno'>) => item.descripcion_procedencia || '', // TODO corregir modelo
       )
     }
   }
 
   const poblar_tp_tipo_tel = async () => {
-    const { data, error } = await supabase.from('tp_tipo_tel').select()
-    if (error) console.error(error)
+    const { data, error, status } = await supabase.from('tp_tipo_tel').select()
+    if (error) useErrorStore().setError({ error: error, customCode: status })
     else {
-      tp_tipo_tel.value = data.map((item: Tables<'tp_tipo_tel'>) => item.descripcion_tel || '')
+      tp_tipo_tel.value = data.map((item: Tables<'tp_tipo_tel'>) => item.descripcion_tel || '') // TODO corregir modelo)
     }
   }
 
   const poblar_tp_problemas_aprendizaje = async () => {
-    const { data, error } = await supabase.from('tp_problemas_aprendizaje').select()
-    if (error) console.error(error)
+    const { data, error, status } = await supabase.from('tp_problemas_aprendizaje').select()
+    if (error) useErrorStore().setError({ error: error, customCode: status })
     else {
       tp_problemas_aprendizaje.value = data.map(
-        (item: Tables<'tp_problemas_aprendizaje'>) => item.descripcion_problema_aprendizaje || '',
+        (item: Tables<'tp_problemas_aprendizaje'>) => item.descripcion_problema_aprendizaje || '', // TODO corregir modelo,
       )
     }
   }
 
   const poblar_tp_regiones_comunas_chile = async () => {
-    const { data, error } = await supabase.from('tp_regiones_comunas_chile').select()
-    if (error) console.error(error)
+    const { data, error, status } = await supabase.from('tp_regiones_comunas_chile').select()
+    if (error) useErrorStore().setError({ error: error, customCode: status })
     else {
       tp_regiones_comunas_chile.value = data.map(
-        (item: Tables<'tp_regiones_comunas_chile'>) => item.nombre_comuna || '',
+        (item: Tables<'tp_regiones_comunas_chile'>) => item.nombre_comuna || '', // TODO corregir modelo,
       )
     }
   }
 
   const poblar_tp_nacionalidad_alumno = async () => {
-    const { data, error } = await supabase.from('tp_nacionalidad_alumno').select()
-    if (error) console.error(error)
+    const { data, error, status } = await supabase.from('tp_nacionalidad_alumno').select()
+    if (error) useErrorStore().setError({ error: error, customCode: status })
     else {
       tp_nacionalidad_alumno.value = data.map(
-        (item: Tables<'tp_nacionalidad_alumno'>) => item.descripcion_nacionalidad || '',
+        (item: Tables<'tp_nacionalidad_alumno'>) => item.descripcion_nacionalidad,
       )
     }
   }
 
   const poblar_tp_genero_alumno = async () => {
-    const { data, error } = await supabase.from('tp_genero_alumno').select()
-    if (error) console.error(error)
+    const { data, error, status } = await supabase.from('tp_genero_alumno').select()
+    if (error) useErrorStore().setError({ error: error, customCode: status })
     else {
       tp_genero_alumno.value = data.map(
-        (item: Tables<'tp_genero_alumno'>) => item.descripcion_genero_alumno || '',
+        (item: Tables<'tp_genero_alumno'>) => item.descripcion_genero_alumno || '', // TODO corregir modelo,
       )
     }
   }
 
   const poblar_tp_situacion_social = async () => {
-    const { data, error } = await supabase.from('tp_situacion_social').select()
-    if (error) console.error(error)
+    const { data, error, status } = await supabase.from('tp_situacion_social').select()
+    if (error) useErrorStore().setError({ error: error, customCode: status })
     else {
       tp_situacion_social.value = data.map(
-        (item: Tables<'tp_situacion_social'>) => item.descripcion_situacion_social || '',
+        (item: Tables<'tp_situacion_social'>) => item.descripcion_situacion_social || '', // TODO corregir modelo,
       )
     }
   }
 
   const poblar_tp_pueblo_originario = async () => {
-    const { data, error } = await supabase.from('tp_pueblo_originario').select()
-    if (error) console.error(error)
+    const { data, error, status } = await supabase.from('tp_pueblo_originario').select()
+    if (error) useErrorStore().setError({ error: error, customCode: status })
     else {
       tp_pueblo_originario.value = data.map(
-        (item: Tables<'tp_pueblo_originario'>) => item.descripcion_pertenece || '',
+        (item: Tables<'tp_pueblo_originario'>) => item.descripcion_pertenece || '', // TODO corregir modelo,
       )
     }
   }
 
   const poblar_tp_vive_con = async () => {
-    const { data, error } = await supabase.from('tp_vive_con').select()
-    if (error) console.error(error)
+    const { data, error, status } = await supabase.from('tp_vive_con').select()
+    if (error) useErrorStore().setError({ error: error, customCode: status })
     else {
-      tp_vive_con.value = data.map((item: Tables<'tp_vive_con'>) => item.descripcion_vive_con || '')
+      tp_vive_con.value = data.map((item: Tables<'tp_vive_con'>) => item.descripcion_vive_con || '') // TODO corregir modelo)
     }
   }
 
   const poblar_tp_parentezco_alumno = async () => {
-    const { data, error } = await supabase.from('tp_parentezco_alumno').select()
-    if (error) console.error(error)
+    const { data, error, status } = await supabase.from('tp_parentezco_alumno').select()
+    if (error) useErrorStore().setError({ error: error, customCode: status })
     else {
       tp_parentezco_alumno.value = data.map(
-        (item: Tables<'tp_parentezco_alumno'>) => item.descripcion_parentezco_alumno || '',
+        (item: Tables<'tp_parentezco_alumno'>) => item.descripcion_parentezco_alumno || '', // TODO corregir modelo,
       )
     }
   }
 
   const poblar_tp_nivel_educacional_padres = async () => {
-    const { data, error } = await supabase.from('tp_nivel_educacional_padres').select()
-    if (error) console.error(error)
+    const { data, error, status } = await supabase.from('tp_nivel_educacional_padres').select()
+    if (error) useErrorStore().setError({ error: error, customCode: status })
     else {
       tp_nivel_educacional_padres.value = data.map(
-        (item: Tables<'tp_nivel_educacional_padres'>) => item.descripcion_educacion || '',
+        (item: Tables<'tp_nivel_educacional_padres'>) => item.descripcion_educacion || '', // TODO corregir modelo,
       )
     }
   }

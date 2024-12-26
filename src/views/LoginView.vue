@@ -5,15 +5,13 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 const router = useRouter()
 
-// store
-import { useAuthStore } from '@/stores/auth'
-const { login } = useAuthStore()
-
 // shadcn
 import Button from '@/components/ui/button/Button.vue'
 import { Loader } from 'lucide-vue-next'
 import { useToast } from '@/components/ui/toast/use-toast'
 const { toast } = useToast()
+
+import { supabase } from '@/services/supabaseClient'
 
 // data
 const dataFormulario = ref({ email: '', password: '' })
@@ -26,9 +24,8 @@ interface FormData {
 
 // methods
 const handleForm = async (formData: FormData) => {
-  const error = await login(formData)
-  if (!error) return router.push({ name: 'dashboard' })
-  else {
+  const { error } = await supabase.auth.signInWithPassword(formData)
+  if (error) {
     toast({
       title: 'Error',
       description: 'Email ó contraseña incorrectos',
@@ -36,6 +33,7 @@ const handleForm = async (formData: FormData) => {
     })
     dataFormulario.value.password = ''
   }
+  return router.push({ name: 'dashboard' })
 }
 </script>
 

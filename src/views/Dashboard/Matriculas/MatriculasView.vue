@@ -43,6 +43,8 @@ import {
 // store
 import { useAuthStore } from '@/stores/auth'
 const authStore = useAuthStore()
+import { useErrorStore } from '@/stores/error'
+const errorStore = useErrorStore()
 
 // data
 const alumnos = ref<Tables<'mv_libro_matricula'>[] | null>(null)
@@ -59,14 +61,14 @@ const queryDelete = (id: number) => supabase.from('mv_libro_matricula').delete()
 
 // methods
 const fetchSupabase = async () => {
-  const { data, error } = await querySelect
-  if (error) console.error(error)
+  const { data, error, status } = await querySelect
+  if (error) errorStore.setError({ error: error, customCode: status })
   else alumnos.value = data
 }
 
 const deleteSupabase = async (id: number) => {
   const { error } = await queryDelete(id)
-  if (error) console.error(error)
+  if (error) errorStore.setError({ error: error, customCode: status })
   else await fetchSupabase()
 }
 

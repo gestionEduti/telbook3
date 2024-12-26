@@ -22,15 +22,13 @@ import { useRouter } from 'vue-router'
 const router = useRouter()
 
 // store
-import { useAuthStore } from '@/stores/auth'
 import { storeToRefs } from 'pinia'
-const store = useAuthStore()
+import { useAuthStore } from '@/stores/auth'
 const { perfil } = storeToRefs(useAuthStore())
 
 // methods
 const logout = async () => {
-  await store.logout()
-  router.push({ name: 'login' })
+  await router.push({ name: 'logout' })
 }
 
 // computed

@@ -11,6 +11,8 @@ import { formatearRut } from '@/lib/formato'
 // store
 import { useAuthStore } from '@/stores/auth'
 const authStore = useAuthStore()
+import { useErrorStore } from '@/stores/error'
+const errorStore = useErrorStore()
 
 // shadcn
 import Table from '@/components/ui/table/Table.vue'
@@ -44,8 +46,8 @@ const querySelect = supabase
 
 // methods
 const fetchSupabase = async () => {
-  const { data, error } = await querySelect
-  if (error) console.error(error)
+  const { data, error, status } = await querySelect
+  if (error) errorStore.setError({ error: error, customCode: status })
   else alumnos.value = data
 }
 

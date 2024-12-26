@@ -5,6 +5,10 @@ import { ref, onMounted } from 'vue'
 // props
 const props = defineProps<{ siglaCurso: string }>()
 
+// store
+import { useErrorStore } from '@/stores/error'
+const errorStore = useErrorStore()
+
 // shadcn
 import Card from '@/components/ui/card/Card.vue'
 import CardContent from '@/components/ui/card/CardContent.vue'
@@ -28,8 +32,8 @@ const alumnos = ref<Tables<'mv_libro_matricula'>[] | null>(null)
 
 // methods
 const fetchSupabase = async () => {
-  const { data, error } = await querySelect
-  if (error) console.error(error)
+  const { data, error, status } = await querySelect
+  if (error) errorStore.setError({ error: error, customCode: status })
   else alumnos.value = data
 }
 

@@ -2,8 +2,12 @@ import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import { supabase } from '@/services/supabaseClient'
 import type { NominaAlumnoInterface } from '@/types/nomina'
+
+// store
 import { useAuthStore } from '@/stores/auth'
+import { useErrorStore } from './error'
 const authStore = useAuthStore()
+const errorStore = useErrorStore()
 
 export const usePrematriculaStore = defineStore('prematricula', () => {
   // data
@@ -42,9 +46,12 @@ export const usePrematriculaStore = defineStore('prematricula', () => {
     // await new Promise((resolve) => setTimeout(resolve, 2000))
     if (!nomina.value) return
     for (const alumno of nomina.value) {
-      await queryMatricularAlumno(alumno)
+      const { error, status } = await queryMatricularAlumno(alumno)
+      if (error) {
+        errorStore.setError({ error: error, customCode: status })
+        return
+      }
     }
-    loading.value = false
   }
 
   async function leerArchivo(f: File): Promise<string | null> {
@@ -69,22 +76,22 @@ export const usePrematriculaStore = defineStore('prematricula', () => {
     const xhtml = parser.parseFromString(fileContent, 'application/xhtml+xml')
 
     // Extraigo los nodos que corresponden a las filas de la tabla
-    const rows = Array.from(xhtml.querySelectorAll('table tr'))
+    const rows: HTMLTableRowElement[] = Array.from(xhtml.querySelectorAll('table tr'))
 
     // Separo la primera fila que corresponde a los headers
     const headerRow = rows.shift()
     if (!headerRow) return
 
     // Extraigo los headers de la tabla
-    const headers = Array.from(headerRow.querySelectorAll('th, td')).map((cell) =>
-      cell.textContent.trim(),
-    )
+    const nodes: NodeListOf<HTMLTableCellElement> = headerRow.querySelectorAll('th, td')
+    const nodesArray: HTMLTableCellElement[] = Array.from(nodes)
+    const headers: string[] = nodesArray.map((cell) => cell.textContent?.trim() || '')
 
     // Procesa cada fila de la tabla
-    const result = rows.map((row) => {
-      const cells = Array.from(row.querySelectorAll('td'))
-      const rowData = {}
-      headers.forEach((header, index) => {
+    const result = rows.map((row: HTMLTableRowElement) => {
+      const cells: HTMLTableCellElement[] = Array.from(row.querySelectorAll('td'))
+      const rowData: Record<string, string | null> = {}
+      headers.forEach((header: string, index: number) => {
         rowData[header] = cells[index]?.textContent.trim() || null // Match cells with headers
       })
       return rowData
@@ -95,7 +102,7 @@ export const usePrematriculaStore = defineStore('prematricula', () => {
   }
 
   async function queryMatricularAlumno(alumno: NominaAlumnoInterface) {
-    const { data, error } = await supabase.rpc('gestionar_alumnos_pre_matricula', {
+    return supabase.rpc('gestionar_alumnos_pre_matricula', {
       v_anio: alumno.Año,
       v_apellido_materno: alumno['Apellido Materno'],
       v_apellido_paterno: alumno['Apellido Paterno'],
@@ -114,13 +121,6 @@ export const usePrematriculaStore = defineStore('prematricula', () => {
       v_rut_usuario: authStore.perfil!.rut_usuario,
       v_telefono: alumno.Telefono,
     })
-    return error || data
-  }
-
-  async function reiniciarStore() {
-    nomina.value = null
-    nombreArchivo.value = null
-    loading.value = false
   }
 
   return {
@@ -137,6 +137,5 @@ export const usePrematriculaStore = defineStore('prematricula', () => {
     // methods
     procesarArchivo,
     cargarAlumnos,
-    reiniciarStore,
   }
 })

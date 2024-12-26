@@ -2,6 +2,10 @@
 // vue imports
 import { onMounted, ref } from 'vue'
 
+// store
+import { useErrorStore } from '@/stores/error'
+const errorStore = useErrorStore()
+
 // props
 const props = defineProps<{ rutAlumno: string }>()
 
@@ -37,8 +41,8 @@ const alumno = ref<Tables<'mv_libro_matricula'> | null>(null)
 
 // methods
 const fetchAlumno = async () => {
-  const { data, error } = await querySelect
-  if (error) console.error(error)
+  const { data, error, status } = await querySelect
+  if (error) errorStore.setError({ error: error, customCode: status })
   else alumno.value = data
 }
 

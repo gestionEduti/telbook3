@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
+import { useErrorStore } from '@/stores/error'
 
 const routes = [
   {
@@ -12,6 +13,11 @@ const routes = [
     path: '/login',
     name: 'login',
     component: () => import('../views/LoginView.vue'),
+  },
+  {
+    path: '/logout',
+    name: 'logout',
+    component: () => import('../views/LogoutView.vue'),
   },
   {
     path: '/dashboard',
@@ -136,6 +142,13 @@ const routes = [
       },
     ],
   },
+
+  // Error
+  {
+    path: '/:pathMatch(.*)*',
+    name: 'NotFound',
+    component: () => import('../views/NotFound.vue'),
+  },
 ]
 
 const router = createRouter({
@@ -154,6 +167,11 @@ router.beforeEach(async (to, from) => {
   if (authStore.usuario && paginaConAutenticacion) {
     return { name: 'dashboard' }
   }
+})
+
+router.afterEach((to, from) => {
+  const errorStore = useErrorStore()
+  errorStore.clearError()
 })
 
 export default router
