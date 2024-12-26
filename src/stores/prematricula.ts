@@ -12,6 +12,7 @@ export const usePrematriculaStore = defineStore('prematricula', () => {
   const loading = ref(false)
 
   // getters
+  const rbdEstablecimiento = computed(() => nomina.value?.[0]?.RBD || '')
   const nombreEstablecimiento = computed(() =>
     !nombreArchivo.value
       ? ''
@@ -32,16 +33,16 @@ export const usePrematriculaStore = defineStore('prematricula', () => {
     if (!contenidoArchivo) return // si no hay archivo, termina
     nomina.value = await parsearXHTML(contenidoArchivo) // actualiza el estado
     if (!nomina.value) return // si no se pudo parsear, termina
-    await new Promise((resolve) => setTimeout(resolve, 800))
+    // await new Promise((resolve) => setTimeout(resolve, 800)
     loading.value = false
   }
 
   async function cargarAlumnos() {
     loading.value = true
-    await new Promise((resolve) => setTimeout(resolve, 2000))
+    // await new Promise((resolve) => setTimeout(resolve, 2000))
     if (!nomina.value) return
     for (const alumno of nomina.value) {
-      // await queryMatricularAlumno(alumno)
+      await queryMatricularAlumno(alumno)
     }
     loading.value = false
   }
@@ -116,12 +117,19 @@ export const usePrematriculaStore = defineStore('prematricula', () => {
     return error || data
   }
 
+  async function reiniciarStore() {
+    nomina.value = null
+    nombreArchivo.value = null
+    loading.value = false
+  }
+
   return {
     // data
     nomina,
     loading,
 
     // getters
+    rbdEstablecimiento,
     nombreEstablecimiento,
     totalAlumnos,
     totalCursos,
@@ -129,5 +137,6 @@ export const usePrematriculaStore = defineStore('prematricula', () => {
     // methods
     procesarArchivo,
     cargarAlumnos,
+    reiniciarStore,
   }
 })

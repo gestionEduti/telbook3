@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+const router = useRouter()
 
 // shadcn
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -56,6 +58,14 @@ const procesarArchivo = async (data: FormKitFormData) => {
 const cargarAlumnos = async () => {
   pasoActual.value = 3
   await prematriculaStore.cargarAlumnos()
+}
+const reiniciarProceso = async () => {
+  pasoActual.value = 1
+  prematriculaStore.reiniciarStore()
+}
+const salir = () => {
+  prematriculaStore.reiniciarStore()
+  router.push({ name: 'dashboard' })
 }
 </script>
 
@@ -129,7 +139,7 @@ const cargarAlumnos = async () => {
 
         <div v-else-if="pasoActual === 2" class="space-y-4">
           <Alert>
-            <Info class="h-4 w-4" />
+            <Info class="h-4 w-4" color="black" />
             <AlertTitle> Resumen </AlertTitle>
             <AlertDescription class="pt-4">
               <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
@@ -140,6 +150,16 @@ const cargarAlumnos = async () => {
                   <CardContent>
                     <div class="text-2xl font-bold capitalize">
                       {{ prematriculaStore.nombreEstablecimiento }}
+                    </div>
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle class="text-sm font-medium"> RBD </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div class="text-2xl font-bold capitalize">
+                      {{ prematriculaStore.rbdEstablecimiento }}
                     </div>
                   </CardContent>
                 </Card>
@@ -210,10 +230,8 @@ const cargarAlumnos = async () => {
             <AlertDescription>
               <p class="py-2">Se han cargado exitosamente todos los alumnos.</p>
               <div class="flex space-x-2 pt-4">
-                <Button variant="outline" @click="pasoActual = 1"> Comenzar de nuevo </Button>
-                <RouterLink :to="{ name: 'dashboard' }">
-                  <Button>Finalizar y volver al libro</Button>
-                </RouterLink>
+                <Button variant="outline" @click="reiniciarProceso"> Comenzar de nuevo </Button>
+                <Button @click="salir">Finalizar y volver al libro</Button>
               </div>
             </AlertDescription>
           </Alert>
