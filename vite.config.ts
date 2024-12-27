@@ -14,7 +14,10 @@ export default defineConfig({
       plugins: [tailwind(), autoprefixer()],
     },
   },
-  plugins: [vue(), vueDevTools()],
+  plugins: [
+    vue(),
+    //  vueDevTools() // comentado para q no aparezca el overlay que me afecta en cypress
+  ],
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),

@@ -90,6 +90,7 @@ const handleForm = async (formData: FormData) => {
               label="Email"
               placeholder="profesor@mail.com"
               validation="required|email"
+              data-test="login-input-email"
             />
             <FormKit
               type="password"
@@ -98,9 +99,10 @@ const handleForm = async (formData: FormData) => {
               label="Contraseña"
               placeholder="tu contraseña"
               validation="required"
+              data-test="login-input-password"
             />
             <div class="flex">
-              <Button :disabled="state.loading" class="mx-auto">
+              <Button data-test="login-button" :disabled="state.loading" class="mx-auto">
                 <Loader v-if="state.loading" class="mr-2 h-6 w-6 animate-spin" />
                 Ingresar
               </Button>

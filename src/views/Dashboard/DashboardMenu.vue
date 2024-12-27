@@ -26,6 +26,7 @@ const esAdmin = computed(() => {
         :key="item.routeName"
         :to="{ name: item.routeName }"
         class="text-sm font-medium transition-colors hover:text-primary"
+        :data-test="`nav-${item.routeName}`"
       >
         {{ item.text }}
       </RouterLink>

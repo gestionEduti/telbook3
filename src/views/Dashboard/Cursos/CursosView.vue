@@ -64,8 +64,8 @@ onMounted(async () => {
           <CardDescription>Todos los cursos del establecimiento.</CardDescription>
           <Separator />
         </CardHeader>
-        <CardContent>
-          <ListaCursos v-if="cursos && niveles" :cursos :niveles />
+        <CardContent data-test="cursos-lista">
+          <ListaCursos v-if="cursos.length && niveles" :cursos :niveles />
           <!-- TODO: extraer a un componente de cuando no hay resultados -->
           <div v-else class="flex flex-col items-center justify-center space-y-2 py-8">
             <ListX :size="32" class="text-gray-500" />

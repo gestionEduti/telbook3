@@ -118,6 +118,27 @@ onMounted(async () => {
           <Separator />
         </CardHeader>
         <CardContent v-if="alumnos?.length">
+          <div class="grid gap-4 pb-4 md:grid-cols-2 lg:grid-cols-4">
+            <Card class="col-start-2">
+              <CardHeader class="flex flex-row items-center justify-center space-y-0 pb-2">
+                <CardTitle class="text-sm font-medium"> Total alumnos </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div class="text-center text-2xl font-bold">{{ alumnos.length || 0 }}</div>
+              </CardContent>
+            </Card>
+            <Card class="col-start-3">
+              <CardHeader class="flex flex-row items-center justify-center space-y-0 pb-2">
+                <CardTitle class="text-sm font-medium"> Total activos </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div class="text-center text-2xl font-bold">
+                  {{ alumnos.filter((a) => a.codigo_estado_alumno == 1).length || 0 }}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
           <Table class="border border-slate-300 bg-white">
             <TableCaption>
               {{ alumnos?.length ? 'Lista de matriculas.' : 'No hay alumnos' }}

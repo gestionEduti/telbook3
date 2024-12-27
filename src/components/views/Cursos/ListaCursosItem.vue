@@ -42,11 +42,7 @@ const colorCurso = (nivel: string) => {
     }"
   >
     <Card :class="[colorCurso(curso.sigla_nivel_curso || '')]">
-      <CardHeader>
-        <CardTitle class="h-12 text-center text-sm font-medium capitalize">
-          {{ nombreNivel(curso.sigla_nivel_curso) || '' }}
-        </CardTitle>
-      </CardHeader>
+      <CardHeader> </CardHeader>
       <CardContent>
         <div class="text-center text-2xl font-bold">
           {{ curso.letra_nivel_curso }}

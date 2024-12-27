@@ -1,5 +1,6 @@
 #telbook
 supabase/
+.github/
 
 # Logs
 logs

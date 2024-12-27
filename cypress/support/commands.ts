@@ -44,12 +44,8 @@ Cypress.Commands.add('getBySel', (selector, ...args) => {
 
 Cypress.Commands.add('login', (email: string, password: string) => {
   cy.visit('/login')
-
-  cy.get('input[name=email]').type(email)
-
-  // {enter} causes the form to submit
-  cy.get('input[name=password]').type(`${password}{enter}`, { log: false })
-
+  cy.getBySel('login-input-email').type(email)
+  cy.getBySel('login-input-password').type(`${password}{enter}`, { log: false })
   // we should be redirected to /dashboard
   cy.url().should('include', '/dashboard')
 
