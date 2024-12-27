@@ -35,14 +35,6 @@ const dataFormulario = ref<Tables<'mv_libro_matricula'>>()
 
 // methods
 const handleForm = async (data: Tables<'mv_libro_matricula'>) => {
-  // replace empty fields with null
-  // TODO: corregir tipos de TS
-  for (const key in data) {
-    if (data[key] === '') {
-      data[key] = null
-    }
-  }
-
   // obtener ultimo numero de matricula
   const {
     data: dataUnm,
@@ -70,7 +62,10 @@ const handleForm = async (data: Tables<'mv_libro_matricula'>) => {
     errorStore.setError({ error: errorUnl, customCode: statusUnl })
   } else {
     // seteando datos extras que no vienen del formulario
+    data.anio_libro = 2025
+    data.created_at = new Date().toISOString()
     data.estado_alumno = 'ACTIVO'
+    data.codigo_estado_alumno = 1
     data.nombre_completo_alumno = `${data.apellidos_alumno} ${data.nombres_alumno}`
     data.rbd_establecimiento = authStore.perfil?.rbd_usuario || 0
     data.numero_matricula_alumno = dataUnm[0].numero_matricula_alumno + 1 // TODO: corregir en la DB que sea NOT NULL
@@ -180,7 +175,7 @@ onMounted(async () => {
                   id="nacionalidad_alumno"
                   label="Nacionalidad"
                   placeholder="Selecciona la nacionalidad"
-                  validation="required"
+                  validation=""
                   :options="loaderStore.tp_nacionalidad_alumno"
                 />
                 <FormKit
@@ -188,7 +183,7 @@ onMounted(async () => {
                   label="Sexo"
                   name="sexo_alumno"
                   placeholder="Selecciona el sexo"
-                  validation="required"
+                  validation=""
                   :options="loaderStore.tp_genero_alumno"
                 />
               </div>
@@ -217,7 +212,7 @@ onMounted(async () => {
                   label="Jornada"
                   name="jornada_alumno"
                   placeholder="Selecciona la jornada"
-                  validation="required"
+                  validation=""
                   :options="loaderStore.tp_jornada_alumno"
                 />
               </div>
@@ -231,14 +226,14 @@ onMounted(async () => {
                 name="domicilio_alumno"
                 placeholder="Ingresa la direccion"
                 help="Calle, numero, departamento"
-                validation="required"
+                validation=""
               />
               <FormKit
                 type="select"
                 label="Comuna"
                 name="comuna_alumno"
                 placeholder="Selecciona la comuna"
-                validation="required"
+                validation=""
                 :options="loaderStore.tp_regiones_comunas_chile"
               />
 
@@ -251,7 +246,7 @@ onMounted(async () => {
                 label="Pueblo originario"
                 name="pueblo_originario_alumno"
                 placeholder="Selecciona si es pueblo originario"
-                validation="required"
+                validation=""
                 :options="loaderStore.tp_pueblo_originario"
               />
               <div class="flex gap-4">
@@ -260,7 +255,7 @@ onMounted(async () => {
                   label="Situacion social"
                   name="situacion_social_alumno"
                   placeholder="Selecciona la situacion social del alumno"
-                  validation="required"
+                  validation=""
                   :options="loaderStore.tp_situacion_social"
                 />
                 <FormKit
@@ -268,7 +263,7 @@ onMounted(async () => {
                   label="Procedencia"
                   name="procedencia_alumno"
                   placeholder="Selecciona la procedencia"
-                  validation="required"
+                  validation=""
                   :options="loaderStore.tp_procedencia_alumno"
                 />
               </div>
@@ -278,7 +273,7 @@ onMounted(async () => {
                   label="Tipo TEL"
                   name="tipo_tel_alumno"
                   placeholder="Selecciona el tipo TEL"
-                  validation="required"
+                  validation=""
                   :options="loaderStore.tp_tipo_tel"
                 />
                 <FormKit
@@ -286,7 +281,7 @@ onMounted(async () => {
                   label="Problemas aprendizaje"
                   name="problema_aprendizaje_alumno"
                   placeholder="Selecciona los problemas de aprendizaje"
-                  validation="required"
+                  validation=""
                   :options="loaderStore.tp_problemas_aprendizaje"
                 />
               </div>
@@ -301,7 +296,7 @@ onMounted(async () => {
                 label="Vive con"
                 name="vive_con_alumno"
                 placeholder="Selecciona con quien vive"
-                validation="required"
+                validation=""
                 :options="loaderStore.tp_vive_con"
               />
               <div class="flex gap-4">
@@ -310,14 +305,14 @@ onMounted(async () => {
                   label="Nombre apoderado"
                   placeholder="Ingresa el nombre y apellido"
                   name="nombre_apoderado_alumno"
-                  validation="required"
+                  validation=""
                 />
                 <FormKit
                   type="select"
                   label="Parentezco"
                   name="parentezco_con_alumno"
                   placeholder="Selecciona el parentezco"
-                  validation="required"
+                  validation=""
                   :options="loaderStore.tp_parentezco_alumno"
                 />
               </div>
@@ -328,7 +323,7 @@ onMounted(async () => {
                   name="telefono_apoderado_alumno"
                   help="Ingresa el numero en este formato: +56981234567"
                   placeholder="Ingresa el telefono"
-                  validation="required"
+                  validation=""
                 />
                 <FormKit
                   type="email"
@@ -336,7 +331,7 @@ onMounted(async () => {
                   id="email"
                   label="Email"
                   placeholder="Ingresa el email"
-                  validation="required|email"
+                  validation="email"
                 />
               </div>
               <div class="flex gap-4">
@@ -345,7 +340,7 @@ onMounted(async () => {
                   label="Nivel educacional padre"
                   name="nivel_educacional_padre"
                   placeholder="Selecciona el nivel educacional del padre"
-                  validation="required"
+                  validation=""
                   :options="loaderStore.tp_nivel_educacional_padres"
                 />
                 <FormKit
@@ -353,7 +348,7 @@ onMounted(async () => {
                   label="Nivel educacional madre"
                   name="nivel_educacional_madre"
                   placeholder="Selecciona el nivel educacional de la madre"
-                  validation="required"
+                  validation=""
                   :options="loaderStore.tp_nivel_educacional_padres"
                 />
               </div>

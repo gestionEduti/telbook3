@@ -37,3 +37,22 @@
 // }
 
 export {}
+
+Cypress.Commands.add('getBySel', (selector, ...args) => {
+  return cy.get(`[data-test=${selector}]`, ...args)
+})
+
+Cypress.Commands.add('login', (email: string, password: string) => {
+  cy.visit('/login')
+
+  cy.get('input[name=email]').type(email)
+
+  // {enter} causes the form to submit
+  cy.get('input[name=password]').type(`${password}{enter}`, { log: false })
+
+  // we should be redirected to /dashboard
+  cy.url().should('include', '/dashboard')
+
+  // UI should reflect this user being logged in
+  // cy.getBySel('avatar-email').should('contain', email)
+})

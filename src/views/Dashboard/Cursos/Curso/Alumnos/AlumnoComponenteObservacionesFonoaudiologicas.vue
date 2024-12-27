@@ -54,6 +54,7 @@ import ScrollBar from '@/components/ui/scroll-area/ScrollBar.vue'
 import CardFooter from '@/components/ui/card/CardFooter.vue'
 import SheetFooter from '@/components/ui/sheet/SheetFooter.vue'
 
+// supabase
 import type { Database } from '@/types/supabase'
 type InsertType = Database['public']['Tables']['mv_anotaciones_fonoaudiologicas']['Insert']
 // TODO investigar mas de este tipo de tipado

@@ -1,7 +1,7 @@
 /// <reference types="cypress" />
 
 describe('probar autenticacion', () => {
-  beforeEach(() => cy.visit('http://127.0.0.1:5173/logout'))
+  beforeEach(() => cy.visit('http://127.0.0.1:5173/login'))
 
   const adminUser = { email: 'sergrodrig@gmail.com', password: '123456' }
   const profeUser = { email: 'alberto@gmail.com', password: '123456' }

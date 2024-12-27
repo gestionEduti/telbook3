@@ -20,6 +20,8 @@ import './commands'
 // require('./commands')
 
 import { mount } from 'cypress/vue'
+
+//Load global styles
 import '../../src/assets/index.css' // tailwind
 
 // Augment the Cypress namespace to include type definitions for

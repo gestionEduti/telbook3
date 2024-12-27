@@ -53,7 +53,9 @@ const esAdmin = computed(() => {
           <p class="text-sm font-medium leading-none">
             {{ perfil?.nombre_usuario }} {{ perfil?.apellido_usuario }}
           </p>
-          <p class="text-xs leading-none text-muted-foreground">{{ perfil?.email }}</p>
+          <p data-test="avatar-email" class="text-xs leading-none text-muted-foreground">
+            {{ perfil?.email }}
+          </p>
         </div>
       </DropdownMenuLabel>
       <DropdownMenuSeparator />

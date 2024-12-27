@@ -8,12 +8,18 @@ import Tabs from '@/components/ui/tabs/Tabs.vue'
 import TabsContent from '@/components/ui/tabs/TabsContent.vue'
 import TabsList from '@/components/ui/tabs/TabsList.vue'
 import TabsTrigger from '@/components/ui/tabs/TabsTrigger.vue'
+
+// store
+import { useAuthStore } from '@/stores/auth'
+const authStore = useAuthStore()
 </script>
 
 <template>
   <div class="flex-1 space-y-4 px-4 py-8 pt-6">
     <div class="flex items-end justify-between space-y-2">
-      <h2 class="text-3xl font-bold tracking-tight">Resumen</h2>
+      <h2 data-test="resumen-h1" class="text-3xl font-bold tracking-tight">
+        Hola {{ authStore.perfil?.nombre_usuario }}!
+      </h2>
     </div>
 
     <Tabs default-value="overview" class="space-y-4">

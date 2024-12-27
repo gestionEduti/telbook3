@@ -1,20 +1,26 @@
 /// <reference types="cypress" />
 
-const adminCredentials = { email: 'sergrodrig@gmail.com', password: '123456' }
-const profeCredentials = { email: 'alberto@gmail.com', password: '123456' }
+const adminCredentials = { email: 'test_admin@mail.com', password: '123456' }
+const profeCredentials = { email: 'test_profesor@mail.com', password: '123456' }
+const sinPerfilCredentials = { email: 'test_no_profile@mail.com', password: '123456' }
 
 describe('probar pagina matriculas', () => {
   beforeEach(() => {
-    cy.visit('http://127.0.0.1:5173/login')
-    cy.get('input[id="email"]').type(adminCredentials.email)
-    cy.get('input[id="password"]').type(adminCredentials.password)
-    cy.contains('button', 'Ingresar').click()
+    cy.login(profeCredentials.email, profeCredentials.password)
     cy.url().should('include', '/dashboard/resumen')
     cy.visit('http://127.0.0.1:5173/dashboard/matriculas')
     cy.url().should('include', '/dashboard/matriculas')
+
+    // cy.visit('http://127.0.0.1:5173/login')
+    // cy.get('input[id="email"]').type(profeCredentials.email)
+    // cy.get('input[id="password"]').type(profeCredentials.password)
+    // cy.contains('button', 'Ingresar').click({ force: true })
+    // cy.url().should('include', '/dashboard/resumen')
+    // cy.visit('http://127.0.0.1:5173/dashboard/matriculas')
+    // cy.url().should('include', '/dashboard/matriculas')
   })
 
-  it('deberia mostrar la pagina matriculas', () => {
+  it.only('deberia mostrar la pagina matriculas', () => {
     cy.get('main').should('exist').should('contain', 'Matriculas')
   })
 
@@ -24,9 +30,9 @@ describe('probar pagina matriculas', () => {
   })
 })
 
-describe.only('probar funcionalidades como admin', () => {
+describe('probar funcionalidades como admin', () => {
   beforeEach(() => {
-    cy.visit('http://127.0.0.1:5173/logout')
+    cy.visit('http://127.0.0.1:5173/login')
     cy.get('input[id="email"]').type(adminCredentials.email)
     cy.get('input[id="password"]').type(adminCredentials.password)
     cy.contains('button', 'Ingresar').click()
