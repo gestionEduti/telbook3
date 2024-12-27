@@ -12,7 +12,7 @@ import CardContent from '@/components/ui/card/CardContent.vue'
 import { useAuthStore } from '@/stores/auth'
 import { useErrorStore } from '@/stores/error'
 const errorStore = useErrorStore()
-const { establecimiento } = useAuthStore()
+const authStore = useAuthStore()
 
 // props
 const props = defineProps<{ siglaCurso: string }>()
@@ -24,7 +24,8 @@ const queryNiveles = supabase.from('tp_niveles').select()
 const queryCurso = supabase
   .from('tp_cursos')
   .select()
-  .eq('rbd_establecimiento', String(establecimiento?.rbd))
+  .eq('rbd_establecimiento', String(authStore.establecimiento?.rbd))
+  .eq('anio_curso', 2025) // TODO cambiar a año sacado desde la futura tabla de configuraciones
   .eq('nombre_curso', props.siglaCurso)
   .single()
 

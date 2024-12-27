@@ -52,6 +52,7 @@ export const usePrematriculaStore = defineStore('prematricula', () => {
         return
       }
     }
+    loading.value = false
   }
 
   async function leerArchivo(f: File): Promise<string | null> {
@@ -103,7 +104,7 @@ export const usePrematriculaStore = defineStore('prematricula', () => {
 
   async function queryMatricularAlumno(alumno: NominaAlumnoInterface) {
     return supabase.rpc('gestionar_alumnos_pre_matricula', {
-      v_anio: alumno.Año,
+      v_anio: 2025, // TODO cambiar a año sacado desde la futura tabla de configuraciones
       v_apellido_materno: alumno['Apellido Materno'],
       v_apellido_paterno: alumno['Apellido Paterno'],
       v_comuna: alumno['Comuna Residencia'],
@@ -117,7 +118,7 @@ export const usePrematriculaStore = defineStore('prematricula', () => {
       v_letra_nivel: alumno['Letra Curso'],
       v_nombres_alumno: alumno.Nombres,
       v_rbd: alumno.RBD,
-      v_rut_alumno: alumno.Run,
+      v_rut_alumno: `${alumno.Run}-${alumno['Dígito Ver.']}`,
       v_rut_usuario: authStore.perfil!.rut_usuario,
       v_telefono: alumno.Telefono,
     })

@@ -29,7 +29,8 @@ const queryNiveles = supabase.from('tp_niveles').select()
 const queryCursos = supabase
   .from('tp_cursos')
   .select('*')
-  .eq('rbd_establecimiento', authStore.perfil!.rbd_usuario) // TODO: setear error si es que el perfil no existe
+  .eq('anio_curso', 2025) // TODO cambiar a año sacado desde la futura tabla de configuraciones
+  .eq('rbd_establecimiento', String(authStore.establecimiento?.rbd)) // TODO: setear error si es que el perfil no existe
   .order('sigla_nivel_curso', { ascending: true })
   .order('letra_nivel_curso', { ascending: true })
 
