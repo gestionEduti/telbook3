@@ -23,24 +23,24 @@ import Separator from '@/components/ui/separator/Separator.vue'
             <Separator />
           </CardHeader>
           <CardContent>
-            <div class="text-sm font-semibold tracking-tighter text-gray-400">Nombre</div>
+            <div class="telbook-label">Nombre</div>
             <p class="mb-3 capitalize">
               {{ perfil.nombre_usuario?.toLocaleLowerCase() }}
               {{ perfil.apellido_usuario?.toLocaleLowerCase() }}
             </p>
-            <div class="text-sm font-semibold tracking-tighter text-gray-400">Email</div>
+            <div class="telbook-label">Email</div>
             <p class="mb-3">
               {{ usuario.email?.toLocaleLowerCase() }}
             </p>
-            <div class="text-sm font-semibold tracking-tighter text-gray-400">Rut</div>
+            <div class="telbook-label">Rut</div>
             <p class="mb-3">
               {{ formatearRut(perfil.rut_usuario?.toLocaleLowerCase()) }}
             </p>
-            <div class="text-sm font-semibold tracking-tighter text-gray-400">Telefono</div>
+            <div class="telbook-label">Telefono</div>
             <p class="mb-3">
               {{ perfil.telefono?.toLocaleLowerCase() }}
             </p>
-            <div class="text-sm font-semibold tracking-tighter text-gray-400">RBD</div>
+            <div class="telbook-label">RBD</div>
             <p class="mb-3">
               {{ String(perfil.rbd_usuario).toLocaleLowerCase() }}
             </p>
@@ -55,11 +55,11 @@ import Separator from '@/components/ui/separator/Separator.vue'
             <Separator />
           </CardHeader>
           <CardContent>
-            <div class="text-sm font-semibold tracking-tighter text-gray-400">Nombre</div>
+            <div class="telbook-label">Nombre</div>
             <p class="mb-3 capitalize">
               {{ establecimiento?.razon_social?.toLocaleLowerCase() }}
             </p>
-            <div class="text-sm font-semibold tracking-tighter text-gray-400">Cursos</div>
+            <div class="telbook-label">Cursos</div>
             <p class="mb-3 capitalize">No tienes cursos asignados</p>
           </CardContent>
         </Card>

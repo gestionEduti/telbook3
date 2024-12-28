@@ -84,31 +84,31 @@ onMounted(async () => {
             </CardHeader>
             <CardContent>
               <div v-if="alumno.nombres_alumno">
-                <p class="text-sm font-semibold tracking-tighter text-gray-400">Nombres</p>
+                <p class="telbook-label">Nombres</p>
                 <p class="mb-3 capitalize">
                   {{ alumno.nombres_alumno?.toLocaleLowerCase() }}
                 </p>
               </div>
               <div v-if="alumno.apellidos_alumno">
-                <p class="text-sm font-semibold tracking-tighter text-gray-400">Apellidos</p>
+                <p class="telbook-label">Apellidos</p>
                 <p class="mb-3 capitalize">
                   {{ alumno.apellidos_alumno?.toLocaleLowerCase() }}
                 </p>
               </div>
               <div v-if="alumno.nacionalidad_alumno">
-                <p class="text-sm font-semibold tracking-tighter text-gray-400">Nacionalidad</p>
+                <p class="telbook-label">Nacionalidad</p>
                 <p class="mb-3 capitalize">
                   {{ formatearNacionalidad(alumno.nacionalidad_alumno?.toLowerCase() || '') }}
                 </p>
               </div>
               <div v-if="alumno.sexo_alumno">
-                <p class="text-sm font-semibold tracking-tighter text-gray-400">Sexo</p>
+                <p class="telbook-label">Sexo</p>
                 <p class="mb-3 capitalize">
                   {{ alumno.sexo_alumno === 'MASCULINO' ? 'Masculino ♂' : 'Femenino ♀' }}
                 </p>
               </div>
               <div v-if="alumno.fecha_nacimiento_alumno">
-                <p class="text-sm font-semibold tracking-tighter text-gray-400">Fecha nacimiento</p>
+                <p class="telbook-label">Fecha nacimiento</p>
                 <p class="mb-3 capitalize">
                   {{ formatearFechaNacimiento(alumno.fecha_nacimiento_alumno) }}
                 </p>
@@ -126,19 +126,19 @@ onMounted(async () => {
             </CardHeader>
             <CardContent>
               <div v-if="alumno.apoderado_tutor_alumno">
-                <p class="text-sm font-semibold tracking-tighter text-gray-400">Nombre apoderado</p>
+                <p class="telbook-label">Nombre apoderado</p>
                 <p class="mb-3 capitalize">
                   {{ alumno.apoderado_tutor_alumno?.toLowerCase() }}
                 </p>
               </div>
               <div v-if="alumno.email_apoderado_alumno">
-                <p class="text-sm font-semibold tracking-tighter text-gray-400">Email apoderado</p>
+                <p class="telbook-label">Email apoderado</p>
                 <p class="mb-3">
                   {{ alumno.email_apoderado_alumno?.toLowerCase() }}
                 </p>
               </div>
               <div v-if="alumno.vive_con_alumno">
-                <p class="text-sm font-semibold tracking-tighter text-gray-400">Vive con</p>
+                <p class="telbook-label">Vive con</p>
                 <p class="mb-3 capitalize">
                   {{ alumno.vive_con_alumno?.toLocaleLowerCase() }}
                 </p>
@@ -156,7 +156,7 @@ onMounted(async () => {
             </CardHeader>
             <CardContent>
               <div v-if="alumno.domicilio_alumno && alumno.comuna_alumno">
-                <p class="text-sm font-semibold tracking-tighter text-gray-400">Dirección</p>
+                <p class="telbook-label">Dirección</p>
                 <p class="mb-3 capitalize">
                   {{
                     alumno.domicilio_alumno?.toLowerCase() +

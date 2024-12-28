@@ -7,6 +7,9 @@
   .contenedor {
     @apply mx-auto w-full max-w-7xl;
   }
+  .telbook-label {
+    @apply text-sm font-semibold tracking-tighter text-gray-400;
+  }
 }
 
 /* shadcn-vue configuration */

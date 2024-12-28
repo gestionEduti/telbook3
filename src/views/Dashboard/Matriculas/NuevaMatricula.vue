@@ -131,9 +131,7 @@ onMounted(async () => {
           >
             <!-- slot que contiene los input -->
             <template #default>
-              <p class="text-sm font-semibold tracking-tighter text-gray-400">
-                Sección Datos personales
-              </p>
+              <p class="telbook-label">Sección Datos personales</p>
               <Separator class="mb-4" />
               <FormKit
                 type="text"
@@ -188,9 +186,7 @@ onMounted(async () => {
                 />
               </div>
 
-              <p class="mt-8 text-sm font-semibold tracking-tighter text-gray-400">
-                Sección Incorporacion
-              </p>
+              <p class="telbook-label mt-8">Sección Incorporacion</p>
               <Separator class="mb-4" />
               <FormKit
                 type="date"
@@ -217,9 +213,7 @@ onMounted(async () => {
                 />
               </div>
 
-              <p class="mt-8 text-sm font-semibold tracking-tighter text-gray-400">
-                Sección Domicilio
-              </p>
+              <p class="telbook-label mt-8">Sección Domicilio</p>
               <Separator class="mb-4" />
               <FormKit
                 label="Direccion"
@@ -237,9 +231,7 @@ onMounted(async () => {
                 :options="loaderStore.tp_regiones_comunas_chile"
               />
 
-              <p class="mt-8 text-sm font-semibold tracking-tighter text-gray-400">
-                Sección Situacion alumno
-              </p>
+              <p class="telbook-label mt-8">Sección Situacion alumno</p>
               <Separator class="mb-4" />
               <FormKit
                 type="select"
@@ -287,9 +279,7 @@ onMounted(async () => {
               </div>
 
               <!--  -->
-              <p class="mt-8 text-sm font-semibold tracking-tighter text-gray-400">
-                Sección Familia
-              </p>
+              <p class="telbook-label mt-8">Sección Familia</p>
               <Separator class="mb-4" />
               <FormKit
                 type="select"

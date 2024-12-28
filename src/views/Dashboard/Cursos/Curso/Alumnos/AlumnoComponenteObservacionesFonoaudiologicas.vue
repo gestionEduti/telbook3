@@ -104,7 +104,7 @@ const fetchObsevacionesFonoaudiologicas = async () => {
 <template>
   <div class="grid w-full gap-1.5">
     <Label for="message-2">
-      <div class="text-sm font-semibold tracking-tighter text-gray-400">Fonoaudiológicas</div>
+      <div class="telbook-label">Fonoaudiológicas</div>
     </Label>
     <Textarea
       v-model="nuevaObservacion"

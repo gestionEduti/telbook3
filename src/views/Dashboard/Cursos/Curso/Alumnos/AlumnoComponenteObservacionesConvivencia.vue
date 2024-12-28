@@ -10,7 +10,7 @@ const { toast } = useToast()
 <template>
   <div class="grid w-full gap-1.5">
     <Label for="message-2">
-      <div class="text-sm font-semibold tracking-tighter text-gray-400">Convivencia escolar</div>
+      <div class="telbook-label">Convivencia escolar</div>
     </Label>
     <Textarea id="message-2" placeholder="Escribe la observacion acá." rows="6" />
     <div class="flex gap-1">

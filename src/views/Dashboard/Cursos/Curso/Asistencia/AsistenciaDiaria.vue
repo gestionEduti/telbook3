@@ -68,9 +68,7 @@ onMounted(async () => {
     </CardHeader>
     <CardContent>
       <ul class="mb-3 divide-y">
-        <li
-          class="grid grid-cols-12 items-center gap-2 py-3 text-sm font-semibold tracking-tighter text-gray-400"
-        >
+        <li class="telbook-label grid grid-cols-12 items-center gap-2 py-3">
           <span class="col-span-4">Nombre</span>
           <span class="col-span-2">Estado</span>
           <span class="col-span-6">Comentario</span>
