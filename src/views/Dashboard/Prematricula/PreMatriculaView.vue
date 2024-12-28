@@ -50,14 +50,15 @@ const prematriculaStore = usePrematriculaStore()
 const pasoActual = ref(1)
 
 // methods
-const procesarArchivo = async (data: FormKitFormData) => {
+const parsearArchivo = async (data: FormKitFormData) => {
   const primerArchivo = data.license[0].file // viene 1 o mas archivos en un array. este es el primero
   await prematriculaStore.procesarArchivo(primerArchivo)
   pasoActual.value = 2
 }
-const cargarAlumnos = async () => {
+const cargarAlumnosEnLaDB = async () => {
   pasoActual.value = 3
   await prematriculaStore.cargarAlumnos()
+  await prematriculaStore.obtenerResumen()
 }
 const reiniciarProceso = async () => {
   pasoActual.value = 1
@@ -117,7 +118,7 @@ const salir = () => {
 
         <!-- stepper content -->
         <div v-if="pasoActual === 1">
-          <FormKit id="licenseForm" type="form" @submit="procesarArchivo" :actions="false">
+          <FormKit id="licenseForm" type="form" @submit="parsearArchivo" :actions="false">
             <template #default="{ state }">
               <FormKit
                 type="file"
@@ -205,7 +206,7 @@ const salir = () => {
                 <AlertDialogFooter>
                   <AlertDialogCancel>Cancelar</AlertDialogCancel>
                   <AlertDialogAction as-child>
-                    <Button :disabled="prematriculaStore.loading" @click="cargarAlumnos">
+                    <Button :disabled="prematriculaStore.loading" @click="cargarAlumnosEnLaDB">
                       <Loader v-if="prematriculaStore.loading" class="mr-2 h-6 w-6 animate-spin" />
                       Confirmar
                     </Button>
@@ -229,6 +230,9 @@ const salir = () => {
             <AlertTitle> Finalizado </AlertTitle>
             <AlertDescription>
               <p class="py-2">Se han cargado exitosamente todos los alumnos.</p>
+              <Alert>
+                <AlertDescription> Resumen de la carga: </AlertDescription>
+              </Alert>
               <div class="flex space-x-2 pt-4">
                 <Button variant="outline" @click="reiniciarProceso"> Comenzar de nuevo </Button>
                 <Button @click="salir">Finalizar y volver al libro</Button>

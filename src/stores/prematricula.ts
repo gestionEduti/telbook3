@@ -130,6 +130,13 @@ export const usePrematriculaStore = defineStore('prematricula', () => {
     loading.value = false
   }
 
+  async function obtenerResumen() {
+    // select accion, count(*)
+    // from log_prematricula
+    // where rbd = 26523
+    // group by accion
+  }
+
   return {
     // data
     nomina,
@@ -145,5 +152,6 @@ export const usePrematriculaStore = defineStore('prematricula', () => {
     procesarArchivo,
     cargarAlumnos,
     reiniciarStore,
+    obtenerResumen,
   }
 })

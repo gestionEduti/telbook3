@@ -40,7 +40,7 @@ export const useNuevaMatriculaLoaderStore = defineStore('nuevaMatriculaLoader-st
     if (error) useErrorStore().setError({ error: error, customCode: status })
     else {
       tp_jornada_alumno.value = data.map(
-        (item: Tables<'tp_jornada_alumno'>) => item.descripcion_jornada || '', // TODO corregir modelo
+        (item: Tables<'tp_jornada_alumno'>) => item.descripcion_jornada || '', // TODO (modelo) corregir modelo
       )
     }
   }
@@ -50,7 +50,7 @@ export const useNuevaMatriculaLoaderStore = defineStore('nuevaMatriculaLoader-st
     if (error) useErrorStore().setError({ error: error, customCode: status })
     else {
       tp_procedencia_alumno.value = data.map(
-        (item: Tables<'tp_procedencia_alumno'>) => item.descripcion_procedencia || '', // TODO corregir modelo
+        (item: Tables<'tp_procedencia_alumno'>) => item.descripcion_procedencia || '', // TODO (modelo) corregir modelo
       )
     }
   }
@@ -59,7 +59,7 @@ export const useNuevaMatriculaLoaderStore = defineStore('nuevaMatriculaLoader-st
     const { data, error, status } = await supabase.from('tp_tipo_tel').select()
     if (error) useErrorStore().setError({ error: error, customCode: status })
     else {
-      tp_tipo_tel.value = data.map((item: Tables<'tp_tipo_tel'>) => item.descripcion_tel || '') // TODO corregir modelo)
+      tp_tipo_tel.value = data.map((item: Tables<'tp_tipo_tel'>) => item.descripcion_tel || '') // TODO (modelo) corregir modelo)
     }
   }
 
@@ -68,7 +68,7 @@ export const useNuevaMatriculaLoaderStore = defineStore('nuevaMatriculaLoader-st
     if (error) useErrorStore().setError({ error: error, customCode: status })
     else {
       tp_problemas_aprendizaje.value = data.map(
-        (item: Tables<'tp_problemas_aprendizaje'>) => item.descripcion_problema_aprendizaje || '', // TODO corregir modelo,
+        (item: Tables<'tp_problemas_aprendizaje'>) => item.descripcion_problema_aprendizaje || '', // TODO (modelo) corregir modelo,
       )
     }
   }
@@ -78,7 +78,7 @@ export const useNuevaMatriculaLoaderStore = defineStore('nuevaMatriculaLoader-st
     if (error) useErrorStore().setError({ error: error, customCode: status })
     else {
       tp_regiones_comunas_chile.value = data.map(
-        (item: Tables<'tp_regiones_comunas_chile'>) => item.nombre_comuna || '', // TODO corregir modelo,
+        (item: Tables<'tp_regiones_comunas_chile'>) => item.nombre_comuna || '', // TODO (modelo) corregir modelo,
       )
     }
   }
@@ -98,7 +98,7 @@ export const useNuevaMatriculaLoaderStore = defineStore('nuevaMatriculaLoader-st
     if (error) useErrorStore().setError({ error: error, customCode: status })
     else {
       tp_genero_alumno.value = data.map(
-        (item: Tables<'tp_genero_alumno'>) => item.descripcion_genero_alumno || '', // TODO corregir modelo,
+        (item: Tables<'tp_genero_alumno'>) => item.descripcion_genero_alumno || '', // TODO (modelo) corregir modelo,
       )
     }
   }
@@ -108,7 +108,7 @@ export const useNuevaMatriculaLoaderStore = defineStore('nuevaMatriculaLoader-st
     if (error) useErrorStore().setError({ error: error, customCode: status })
     else {
       tp_situacion_social.value = data.map(
-        (item: Tables<'tp_situacion_social'>) => item.descripcion_situacion_social || '', // TODO corregir modelo,
+        (item: Tables<'tp_situacion_social'>) => item.descripcion_situacion_social || '', // TODO (modelo) corregir modelo,
       )
     }
   }
@@ -118,7 +118,7 @@ export const useNuevaMatriculaLoaderStore = defineStore('nuevaMatriculaLoader-st
     if (error) useErrorStore().setError({ error: error, customCode: status })
     else {
       tp_pueblo_originario.value = data.map(
-        (item: Tables<'tp_pueblo_originario'>) => item.descripcion_pertenece || '', // TODO corregir modelo,
+        (item: Tables<'tp_pueblo_originario'>) => item.descripcion_pertenece || '', // TODO (modelo) corregir modelo,
       )
     }
   }
@@ -127,7 +127,7 @@ export const useNuevaMatriculaLoaderStore = defineStore('nuevaMatriculaLoader-st
     const { data, error, status } = await supabase.from('tp_vive_con').select()
     if (error) useErrorStore().setError({ error: error, customCode: status })
     else {
-      tp_vive_con.value = data.map((item: Tables<'tp_vive_con'>) => item.descripcion_vive_con || '') // TODO corregir modelo)
+      tp_vive_con.value = data.map((item: Tables<'tp_vive_con'>) => item.descripcion_vive_con || '') // TODO (modelo) corregir modelo)
     }
   }
 
@@ -136,7 +136,7 @@ export const useNuevaMatriculaLoaderStore = defineStore('nuevaMatriculaLoader-st
     if (error) useErrorStore().setError({ error: error, customCode: status })
     else {
       tp_parentezco_alumno.value = data.map(
-        (item: Tables<'tp_parentezco_alumno'>) => item.descripcion_parentezco_alumno || '', // TODO corregir modelo,
+        (item: Tables<'tp_parentezco_alumno'>) => item.descripcion_parentezco_alumno || '', // TODO (modelo) corregir modelo,
       )
     }
   }
@@ -146,7 +146,7 @@ export const useNuevaMatriculaLoaderStore = defineStore('nuevaMatriculaLoader-st
     if (error) useErrorStore().setError({ error: error, customCode: status })
     else {
       tp_nivel_educacional_padres.value = data.map(
-        (item: Tables<'tp_nivel_educacional_padres'>) => item.descripcion_educacion || '', // TODO corregir modelo,
+        (item: Tables<'tp_nivel_educacional_padres'>) => item.descripcion_educacion || '', // TODO (modelo) corregir modelo,
       )
     }
   }

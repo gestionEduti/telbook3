@@ -62,14 +62,14 @@ type InsertType = Database['public']['Tables']['mv_anotaciones_fonoaudiologicas'
 // methods
 const insertar = async () => {
   const newObservacion: InsertType = {
-    dia: parseInt(day.value), // TODO corregir modelo
-    mes: parseInt(month.value), // TODO corregir modelo
-    anio: parseInt(year.value), // TODO corregir modelo
+    dia: parseInt(day.value), // TODO (modelo) quitar estas columnas redundantes
+    mes: parseInt(month.value), // TODO (modelo) quitar estas columnas redundantes
+    anio: parseInt(year.value), // TODO (modelo) quitar estas columnas redundantes
     fecha_anotacion: String(fecha_anotacion.value),
     descripcion_anotacion: nuevaObservacion.value,
     numero_matricula: props.alumno.numero_matricula_alumno,
-    rbd_escuela: establecimiento.value!.rbd!, // TODO corregir modelo
-    rut_anotador: perfil.value!.rut_usuario!, // TODO corregir modelo
+    rbd_escuela: establecimiento.value!.rbd!, // TODO (modelo) tp_establecimiento rbd debe ser not null
+    rut_anotador: perfil.value!.rut_usuario!, // TODO (modelo) mv_usuario rut_usuario debe ser not null
   }
 
   const { error, status } = await supabase

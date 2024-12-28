@@ -858,6 +858,20 @@ export type Database = {
             referencedRelation: "tp_vive_con"
             referencedColumns: ["descripcion_vive_con"]
           },
+          {
+            foreignKeyName: "mv_libro_matricula___fk_codigo_estado_alumno"
+            columns: ["codigo_estado_alumno"]
+            isOneToOne: false
+            referencedRelation: "tp_estado_alumno"
+            referencedColumns: ["codigo_estado"]
+          },
+          {
+            foreignKeyName: "mv_libro_matricula___fk_estado_alumno"
+            columns: ["estado_alumno"]
+            isOneToOne: false
+            referencedRelation: "tp_estado_alumno"
+            referencedColumns: ["descripcion_estado"]
+          },
         ]
       }
       mv_pla_corto_plazo: {
@@ -1345,6 +1359,24 @@ export type Database = {
             referencedColumns: ["codigo_perfil"]
           },
         ]
+      }
+      tp_estado_alumno: {
+        Row: {
+          codigo_estado: number
+          descripcion_estado: string
+          id: number
+        }
+        Insert: {
+          codigo_estado: number
+          descripcion_estado: string
+          id?: number
+        }
+        Update: {
+          codigo_estado?: number
+          descripcion_estado?: string
+          id?: number
+        }
+        Relationships: []
       }
       tp_estado_usuario: {
         Row: {

@@ -67,9 +67,7 @@ onMounted(async () => {
       </CardHeader>
       <CardContent v-if="alumnos?.length">
         <Table class="border border-slate-300 bg-white">
-          <TableCaption>
-            {{ alumnos.length }} {{ alumnos.length > 1 ? 'alumnos en total' : 'alumno en total' }}
-          </TableCaption>
+          <TableCaption> {{ alumnos.length }} alumno(s) en la tabla </TableCaption>
           <TableHeader class="bg-slate-100">
             <TableRow>
               <TableHead class="w-[1px] py-2 text-center"> Nº </TableHead>

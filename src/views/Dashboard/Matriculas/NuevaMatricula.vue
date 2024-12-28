@@ -62,14 +62,14 @@ const handleForm = async (data: Tables<'mv_libro_matricula'>) => {
     errorStore.setError({ error: errorUnl, customCode: statusUnl })
   } else {
     // seteando datos extras que no vienen del formulario
-    data.anio_libro = 2025
-    data.created_at = new Date().toISOString()
-    data.estado_alumno = 'ACTIVO'
-    data.codigo_estado_alumno = 1
+    data.anio_libro = 2025 // TODO cambiar a año sacado desde la futura tabla de configuraciones
+    data.created_at = new Date().toISOString() // TODO (model) tiene q ser creado por la DB
+    data.estado_alumno = 'ACTIVO' // en duro porque siempre empiezan activos
+    data.codigo_estado_alumno = 1 // en duro porque siempre empiezan activos
     data.nombre_completo_alumno = `${data.apellidos_alumno} ${data.nombres_alumno}`
     data.rbd_establecimiento = authStore.perfil?.rbd_usuario || 0
-    data.numero_matricula_alumno = dataUnm[0].numero_matricula_alumno + 1 // TODO: corregir en la DB que sea NOT NULL
-    data.numero_lista_nivel_alumno = dataUnl[0].numero_lista_nivel_alumno + 1 // TODO: corregir en la DB que sea NOT NULL
+    data.numero_matricula_alumno = dataUnm[0].numero_matricula_alumno + 1 || 1 // el ultimo numero, ó 1 si no hay
+    data.numero_lista_nivel_alumno = dataUnl[0].numero_lista_nivel_alumno + 1 // el ultimo numero, ó 1 si no hay
   }
 
   // insert en supabase
