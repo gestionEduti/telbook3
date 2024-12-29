@@ -29,9 +29,11 @@ if (error.value && 'code' in error.value) {
   statusCode.value = error.value.statusCode ?? 0
 }
 
-const ErrorTemplate = import.meta.env.DEV
-  ? defineAsyncComponent(() => import('@/components/AppErrorDevSection.vue'))
-  : defineAsyncComponent(() => import('@/components/AppErrorProdSection.vue'))
+// const ErrorTemplate = import.meta.env.DEV
+//   ? defineAsyncComponent(() => import('@/components/AppErrorDevSection.vue'))
+//   : defineAsyncComponent(() => import('@/components/AppErrorProdSection.vue'))
+
+const ErrorTemplate = defineAsyncComponent(() => import('@/components/AppErrorDevSection.vue'))
 </script>
 
 <template>
