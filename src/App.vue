@@ -22,7 +22,13 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="min-h-svh bg-zinc-200">
+  <!-- visible en mobile y tablet -->
+  <div class="flex h-svh items-center justify-center bg-zinc-200 lg:hidden">
+    <p>Resolucion minima 1024x768</p>
+  </div>
+
+  <!-- visible en desktop hacia arriba -->
+  <div class="hidden min-h-svh bg-zinc-200 lg:block">
     <Toaster />
     <Transition name="fade" mode="out-in">
       <AppErrorPage v-if="errorStore.activeError" />
