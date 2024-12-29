@@ -59,21 +59,21 @@ onMounted(async () => {
 <template>
   <div class="flex-1 space-y-3 px-4 py-8 pt-3">
     <Transition name="fade" mode="out-in">
-      <Card class="shadow-xl" v-if="cursos !== null">
+      <Card class="shadow-xl" v-if="cursos && niveles">
         <CardHeader>
           <CardTitle class="flex items-center justify-between"> Cursos </CardTitle>
           <CardDescription>Todos los cursos del establecimiento.</CardDescription>
           <Separator />
         </CardHeader>
         <CardContent data-test="cursos-lista">
-          <ListaCursos v-if="cursos.length && niveles" :cursos :niveles />
+          <ListaCursos v-if="cursos.length && niveles.length" :cursos :niveles />
           <!-- TODO: extraer a un componente de cuando no hay resultados -->
           <div v-else class="flex flex-col items-center justify-center space-y-2 py-8">
             <ListX :size="32" class="text-gray-500" />
             <p class="text-muted-foreground">No hay cursos creados.</p>
           </div>
         </CardContent>
-        <CardFooter v-if="cursos.length">
+        <CardFooter>
           <p data-test="cursos-total-cursos" class="mx-auto text-sm text-muted-foreground">
             {{ cursos.length }} curso(s) en total.
           </p>
@@ -92,5 +92,21 @@ onMounted(async () => {
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;
+}
+
+/* spinner */
+/* HTML: <div class="loader"></div> */
+.loader {
+  width: 50px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: 8px solid;
+  border-color: #000 #0000;
+  animation: l1 1s infinite;
+}
+@keyframes l1 {
+  to {
+    transform: rotate(0.5turn);
+  }
 }
 </style>
