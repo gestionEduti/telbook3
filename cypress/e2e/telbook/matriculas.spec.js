@@ -1,23 +1,11 @@
 /// <reference types="cypress" />
 
-const adminCredentials = { email: 'test_admin@mail.com', password: '123456' }
-const profeCredentials = { email: 'test_profesor@mail.com', password: '123456' }
-const sinPerfilCredentials = { email: 'test_no_profile@mail.com', password: '123456' }
-
-describe('probar pagina matriculas', () => {
+describe.only('/matriculas', () => {
   beforeEach(() => {
-    cy.login(profeCredentials.email, profeCredentials.password)
-    cy.url().should('include', '/dashboard/resumen')
-    cy.visit('http://127.0.0.1:5173/dashboard/matriculas')
+    cy.login('sergrodrig@gmail.com', '123456') // logearse
+    cy.visit('/') // visitar la pagina
+    cy.getBySel('nav-matriculas').click() // hacer click en el menu cursos
     cy.url().should('include', '/dashboard/matriculas')
-
-    // cy.visit('http://127.0.0.1:5173/login')
-    // cy.get('input[id="email"]').type(profeCredentials.email)
-    // cy.get('input[id="password"]').type(profeCredentials.password)
-    // cy.contains('button', 'Ingresar').click({ force: true })
-    // cy.url().should('include', '/dashboard/resumen')
-    // cy.visit('http://127.0.0.1:5173/dashboard/matriculas')
-    // cy.url().should('include', '/dashboard/matriculas')
   })
 
   it.only('deberia mostrar la pagina matriculas', () => {
