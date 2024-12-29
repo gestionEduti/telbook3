@@ -2,6 +2,9 @@
 import DashboardMenu from './DashboardMenu.vue'
 import DashboardAvatar from './DashboardAvatar.vue'
 import DashboardLogo from './DashboardLogo.vue'
+
+import { useAuthStore } from '@/stores/auth'
+const authStore = useAuthStore()
 </script>
 
 <template>
@@ -10,11 +13,19 @@ import DashboardLogo from './DashboardLogo.vue'
     <div class="bg-white">
       <header class="contenedor">
         <div class="flex h-16 items-center justify-between px-4">
+          <!-- logo y menu -->
           <div class="flex space-x-8">
             <DashboardLogo />
             <DashboardMenu />
           </div>
-          <DashboardAvatar />
+
+          <!-- nombre colegio y avatar -->
+          <div class="flex items-center space-x-4">
+            <p data-test="dashboard-nombre-establecimiento" class="font-medium capitalize">
+              {{ authStore.establecimiento?.razon_social?.toLocaleLowerCase() }}
+            </p>
+            <DashboardAvatar />
+          </div>
         </div>
       </header>
     </div>

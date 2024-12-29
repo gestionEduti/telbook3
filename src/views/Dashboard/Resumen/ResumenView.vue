@@ -32,7 +32,7 @@ const authStore = useAuthStore()
         <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           <Card>
             <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle class="text-sm font-medium"> cursos </CardTitle>
+              <CardTitle class="text-sm font-medium"> Total cursos </CardTitle>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
@@ -48,7 +48,6 @@ const authStore = useAuthStore()
             </CardHeader>
             <CardContent>
               <div class="text-2xl font-bold">8</div>
-              <p class="text-xs text-muted-foreground">(2xMMA, 3x1NT, 3x2NT)</p>
             </CardContent>
           </Card>
           <Card>
