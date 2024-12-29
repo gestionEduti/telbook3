@@ -17,7 +17,7 @@ const authStore = useAuthStore()
 <template>
   <div class="flex-1 space-y-4 px-4 py-8 pt-6">
     <div class="flex items-end justify-between space-y-2">
-      <h2 data-test="resumen-h1" class="text-3xl font-bold tracking-tight">
+      <h2 data-test="dashboard-resumen-saludo" class="text-3xl font-bold tracking-tight">
         Hola {{ authStore.perfil?.nombre_usuario }}!
       </h2>
     </div>
@@ -30,6 +30,27 @@ const authStore = useAuthStore()
       </TabsList>
       <TabsContent value="overview" class="space-y-4">
         <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+          <Card>
+            <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle class="text-sm font-medium"> cursos </CardTitle>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                class="h-4 w-4 text-muted-foreground"
+              >
+                <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+              </svg>
+            </CardHeader>
+            <CardContent>
+              <div class="text-2xl font-bold">8</div>
+              <p class="text-xs text-muted-foreground">(2xMMA, 3x1NT, 3x2NT)</p>
+            </CardContent>
+          </Card>
           <Card>
             <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle class="text-sm font-medium"> Total matriculas </CardTitle>
@@ -94,27 +115,6 @@ const authStore = useAuthStore()
             <CardContent>
               <div class="text-2xl font-bold">+12,234</div>
               <p class="text-xs text-muted-foreground">+19% from last month</p>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle class="text-sm font-medium"> Active Now </CardTitle>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                class="h-4 w-4 text-muted-foreground"
-              >
-                <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
-              </svg>
-            </CardHeader>
-            <CardContent>
-              <div class="text-2xl font-bold">+573</div>
-              <p class="text-xs text-muted-foreground">+201 since last hour</p>
             </CardContent>
           </Card>
         </div>

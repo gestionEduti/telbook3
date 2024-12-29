@@ -74,7 +74,7 @@ onMounted(async () => {
           </div>
         </CardContent>
         <CardFooter v-if="cursos.length">
-          <p class="mx-auto text-sm text-muted-foreground">
+          <p data-test="cursos-total-cursos" class="mx-auto text-sm text-muted-foreground">
             {{ cursos.length }} curso(s) en total.
           </p>
         </CardFooter>
