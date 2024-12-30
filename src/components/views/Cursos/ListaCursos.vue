@@ -23,15 +23,17 @@ const cursosFiltradosPorNivel = (nivel: Tables<'tp_niveles'>) => {
 <template>
   <div class="flex flex-col gap-2">
     <template v-for="nivel in props.niveles" :key="nivel.id">
-      <p class="font-semibold capitalize tracking-tight">
-        {{ nivel.nombre_nivel?.toLocaleLowerCase() }}
-      </p>
-      <ul class="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-5">
-        <li v-for="curso in cursosFiltradosPorNivel(nivel)" :key="curso.id">
-          <ListaCursosItem :curso="curso" :niveles="props.niveles" />
-        </li>
-      </ul>
-      <Separator class="my-4" />
+      <template v-if="cursosFiltradosPorNivel(nivel).length > 0">
+        <p class="font-semibold capitalize tracking-tight">
+          {{ nivel.nombre_nivel?.toLocaleLowerCase() }}
+        </p>
+        <ul class="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-5">
+          <li v-for="curso in cursosFiltradosPorNivel(nivel)" :key="curso.id">
+            <ListaCursosItem :curso="curso" :niveles="props.niveles" />
+          </li>
+        </ul>
+        <Separator class="my-4" />
+      </template>
     </template>
   </div>
 </template>
