@@ -1,14 +1,18 @@
 <script setup lang="ts">
+// supabase
 import type { Tables } from '@/types/supabase'
 
+// shadcn
 import ListaCursosItem from './ListaCursosItem.vue'
 import Separator from '@/components/ui/separator/Separator.vue'
 
+// props
 const props = defineProps<{
   cursos: Tables<'tp_cursos'>[]
   niveles: Tables<'tp_niveles'>[]
 }>()
 
+// methods
 const cursosFiltradosPorNivel = (nivel: Tables<'tp_niveles'>) => {
   return props.cursos.filter((curso) => {
     return curso.sigla_nivel_curso === nivel.sigla_nivel

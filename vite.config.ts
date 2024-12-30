@@ -16,7 +16,7 @@ export default defineConfig({
   },
   plugins: [
     vue(),
-    //  vueDevTools() // comentado para q no aparezca el overlay que me afecta en cypress
+    vueDevTools(), // comentar si da problemas de overlay en cypress
   ],
   resolve: {
     alias: {

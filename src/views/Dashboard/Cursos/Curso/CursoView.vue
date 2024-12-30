@@ -26,7 +26,7 @@ const queryCurso = supabase
   .select()
   .eq('rbd_establecimiento', String(authStore.establecimiento?.rbd))
   .eq('anio_curso', 2025) // TODO cambiar a año sacado desde la futura tabla de configuraciones
-  .eq('nombre_curso', props.siglaCurso)
+  .ilike('nombre_curso', props.siglaCurso)
   .single()
 
 // data
