@@ -7,7 +7,7 @@ import { useErrorStore } from '@/stores/error'
 const errorStore = useErrorStore()
 
 // props
-const props = defineProps<{ rutAlumno: string }>()
+const props = defineProps<{ rut: string }>()
 
 // utils
 import { formatearFechaNacimiento, formatearNacionalidad } from '@/lib/formato'
@@ -33,7 +33,7 @@ import type { Tables } from '@/types/supabase'
 const querySelect = supabase
   .from('mv_libro_matricula')
   .select('*')
-  .eq('rut_alumno', props.rutAlumno)
+  .eq('rut_alumno', props.rut)
   .single()
 
 // data

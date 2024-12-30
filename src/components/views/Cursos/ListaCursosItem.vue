@@ -25,7 +25,8 @@ const colorCurso: Record<string, string> = {
     :to="{
       name: 'curso',
       params: {
-        siglaCurso: curso.nombre_curso,
+        nivel: props.curso.sigla_nivel_curso,
+        letra: props.curso.letra_nivel_curso,
       },
     }"
   >

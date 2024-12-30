@@ -3,7 +3,10 @@
 import { ref, onMounted } from 'vue'
 
 // props
-const props = defineProps<{ siglaCurso: string }>()
+const props = defineProps<{
+  nivel: string
+  letra: string
+}>()
 
 // store
 import { useErrorStore } from '@/stores/error'
@@ -24,7 +27,7 @@ const querySelect = supabase
   .from('mv_libro_matricula')
   .select('*')
   .eq('rbd_establecimiento', 26005)
-  .eq('nivel_alumno', props.siglaCurso)
+  .ilike('nivel_alumno', props.nivel + props.letra)
   .order('apellidos_alumno', { ascending: true })
 
 // data

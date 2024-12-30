@@ -36,82 +36,82 @@ const routes = [
         component: () => import('../views/Dashboard/Cursos/CursosView.vue'),
       },
       {
-        path: '/dashboard/cursos/:siglaCurso',
+        path: '/dashboard/cursos/:nivel/:letra',
         name: 'curso',
         component: () => import('../views/Dashboard/Cursos/Curso/CursoView.vue'),
         props: true,
         redirect: { name: 'alumnos' },
         children: [
           {
-            path: '/dashboard/cursos/:siglaCurso/alumnos',
+            path: '/dashboard/cursos/:nivel/:letra/alumnos',
             name: 'alumnos',
             component: () => import('../views/Dashboard/Cursos/Curso/Alumnos/AlumnosView.vue'),
             props: true,
           },
           {
-            path: '/dashboard/cursos/:siglaCurso/alumnos/:rutAlumno',
+            path: '/dashboard/cursos/:nivel/:letra/alumnos/:rut',
             name: 'alumno',
             component: () => import('../views/Dashboard/Cursos/Curso/Alumnos/AlumnoView.vue'),
             props: true,
           },
           {
-            path: '/dashboard/cursos/:siglaCurso/asistencia/diaria',
+            path: '/dashboard/cursos/:nivel/:letra/asistencia/diaria',
             name: 'asistenciaDiaria',
             component: () =>
               import('../views/Dashboard/Cursos/Curso/Asistencia/AsistenciaDiaria.vue'),
             props: true,
           },
           {
-            path: '/dashboard/cursos/:siglaCurso/asistencia/mensual',
+            path: '/dashboard/cursos/:nivel/:letra/asistencia/mensual',
             name: 'asistenciaMensual',
             component: () =>
               import('../views/Dashboard/Cursos/Curso/Asistencia/AsistenciaMensual.vue'),
             props: true,
           },
           {
-            path: '/dashboard/cursos/:siglaCurso/planificaciones/corto',
+            path: '/dashboard/cursos/:nivel/:letra/planificaciones/corto',
             name: 'planificacionesCortoPlazo',
             component: () =>
               import('../views/Dashboard/Cursos/Curso/Planificaciones/CortoPlazoView.vue'),
             props: true,
           },
           {
-            path: '/dashboard/cursos/:siglaCurso/planificaciones/mediano',
+            path: '/dashboard/cursos/:nivel/:letra/planificaciones/mediano',
             name: 'planificacionesMedianoPlazo',
             component: () =>
               import('../views/Dashboard/Cursos/Curso/Planificaciones/MedianoPlazoView.vue'),
             props: true,
           },
           {
-            path: '/dashboard/cursos/:siglaCurso/planificaciones/largo',
+            path: '/dashboard/cursos/:nivel/:letra/planificaciones/largo',
             name: 'planificacionesLargoPlazo',
             component: () =>
               import('../views/Dashboard/Cursos/Curso/Planificaciones/LargoPlazoView.vue'),
             props: true,
           },
           {
-            path: '/dashboard/cursos/:siglaCurso/planificaciones/leccionario',
+            path: '/dashboard/cursos/:nivel/:letra/planificaciones/leccionario',
             name: 'leccionario',
             component: () =>
               import('../views/Dashboard/Cursos/Curso/Planificaciones/LeccionarioView.vue'),
             props: true,
           },
           {
-            path: '/dashboard/cursos/:siglaCurso/evaluaciones/formato',
+            path: '/dashboard/cursos/:nivel/:letra/evaluaciones/formato',
             name: 'evaluacionesPorFormato',
             component: () =>
               import('../views/Dashboard/Cursos/Curso/Evaluaciones/PorFormatoView.vue'),
             props: true,
           },
           {
-            path: '/dashboard/cursos/:siglaCurso/evaluaciones/personalizada',
+            path: '/dashboard/cursos/:nivel/:letra/evaluaciones/personalizada',
             name: 'evaluacionesPersonalizadas',
             component: () =>
               import('../views/Dashboard/Cursos/Curso/Evaluaciones/PersonalizadaView.vue'),
             props: true,
           },
           {
-            path: '/dashboard/cursos/:siglaCurso/modulotel',
+            path: '/dashboard/cursos/:nivel/:letra/modulotel',
             name: 'moduloTel',
             component: () => import('../views/Dashboard/Cursos/Curso/ModuloTEL/ModuloTelView.vue'),
             props: true,

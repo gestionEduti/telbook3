@@ -31,7 +31,9 @@ export const useNuevaMatriculaLoaderStore = defineStore('nuevaMatriculaLoader-st
       .order('letra_nivel_curso', { ascending: true })
     if (error) useErrorStore().setError({ error: error, customCode: status })
     else {
-      tp_cursos.value = data.map((item: Tables<'tp_cursos'>) => item.nombre_curso)
+      tp_cursos.value = data.map(
+        (item: Tables<'tp_cursos'>) => item.sigla_nivel_curso + item.letra_nivel_curso,
+      )
     }
   }
 

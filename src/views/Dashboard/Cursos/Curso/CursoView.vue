@@ -15,7 +15,10 @@ const errorStore = useErrorStore()
 const authStore = useAuthStore()
 
 // props
-const props = defineProps<{ siglaCurso: string }>()
+const props = defineProps<{
+  nivel: string
+  letra: string
+}>()
 
 // supabase
 import { supabase } from '@/services/supabaseClient'
@@ -26,7 +29,8 @@ const queryCurso = supabase
   .select()
   .eq('rbd_establecimiento', String(authStore.establecimiento?.rbd))
   .eq('anio_curso', 2025) // TODO cambiar a año sacado desde la futura tabla de configuraciones
-  .ilike('nombre_curso', props.siglaCurso)
+  .ilike('sigla_nivel_curso', props.nivel)
+  .ilike('letra_nivel_curso', props.letra)
   .single()
 
 // data
@@ -59,7 +63,7 @@ onMounted(async () => {
         <h2 class="text-3xl font-bold tracking-tight">
           {{ curso?.sigla_nivel_curso }}{{ curso?.letra_nivel_curso }}
         </h2>
-        <CursoMenu :siglaCurso />
+        <CursoMenu :nivel :letra />
       </CardContent>
     </Card>
 

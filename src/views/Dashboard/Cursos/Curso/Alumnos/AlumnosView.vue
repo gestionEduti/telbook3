@@ -3,7 +3,10 @@
 import { onMounted, ref } from 'vue'
 
 // props
-const props = defineProps<{ siglaCurso: string }>()
+const props = defineProps<{
+  nivel: string
+  letra: string
+}>()
 
 // utils
 import { formatearRut } from '@/lib/formato'
@@ -41,7 +44,7 @@ const querySelect = supabase
   .from('mv_libro_matricula')
   .select('*')
   .eq('rbd_establecimiento', authStore.perfil!.rbd_usuario)
-  .eq('nivel_alumno', props.siglaCurso)
+  .ilike('nivel_alumno', props.nivel + props.letra)
   .order('apellidos_alumno', { ascending: true })
 
 // methods
@@ -81,7 +84,7 @@ onMounted(async () => {
                 v-for="alumno in alumnos"
                 :key="alumno.id"
                 class="cursor-pointer"
-                @click="$router.push({ name: 'alumno', params: { rutAlumno: alumno.rut_alumno } })"
+                @click="$router.push({ name: 'alumno', params: { rut: alumno.rut_alumno } })"
               >
                 <TableCell class="text-center font-medium"> {{ alumno.id }} </TableCell>
                 <TableCell class="text-right">{{ formatearRut(alumno.rut_alumno) }}</TableCell>

@@ -1,6 +1,9 @@
 <script setup lang="ts">
 // props
-const props = defineProps<{ siglaCurso: string }>()
+const props = defineProps<{
+  nivel: string
+  letra: string
+}>()
 
 // shadcn
 import {
@@ -57,7 +60,15 @@ const menuEvaluaciones: { title: string; to: string; description: string }[] = [
       <NavigationMenuList>
         <NavigationMenuItem>
           <NavigationMenuLink :class="navigationMenuTriggerStyle()">
-            <RouterLink :to="{ name: 'alumnos', params: { siglaCurso: props.siglaCurso } }">
+            <RouterLink
+              :to="{
+                name: 'alumnos',
+                params: {
+                  nivel: props.nivel,
+                  letra: props.letra,
+                },
+              }"
+            >
               Alumnos
             </RouterLink>
           </NavigationMenuLink>
