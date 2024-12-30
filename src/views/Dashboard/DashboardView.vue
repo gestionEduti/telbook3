@@ -21,7 +21,10 @@ const authStore = useAuthStore()
 
           <!-- nombre colegio y avatar -->
           <div class="flex items-center space-x-4">
-            <p data-test="dashboard-nombre-establecimiento" class="font-medium capitalize">
+            <p
+              data-test="dashboard-nombre-establecimiento"
+              class="text-xs font-semibold capitalize tracking-tight text-gray-500"
+            >
               {{ authStore.establecimiento?.razon_social?.toLocaleLowerCase() }}
             </p>
             <DashboardAvatar />
