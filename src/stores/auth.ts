@@ -1,4 +1,4 @@
-import { defineStore } from 'pinia'
+import { acceptHMRUpdate, defineStore } from 'pinia'
 import { ref } from 'vue'
 
 import { supabase } from '@/services/supabaseClient'
@@ -26,7 +26,7 @@ export const useAuthStore = defineStore('auth-store', () => {
     escuchandoCambiosAuth.value = true
     supabase.auth.onAuthStateChange((event, session) => {
       setTimeout(async () => {
-        await setUsuario(session)
+        if (event === 'SIGNED_IN' || event === 'SIGNED_OUT') await setUsuario(session)
       }, 0)
     })
   }
@@ -138,3 +138,8 @@ export const useAuthStore = defineStore('auth-store', () => {
     obtenerSesion,
   }
 })
+
+// make sure to pass the right store definition, `useAuthStore` in this case.
+if (import.meta.hot) {
+  import.meta.hot.accept(acceptHMRUpdate(useAuthStore, import.meta.hot))
+}

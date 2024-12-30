@@ -1,4 +1,4 @@
-import { defineStore } from 'pinia'
+import { acceptHMRUpdate, defineStore } from 'pinia'
 import { ref } from 'vue'
 import { supabase } from '@/services/supabaseClient'
 import type { Tables } from '@/types/supabase'
@@ -231,3 +231,8 @@ export const useNuevaMatriculaLoaderStore = defineStore('nuevaMatriculaLoader-st
     datos_ejemplo,
   }
 })
+
+// make sure to pass the right store definition, `useNuevaMatriculaLoaderStore` in this case.
+if (import.meta.hot) {
+  import.meta.hot.accept(acceptHMRUpdate(useNuevaMatriculaLoaderStore, import.meta.hot))
+}

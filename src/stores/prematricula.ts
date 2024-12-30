@@ -1,4 +1,4 @@
-import { defineStore } from 'pinia'
+import { acceptHMRUpdate, defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import { supabase } from '@/services/supabaseClient'
 import type { NominaAlumnoInterface } from '@/types/nomina'
@@ -155,3 +155,8 @@ export const usePrematriculaStore = defineStore('prematricula', () => {
     obtenerResumen,
   }
 })
+
+// make sure to pass the right store definition, `usePrematriculaStore` in this case.
+if (import.meta.hot) {
+  import.meta.hot.accept(acceptHMRUpdate(usePrematriculaStore, import.meta.hot))
+}
