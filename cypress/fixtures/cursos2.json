@@ -10,5 +10,13 @@
   {
     "sigla_nivel_curso": "MM",
     "letra_nivel_curso": "C"
+  },
+  {
+    "sigla_nivel_curso": "1NT",
+    "letra_nivel_curso": "A"
+  },
+  {
+    "sigla_nivel_curso": "1NT",
+    "letra_nivel_curso": "B"
   }
 ]

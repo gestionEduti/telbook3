@@ -1,11 +1,13 @@
 /// <reference types="cypress" />
 
 describe('probar dashboard', () => {
-  beforeEach(() => cy.login('sergrodrig@gmail.com', '123456'))
-
-  it('deberia mostrar el dashboard', () => {
-    cy.visit('/')
+  beforeEach(() => {
+    cy.login('sergrodrig@gmail.com', '123456') // logearse
+    cy.visit('/') // visitar la pagina
     cy.url().should('include', '/dashboard/resumen')
+  })
+
+  it('deberia mostrar el nombre del establecimiento y del usuario', () => {
     cy.getBySel('dashboard-nombre-establecimiento').should('contain', 'mi mundo en palabras')
     cy.getBySel('dashboard-resumen-saludo').should('contain', 'Hola Sergio!')
   })
