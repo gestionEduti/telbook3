@@ -68,7 +68,7 @@ const esAdmin = computed(() => {
           <Contact class="h-4 w-4" />
           <span class="ml-2">Mi perfil</span>
         </DropdownMenuItem>
-        <DropdownMenuItem @click="$router.push({ name: 'perfil' })" v-if="esAdmin">
+        <DropdownMenuItem @click="$router.push({ name: 'panel-admin' })" v-if="esAdmin">
           <FileSliders class="h-4 w-4" />
           <span class="ml-2">Panel administracion</span>
         </DropdownMenuItem>

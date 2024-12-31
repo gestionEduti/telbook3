@@ -133,6 +133,11 @@ const routes = [
         name: 'perfil',
         component: () => import('../views/Dashboard/Perfil/PerfilView.vue'),
       },
+      {
+        path: '/dashboard/panel-admin',
+        name: 'panel-admin',
+        component: () => import('../views/Dashboard/PanelAdmin/PanelAdminView.vue'),
+      },
 
       // solo para admin
       {
