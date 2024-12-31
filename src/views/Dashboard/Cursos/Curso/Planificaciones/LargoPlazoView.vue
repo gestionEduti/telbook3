@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import InfoMensajeSinData from '@/components/InfoMensajeSinData.vue'
+
 // shadcn
 import Button from '@/components/ui/button/Button.vue'
 import Card from '@/components/ui/card/Card.vue'
@@ -252,7 +254,7 @@ const planificacionesPorMes = (mes: number) => {
     <CardHeader>
       <CardTitle class="flex items-end justify-between">
         <span> Planificacion largo plazo </span>
-        <div class="space-x-2">
+        <!-- <div class="space-x-2">
           <Button variant="secondary">
             <Download />
             <span> Descargar reporte </span>
@@ -261,7 +263,7 @@ const planificacionesPorMes = (mes: number) => {
             <CalendarPlus2 />
             <span> Crear planificacion </span>
           </Button>
-        </div>
+        </div> -->
       </CardTitle>
       <CardDescription
         >Crea ó visualiza las planificaciones a largo plazo del establecimiento.
@@ -269,8 +271,10 @@ const planificacionesPorMes = (mes: number) => {
       <Separator />
     </CardHeader>
     <CardContent>
-      <!-- lista meses -->
-      <ul class="space-y-8">
+      <CardContent>
+        <InfoMensajeSinData icono="mantencion" mensaje="En mantención" />
+      </CardContent>
+      <!-- <ul class="space-y-8">
         <template v-for="mes in meses" :key="mes.numero">
           <Card v-if="planificacionesPorMes(mes.numero).length">
             <CardHeader>
@@ -283,7 +287,6 @@ const planificacionesPorMes = (mes: number) => {
             </CardHeader>
             <CardContent>
               <li>
-                <!-- lista planificaciones por mes -->
                 <Table>
                   <TableBody>
                     <TableRow
@@ -308,7 +311,7 @@ const planificacionesPorMes = (mes: number) => {
             </CardContent>
           </Card>
         </template>
-      </ul>
+      </ul> -->
     </CardContent>
   </Card>
 </template>

@@ -42,7 +42,7 @@ import type { Tables } from '@/types/supabase'
 import Button from '@/components/ui/button/Button.vue'
 const querySelect = supabase
   .from('mv_libro_matricula')
-  .select('*')
+  .select()
   .eq('rbd_establecimiento', authStore.perfil!.rbd_usuario)
   .ilike('nivel_alumno', props.nivel + props.letra)
   .order('apellidos_alumno', { ascending: true })

@@ -32,7 +32,7 @@ import { supabase } from '@/services/supabaseClient'
 import type { Tables } from '@/types/supabase'
 const querySelect = supabase
   .from('mv_libro_matricula')
-  .select('*')
+  .select()
   .eq('rut_alumno', props.rut)
   .single()
 

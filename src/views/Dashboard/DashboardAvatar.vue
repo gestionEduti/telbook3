@@ -32,9 +32,7 @@ const logout = async () => {
 }
 
 // computed
-const esAdmin = computed(() => {
-  return perfil.value?.codigo_perfil_usuario === 1 || perfil.value?.codigo_perfil_usuario === 2
-})
+const esAdmin = computed(() => perfil.value?.codigo_perfil_usuario === 1)
 </script>
 
 <template>

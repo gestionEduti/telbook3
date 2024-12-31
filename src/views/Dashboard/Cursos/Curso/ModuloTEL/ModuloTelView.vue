@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import InfoMensajeSinData from '@/components/InfoMensajeSinData.vue'
+
 // shadcn
 import Card from '@/components/ui/card/Card.vue'
 import CardContent from '@/components/ui/card/CardContent.vue'
@@ -15,7 +17,9 @@ import Separator from '@/components/ui/separator/Separator.vue'
       <CardDescription>Descripcion modulo tel.</CardDescription>
       <Separator />
     </CardHeader>
-    <CardContent></CardContent>
+    <CardContent>
+      <InfoMensajeSinData icono="mantencion" mensaje="En mantención" />
+    </CardContent>
   </Card>
 </template>
 

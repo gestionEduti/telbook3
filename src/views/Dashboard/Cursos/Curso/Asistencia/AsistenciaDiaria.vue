@@ -35,14 +35,17 @@ import { Pen } from 'lucide-vue-next'
 // store
 import { useErrorStore } from '@/stores/error'
 const errorStore = useErrorStore()
+import { useAuthStore } from '@/stores/auth'
+const authStore = useAuthStore()
 
 // supabase
 import type { Tables } from '@/types/supabase'
 import { supabase } from '@/services/supabaseClient'
+import InfoMensajeSinData from '@/components/InfoMensajeSinData.vue'
 const querySelect = supabase
   .from('mv_libro_matricula')
-  .select('*')
-  .eq('rbd_establecimiento', 26005)
+  .select()
+  .eq('rbd_establecimiento', authStore.perfil!.rbd_usuario) // TODO: asegurar 100% que el perfil va a existir
   .ilike('nivel_alumno', props.nivel + props.letra)
   .order('apellidos_alumno', { ascending: true })
 
@@ -70,7 +73,8 @@ onMounted(async () => {
       <Separator />
     </CardHeader>
     <CardContent>
-      <ul class="mb-3 divide-y">
+      <InfoMensajeSinData icono="mantencion" mensaje="En mantención" />
+      <!-- <ul class="mb-3 divide-y">
         <li class="telbook-label grid grid-cols-12 items-center gap-2 py-3">
           <span class="col-span-4">Nombre</span>
           <span class="col-span-2">Estado</span>
@@ -87,13 +91,9 @@ onMounted(async () => {
           <Switch class="col-span-2" />
           <Input class="col-span-6 w-full" />
         </li>
-      </ul>
+      </ul> -->
     </CardContent>
-    <CardFooter class="flex items-center justify-between">
-      <!-- <div class="flex flex-col space-y-2 sm:flex-row sm:space-x-2 sm:space-y-0">
-        <Badge>{{ 10 }} presentes</Badge>
-        <Badge>{{ 4 }} ausentes</Badge>
-      </div> -->
+    <!-- <CardFooter class="flex items-center justify-between">
       <Dialog>
         <DialogTrigger as-child>
           <Button>
@@ -124,7 +124,7 @@ onMounted(async () => {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-    </CardFooter>
+    </CardFooter> -->
   </Card>
 </template>
 

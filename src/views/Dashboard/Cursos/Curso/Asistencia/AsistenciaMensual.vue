@@ -11,6 +11,8 @@ const props = defineProps<{
 // store
 import { useErrorStore } from '@/stores/error'
 const errorStore = useErrorStore()
+import { useAuthStore } from '@/stores/auth'
+const authStore = useAuthStore()
 
 // shadcn
 import Card from '@/components/ui/card/Card.vue'
@@ -23,10 +25,11 @@ import Separator from '@/components/ui/separator/Separator.vue'
 // supabase
 import type { Tables } from '@/types/supabase'
 import { supabase } from '@/services/supabaseClient'
+import InfoMensajeSinData from '@/components/InfoMensajeSinData.vue'
 const querySelect = supabase
   .from('mv_libro_matricula')
-  .select('*')
-  .eq('rbd_establecimiento', 26005)
+  .select()
+  .eq('rbd_establecimiento', authStore.perfil!.rbd_usuario)
   .ilike('nivel_alumno', props.nivel + props.letra)
   .order('apellidos_alumno', { ascending: true })
 
@@ -53,7 +56,9 @@ onMounted(async () => {
       <CardDescription>Descripcion asistencia mensual.</CardDescription>
       <Separator />
     </CardHeader>
-    <CardContent></CardContent>
+    <CardContent>
+      <InfoMensajeSinData icono="mantencion" mensaje="En mantención" />
+    </CardContent>
   </Card>
 </template>
 
