@@ -14,7 +14,7 @@ const authStore = useAuthStore()
       <header class="contenedor">
         <div class="flex h-16 items-center justify-between px-4">
           <!-- logo y menu -->
-          <div class="flex space-x-8">
+          <div class="flex items-center space-x-4">
             <DashboardLogo />
             <DashboardMenu />
           </div>

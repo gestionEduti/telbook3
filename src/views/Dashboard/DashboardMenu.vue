@@ -25,20 +25,21 @@ const esUnLinkActivo = (routeName: string) => route.name === routeName
 </script>
 
 <template>
-  <nav class="flex items-baseline space-x-4 lg:space-x-6">
+  <nav class="flex items-baseline">
     <template v-for="item in menuUsuario" :key="item.routeName">
       <RouterLink
         v-if="!item.admin || (item.admin && esAdmin)"
         :key="item.routeName"
         :to="{ name: item.routeName }"
         :data-test="`nav-${item.routeName}`"
+        class="px-3 py-2"
+        :class="[
+          esUnLinkActivo(item.routeName) ? 'cursor-default' : 'hover:bg-muted hover:text-red-600',
+        ]"
       >
         <p
-          :class="[
-            esUnLinkActivo(item.routeName)
-              ? 'cursor-default border-b-2 border-red-600 text-sm font-semibold'
-              : 'text-sm font-medium hover:text-red-600',
-          ]"
+          class="text-sm font-medium"
+          :class="[esUnLinkActivo(item.routeName) ? 'border-b-2 border-red-600 font-semibold' : '']"
         >
           {{ item.text }}
         </p>
