@@ -129,6 +129,12 @@ const routes = [
         component: () => import('../views/Dashboard/Matriculas/NuevaMatricula.vue'),
       },
       {
+        path: '/dashboard/matriculas/editar/:matriculaId',
+        name: 'editar-matricula',
+        props: true,
+        component: () => import('../views/Dashboard/Matriculas/EditarMatricula.vue'),
+      },
+      {
         path: '/dashboard/perfil',
         name: 'perfil',
         component: () => import('../views/Dashboard/Perfil/PerfilView.vue'),

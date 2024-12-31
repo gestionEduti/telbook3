@@ -322,9 +322,17 @@ onMounted(async () => {
                             <DropdownMenuLabel>Acciones</DropdownMenuLabel>
                             <DropdownMenuSeparator />
                             <DropdownMenuGroup>
-                              <DropdownMenuItem disabled>
-                                <UserPen class="h-4 w-4" />
-                                <span>Editar</span>
+                              <DropdownMenuItem>
+                                <RouterLink
+                                  :to="{
+                                    name: 'editar-matricula',
+                                    params: { matriculaId: alumno.id },
+                                  }"
+                                  class="flex space-x-2"
+                                >
+                                  <UserPen class="h-4 w-4" />
+                                  <span>Editar</span>
+                                </RouterLink>
                               </DropdownMenuItem>
 
                               <!-- boton retirar -->

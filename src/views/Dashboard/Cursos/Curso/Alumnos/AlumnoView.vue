@@ -134,6 +134,7 @@ onMounted(async () => {
               <div v-if="alumno.email_apoderado_alumno">
                 <p class="telbook-label">Email apoderado</p>
                 <p class="mb-3">
+                  <!-- TODO: truncate ó elipsis porque a veces es muy largo. revisar en toda la app el caso -->
                   {{ alumno.email_apoderado_alumno?.toLowerCase() }}
                 </p>
               </div>
