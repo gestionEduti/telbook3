@@ -40,7 +40,11 @@ const esAdmin = computed(() => {
 <template>
   <DropdownMenu>
     <DropdownMenuTrigger as-child>
-      <Button variant="ghost" class="relative h-8 w-8 rounded-full">
+      <Button
+        data-test="dashboard-avatar-button"
+        variant="ghost"
+        class="relative h-8 w-8 rounded-full"
+      >
         <Avatar class="h-8 w-8">
           <AvatarImage src="https://picsum.photos/seed/sergio/200" alt="@shadcn" />
           <AvatarFallback>SR</AvatarFallback>
@@ -50,10 +54,10 @@ const esAdmin = computed(() => {
     <DropdownMenuContent class="w-56" align="end">
       <DropdownMenuLabel class="flex font-normal">
         <div class="flex flex-col space-y-1">
-          <p class="text-sm font-medium leading-none">
+          <p data-test="dashboard-avatar-nombre" class="text-sm font-medium leading-none">
             {{ perfil?.nombre_usuario }} {{ perfil?.apellido_usuario }}
           </p>
-          <p data-test="avatar-email" class="text-xs leading-none text-muted-foreground">
+          <p data-test="dashboard-avatar-email" class="text-xs leading-none text-muted-foreground">
             {{ perfil?.email }}
           </p>
         </div>
