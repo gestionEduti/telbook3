@@ -41,7 +41,7 @@ onMounted(() => {
   </div>
 </template>
 
-<style scoped>
+<style>
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.3s ease;

@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { onMounted, ref } from 'vue'
+
 // shadcn
 import Card from '@/components/ui/card/Card.vue'
 import CardContent from '@/components/ui/card/CardContent.vue'
@@ -8,10 +10,48 @@ import Tabs from '@/components/ui/tabs/Tabs.vue'
 import TabsContent from '@/components/ui/tabs/TabsContent.vue'
 import TabsList from '@/components/ui/tabs/TabsList.vue'
 import TabsTrigger from '@/components/ui/tabs/TabsTrigger.vue'
+// icons
+import { BookA, BookUser, FileUser, SquareUserRound } from 'lucide-vue-next'
 
 // store
 import { useAuthStore } from '@/stores/auth'
 const authStore = useAuthStore()
+import { useErrorStore } from '@/stores/error'
+
+// supabase
+import { supabase } from '@/services/supabaseClient'
+const queryTotalCursos = supabase
+  .from('tp_cursos')
+  .select('id', { count: 'exact' })
+  .eq('anio_curso', 2025) // TODO cambiar a año sacado desde la futura tabla de configuraciones
+  .eq('rbd_establecimiento', String(authStore.establecimiento?.rbd)) // TODO: setear error si es que el perfil no existe
+const queryTotalMatriculas = supabase
+  .from('mv_libro_matricula')
+  .select('id', { count: 'exact' })
+  .eq('anio_libro', 2025) // TODO cambiar a año sacado desde la futura tabla de configuraciones
+  .eq('rbd_establecimiento', String(authStore.establecimiento?.rbd)) // TODO: setear error si es que el perfil no existe
+
+// data
+const totalCursos = ref<number | null>(null)
+const totalMatriculas = ref<number | null>(null)
+
+// mehods
+const obtenerTotalCursos = async () => {
+  const { count, error, status } = await queryTotalCursos
+  if (error) useErrorStore().setError({ error: error, customCode: status })
+  else totalCursos.value = count
+}
+const obtenerTotalMatriculas = async () => {
+  const { count, error, status } = await queryTotalMatriculas
+  if (error) useErrorStore().setError({ error: error, customCode: status })
+  else totalMatriculas.value = count
+}
+
+// lifecycle
+onMounted(async () => {
+  await obtenerTotalCursos()
+  await obtenerTotalMatriculas()
+})
 </script>
 
 <template>
@@ -28,96 +68,51 @@ const authStore = useAuthStore()
         <TabsTrigger value="analytics"> Actividades </TabsTrigger>
         <TabsTrigger value="reports" disabled> Rendimiento </TabsTrigger>
       </TabsList>
-      <TabsContent value="overview" class="space-y-4">
-        <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-          <Card>
-            <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle class="text-sm font-medium"> Total cursos </CardTitle>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                class="h-4 w-4 text-muted-foreground"
-              >
-                <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
-              </svg>
-            </CardHeader>
-            <CardContent>
-              <div class="text-2xl font-bold">8</div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle class="text-sm font-medium"> Total matriculas </CardTitle>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                class="h-4 w-4 text-muted-foreground"
-              >
-                <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
-              </svg>
-            </CardHeader>
-            <CardContent>
-              <div class="text-2xl font-bold">135</div>
-              <p class="text-xs text-muted-foreground">+23% desde el año pasado</p>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle class="text-sm font-medium"> Asistencia promedio </CardTitle>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                class="h-4 w-4 text-muted-foreground"
-              >
-                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
-                <circle cx="9" cy="7" r="4" />
-                <path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
-              </svg>
-            </CardHeader>
-            <CardContent>
-              <div class="text-2xl font-bold">87%</div>
-              <p class="text-xs text-muted-foreground">+7% desde el mes pasado</p>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle class="text-sm font-medium"> Sales </CardTitle>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                class="h-4 w-4 text-muted-foreground"
-              >
-                <rect width="20" height="14" x="2" y="5" rx="2" />
-                <path d="M2 10h20" />
-              </svg>
-            </CardHeader>
-            <CardContent>
-              <div class="text-2xl font-bold">+12,234</div>
-              <p class="text-xs text-muted-foreground">+19% from last month</p>
-            </CardContent>
-          </Card>
-        </div>
-      </TabsContent>
+      <Transition name="fade" mode="out-in">
+        <TabsContent v-if="totalCursos && totalMatriculas" value="overview" class="space-y-4">
+          <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+            <Card>
+              <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle class="text-sm font-medium"> Total cursos </CardTitle>
+                <BookA class="text-gray-500" :size="19" />
+              </CardHeader>
+              <CardContent>
+                <div class="text-2xl font-bold">{{ totalCursos }}</div>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle class="text-sm font-medium"> Total matriculas </CardTitle>
+                <SquareUserRound class="text-gray-500" :size="19" />
+              </CardHeader>
+              <CardContent>
+                <div class="text-2xl font-bold">{{ totalMatriculas }}</div>
+                <p class="text-xs text-muted-foreground">+23% desde el año pasado</p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle class="text-sm font-medium"> </CardTitle>
+              </CardHeader>
+              <CardContent> </CardContent>
+            </Card>
+            <Card>
+              <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle class="text-sm font-medium"> </CardTitle>
+              </CardHeader>
+              <CardContent> </CardContent>
+            </Card>
+          </div>
+          <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+            <Card class="col-span-4 h-64">
+              <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle class="text-sm font-medium"> </CardTitle>
+              </CardHeader>
+              <CardContent> </CardContent>
+            </Card>
+          </div>
+        </TabsContent>
+      </Transition>
     </Tabs>
   </div>
 </template>

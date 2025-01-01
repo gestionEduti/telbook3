@@ -82,31 +82,3 @@ onMounted(async () => {
     </Transition>
   </div>
 </template>
-
-<style scoped>
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.3s ease;
-}
-
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-}
-
-/* spinner */
-/* HTML: <div class="loader"></div> */
-.loader {
-  width: 50px;
-  aspect-ratio: 1;
-  border-radius: 50%;
-  border: 8px solid;
-  border-color: #000 #0000;
-  animation: l1 1s infinite;
-}
-@keyframes l1 {
-  to {
-    transform: rotate(0.5turn);
-  }
-}
-</style>

@@ -242,6 +242,7 @@ onMounted(async () => {
               </div>
             </AlertDescription>
           </Alert>
+          <Separator class="mb-2 mt-6" />
 
           <!-- tabla -->
           <div class="grid grid-cols-6 gap-4 pb-2 pt-4">
@@ -437,17 +438,6 @@ onMounted(async () => {
 </template>
 
 <style scoped>
-/* animacion para cuando aparezca la pagina luego de llamar a la db */
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.3s ease;
-}
-
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-}
-
 /* animacion de la transicion de la tabla al filtrar */
 .list-move,
 .list-enter-active,
