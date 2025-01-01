@@ -44,6 +44,7 @@ const querySelect = supabase
   .from('mv_libro_matricula')
   .select()
   .eq('rbd_establecimiento', authStore.perfil!.rbd_usuario)
+  .eq('codigo_estado_alumno', '1') // TODO confirmar si es solo activos
   .ilike('nivel_alumno', props.nivel + props.letra)
   .order('apellidos_alumno', { ascending: true })
 
