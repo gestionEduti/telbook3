@@ -69,7 +69,11 @@ onMounted(async () => {
         <TabsTrigger value="reports" disabled> Rendimiento </TabsTrigger>
       </TabsList>
       <Transition name="fade" mode="out-in">
-        <TabsContent v-if="totalCursos && totalMatriculas" value="overview" class="space-y-4">
+        <TabsContent
+          v-if="totalCursos !== null && totalMatriculas !== null"
+          value="overview"
+          class="space-y-4"
+        >
           <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
             <Card>
               <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">

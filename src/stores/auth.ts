@@ -26,7 +26,7 @@ export const useAuthStore = defineStore('auth-store', () => {
     escuchandoCambiosAuth.value = true
     supabase.auth.onAuthStateChange((event, session) => {
       setTimeout(async () => {
-        if (event === 'SIGNED_IN' || event === 'SIGNED_OUT') await setUsuario(session)
+        await setUsuario(session)
       }, 0)
     })
   }
