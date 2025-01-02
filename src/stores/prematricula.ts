@@ -41,20 +41,6 @@ export const usePrematriculaStore = defineStore('prematricula', () => {
     loading.value = false
   }
 
-  async function cargarAlumnos() {
-    loading.value = true
-    // await new Promise((resolve) => setTimeout(resolve, 2000))
-    if (!nomina.value) return
-    for (const alumno of nomina.value) {
-      const { error, status } = await queryMatricularAlumno(alumno)
-      if (error) {
-        errorStore.setError({ error: error, customCode: status })
-        return
-      }
-    }
-    loading.value = false
-  }
-
   async function leerArchivo(f: File): Promise<string | null> {
     nombreArchivo.value = f.name
     return new Promise<string | null>((resolve, reject) => {
@@ -104,6 +90,20 @@ export const usePrematriculaStore = defineStore('prematricula', () => {
 
     // Devuelvo el resultado
     return result
+  }
+
+  async function cargarAlumnos() {
+    loading.value = true
+    // await new Promise((resolve) => setTimeout(resolve, 2000))
+    if (!nomina.value) return
+    for (const alumno of nomina.value) {
+      const { error, status } = await queryMatricularAlumno(alumno)
+      if (error) {
+        errorStore.setError({ error: error, customCode: status })
+        return
+      }
+    }
+    loading.value = false
   }
 
   async function queryMatricularAlumno(alumno: NominaAlumnoInterface) {

@@ -55,7 +55,7 @@ const parsearArchivo = async (data: FormKitFormData) => {
   await prematriculaStore.procesarArchivo(primerArchivo)
   pasoActual.value = 2
 }
-const cargarAlumnosEnLaDB = async () => {
+const enviarAlumnosSupabase = async () => {
   pasoActual.value = 3
   await prematriculaStore.cargarAlumnos()
   await prematriculaStore.obtenerResumen()
@@ -206,7 +206,7 @@ const salir = () => {
                 <AlertDialogFooter>
                   <AlertDialogCancel>Cancelar</AlertDialogCancel>
                   <AlertDialogAction as-child>
-                    <Button :disabled="prematriculaStore.loading" @click="cargarAlumnosEnLaDB">
+                    <Button :disabled="prematriculaStore.loading" @click="enviarAlumnosSupabase">
                       <Loader v-if="prematriculaStore.loading" class="mr-2 h-6 w-6 animate-spin" />
                       Confirmar
                     </Button>

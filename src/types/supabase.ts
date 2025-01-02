@@ -23,6 +23,7 @@ export type Database = {
           fecha_incorporacion_alumno: number | null
           fecha_nacimiento_alumno: number | null
           fecha_retiro_escuela: string | null
+          id: number
           jornada_alumno: string | null
           nacionalidad_alumno: string | null
           nivel_alumno: string | null
@@ -60,6 +61,7 @@ export type Database = {
           fecha_incorporacion_alumno?: number | null
           fecha_nacimiento_alumno?: number | null
           fecha_retiro_escuela?: string | null
+          id?: number
           jornada_alumno?: string | null
           nacionalidad_alumno?: string | null
           nivel_alumno?: string | null
@@ -97,6 +99,7 @@ export type Database = {
           fecha_incorporacion_alumno?: number | null
           fecha_nacimiento_alumno?: number | null
           fecha_retiro_escuela?: string | null
+          id?: number
           jornada_alumno?: string | null
           nacionalidad_alumno?: string | null
           nivel_alumno?: string | null
@@ -1821,6 +1824,17 @@ export type Database = {
           p_rut_usuario?: string
         }
         Returns: string
+      }
+      prematricula_procesada: {
+        Args: {
+          input_rbd: number
+        }
+        Returns: {
+          rbd_column: number
+          accion: string
+          rut_usuario: string
+          accion_count: number
+        }[]
       }
       registrar_o_modificar_asistencia: {
         Args: {
