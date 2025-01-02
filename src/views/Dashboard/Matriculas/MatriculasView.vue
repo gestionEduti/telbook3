@@ -20,7 +20,15 @@ import CardTitle from '@/components/ui/card/CardTitle.vue'
 import CardDescription from '@/components/ui/card/CardDescription.vue'
 import Separator from '@/components/ui/separator/Separator.vue'
 // icons
-import { Download, UserPlus, BookCheck, FileText, ListX } from 'lucide-vue-next'
+import {
+  Download,
+  UserPlus,
+  BookCheck,
+  FileText,
+  ListX,
+  ChevronDown,
+  FileSpreadsheet,
+} from 'lucide-vue-next'
 
 // store
 import { useAuthStore } from '@/stores/auth'
@@ -49,6 +57,10 @@ const fetchSupabase = async () => {
   else alumnos.value = data
 }
 
+const exportarResumen = () => {
+  console.log('exportar resumen')
+}
+
 // lifecycle
 onMounted(async () => {
   await fetchSupabase()
@@ -69,9 +81,10 @@ onMounted(async () => {
               </Button>
               <DropdownMenu v-if="alumnos.length">
                 <DropdownMenuTrigger as-child>
-                  <Button>
+                  <Button variant="outline">
                     <Download class="h-4 w-4" />
                     <span class="ml-2 hidden md:block">Descargar</span>
+                    <ChevronDown class="h-4 w-4" />
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent class="w-56">
@@ -79,12 +92,12 @@ onMounted(async () => {
                   <DropdownMenuSeparator />
                   <DropdownMenuGroup>
                     <DropdownMenuItem disabled>
-                      <BookCheck class="h-4 w-4" />
-                      <span class="ml-2 hidden md:block">Libro completo</span>
+                      <FileSpreadsheet class="h-4 w-4" />
+                      <span class="ml-2 hidden md:block">Libro completo (Excel)</span>
                     </DropdownMenuItem>
-                    <DropdownMenuItem disabled>
+                    <DropdownMenuItem @click="exportarResumen">
                       <FileText class="h-4 w-4" />
-                      <span class="ml-2 hidden md:block">Resumen</span>
+                      <span class="ml-2 hidden md:block">Resumen (PDF)</span>
                     </DropdownMenuItem>
                   </DropdownMenuGroup>
                 </DropdownMenuContent>
