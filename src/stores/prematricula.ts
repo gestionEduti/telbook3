@@ -95,7 +95,9 @@ export const usePrematriculaStore = defineStore('prematricula', () => {
       const cells: HTMLTableCellElement[] = Array.from(row.querySelectorAll('td'))
       const rowData = {} as NominaAlumnoInterface
       headers.forEach((header: string, index: number) => {
-        rowData[header] = cells[index]?.textContent.trim() || null // Match cells with headers
+        // TODO revisar si lo puedo arreglar con buenas practicas de TS luego
+        // @ts-expect-error debido a que ts espera que tenga un header valido de la interfaz, pero no lo puedo asegurar por ahroa
+        rowData[header] = cells[index]?.textContent?.trim() || null
       })
       return rowData
     })

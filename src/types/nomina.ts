@@ -15,7 +15,7 @@ interface License {
 // Refleja las columnas del excel.
 // Las que estan comentadas no son relevantes.
 // Estan en el mismo orden de las columnas del excel.
-export interface NominaAlumnoInterface {
+export interface NominaAlumnoStatic {
   Año: number
   RBD: number
   // 'Cod Tipo Enseñanza': string // no aplica
@@ -40,7 +40,10 @@ export interface NominaAlumnoInterface {
   'Fecha Retiro': string
   // '%Asistenca': string // no aplica
   // 'Promedio Final': string // no aplica
+  [key: string]: string | number
 }
+
+export type NominaAlumnoInterface = NominaAlumnoStatic & Record<string, string | null>
 
 // anio_libro integer null,
 // rbd_establecimiento integer null,
