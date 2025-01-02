@@ -14,9 +14,10 @@ export const usePrematriculaStore = defineStore('prematricula', () => {
   const nomina = ref<NominaAlumnoInterface[] | null>(null)
   const nombreArchivo = ref<string | null>(null)
   const loading = ref(false)
+  const resultadoResumen = ref({ cursos: 0, alumnos: 0 })
 
   // getters
-  const rbdEstablecimiento = computed(() => nomina.value?.[0]?.RBD || '')
+  const rbdEstablecimiento = computed(() => nomina.value?.[0]?.RBD || 0)
   const nombreEstablecimiento = computed(() =>
     !nombreArchivo.value
       ? ''
@@ -135,16 +136,18 @@ export const usePrematriculaStore = defineStore('prematricula', () => {
   }
 
   async function obtenerResumen() {
-    // select accion, count(*)
-    // from log_prematricula
-    // where rbd = 26523
-    // group by accion
+    const { data, error, status } = await supabase.rpc('prematricula_procesada_json', {
+      input_rbd: rbdEstablecimiento.value,
+    })
+    if (error) errorStore.setError({ error: error, customCode: status })
+    else resultadoResumen.value = data as { cursos: number; alumnos: number }
   }
 
   return {
     // data
     nomina,
     loading,
+    resultadoResumen,
 
     // getters
     rbdEstablecimiento,

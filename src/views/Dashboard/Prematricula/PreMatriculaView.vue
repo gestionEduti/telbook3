@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import { storeToRefs } from 'pinia'
 import { useRouter } from 'vue-router'
 const router = useRouter()
 
@@ -8,6 +9,19 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import Button from '@/components/ui/button/Button.vue'
 import CardDescription from '@/components/ui/card/CardDescription.vue'
 import Separator from '@/components/ui/separator/Separator.vue'
+import StepperIndicator from '@/components/ui/stepper/StepperIndicator.vue'
+import Alert from '@/components/ui/alert/Alert.vue'
+import AlertTitle from '@/components/ui/alert/AlertTitle.vue'
+import AlertDescription from '@/components/ui/alert/AlertDescription.vue'
+import AlertDialog from '@/components/ui/alert-dialog/AlertDialog.vue'
+import AlertDialogTrigger from '@/components/ui/alert-dialog/AlertDialogTrigger.vue'
+import AlertDialogContent from '@/components/ui/alert-dialog/AlertDialogContent.vue'
+import AlertDialogTitle from '@/components/ui/alert-dialog/AlertDialogTitle.vue'
+import AlertDialogDescription from '@/components/ui/alert-dialog/AlertDialogDescription.vue'
+import AlertDialogHeader from '@/components/ui/alert-dialog/AlertDialogHeader.vue'
+import AlertDialogFooter from '@/components/ui/alert-dialog/AlertDialogFooter.vue'
+import AlertDialogCancel from '@/components/ui/alert-dialog/AlertDialogCancel.vue'
+import AlertDialogAction from '@/components/ui/alert-dialog/AlertDialogAction.vue'
 import {
   Stepper,
   StepperDescription,
@@ -31,20 +45,15 @@ import type { FormKitFormData } from '@/types/nomina'
 
 // prematricula store
 import { usePrematriculaStore } from '@/stores/prematricula'
-import StepperIndicator from '@/components/ui/stepper/StepperIndicator.vue'
-import Alert from '@/components/ui/alert/Alert.vue'
-import AlertTitle from '@/components/ui/alert/AlertTitle.vue'
-import AlertDescription from '@/components/ui/alert/AlertDescription.vue'
-import AlertDialog from '@/components/ui/alert-dialog/AlertDialog.vue'
-import AlertDialogTrigger from '@/components/ui/alert-dialog/AlertDialogTrigger.vue'
-import AlertDialogContent from '@/components/ui/alert-dialog/AlertDialogContent.vue'
-import AlertDialogTitle from '@/components/ui/alert-dialog/AlertDialogTitle.vue'
-import AlertDialogDescription from '@/components/ui/alert-dialog/AlertDialogDescription.vue'
-import AlertDialogHeader from '@/components/ui/alert-dialog/AlertDialogHeader.vue'
-import AlertDialogFooter from '@/components/ui/alert-dialog/AlertDialogFooter.vue'
-import AlertDialogCancel from '@/components/ui/alert-dialog/AlertDialogCancel.vue'
-import AlertDialogAction from '@/components/ui/alert-dialog/AlertDialogAction.vue'
 const prematriculaStore = usePrematriculaStore()
+const {
+  loading,
+  resultadoResumen,
+  rbdEstablecimiento,
+  nombreEstablecimiento,
+  totalAlumnos,
+  totalCursos,
+} = storeToRefs(prematriculaStore)
 
 // data
 const pasoActual = ref(1)
@@ -141,7 +150,10 @@ const salir = () => {
         <div v-else-if="pasoActual === 2" class="space-y-4">
           <Alert>
             <Info class="h-4 w-4" color="black" />
-            <AlertTitle> Resumen </AlertTitle>
+            <AlertTitle>
+              A continuacion un resumen de la informacion extraida de la nomina que sera agregada a
+              la base de datos:
+            </AlertTitle>
             <AlertDescription class="pt-4">
               <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
                 <Card>
@@ -150,7 +162,7 @@ const salir = () => {
                   </CardHeader>
                   <CardContent>
                     <div class="text-2xl font-bold capitalize">
-                      {{ prematriculaStore.nombreEstablecimiento }}
+                      {{ nombreEstablecimiento }}
                     </div>
                   </CardContent>
                 </Card>
@@ -160,7 +172,7 @@ const salir = () => {
                   </CardHeader>
                   <CardContent>
                     <div class="text-2xl font-bold capitalize">
-                      {{ prematriculaStore.rbdEstablecimiento }}
+                      {{ rbdEstablecimiento }}
                     </div>
                   </CardContent>
                 </Card>
@@ -169,7 +181,7 @@ const salir = () => {
                     <CardTitle class="text-sm font-medium"> Cursos </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <div class="text-2xl font-bold">{{ prematriculaStore.totalCursos }}</div>
+                    <div class="text-2xl font-bold">{{ totalCursos }}</div>
                   </CardContent>
                 </Card>
                 <Card>
@@ -178,7 +190,7 @@ const salir = () => {
                   </CardHeader>
                   <CardContent>
                     <div class="text-2xl font-bold capitalize">
-                      {{ prematriculaStore.totalAlumnos }}
+                      {{ totalAlumnos }}
                     </div>
                   </CardContent>
                 </Card>
@@ -206,8 +218,8 @@ const salir = () => {
                 <AlertDialogFooter>
                   <AlertDialogCancel>Cancelar</AlertDialogCancel>
                   <AlertDialogAction as-child>
-                    <Button :disabled="prematriculaStore.loading" @click="enviarAlumnosSupabase">
-                      <Loader v-if="prematriculaStore.loading" class="mr-2 h-6 w-6 animate-spin" />
+                    <Button :disabled="loading" @click="enviarAlumnosSupabase">
+                      <Loader v-if="loading" class="mr-2 h-6 w-6 animate-spin" />
                       Confirmar
                     </Button>
                   </AlertDialogAction>
@@ -218,8 +230,8 @@ const salir = () => {
         </div>
 
         <div v-else-if="pasoActual === 3" class="space-y-4">
-          <Alert v-if="prematriculaStore.loading">
-            <Loader v-if="prematriculaStore.loading" class="h-4 w-4 animate-spin" />
+          <Alert v-if="loading">
+            <Loader v-if="loading" class="h-4 w-4 animate-spin" />
             <AlertTitle> Procesando </AlertTitle>
             <AlertDescription>
               Se estan cargando los alumnos y cursos en el sistema.
@@ -229,9 +241,56 @@ const salir = () => {
             <Check class="h-4 w-4" />
             <AlertTitle> Finalizado </AlertTitle>
             <AlertDescription>
-              <p class="py-2">Se han cargado exitosamente todos los alumnos.</p>
+              <p class="py-2">Resumen de los datos cargados:</p>
               <Alert>
-                <AlertDescription> Resumen de la carga: </AlertDescription>
+                <AlertDescription>
+                  <!-- <p>Resumen de la carga:</p>
+                  <p>{{ prematriculaStore.resultadoResumen }}</p> -->
+                  <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+                    <Card>
+                      <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
+                        <CardTitle class="text-sm font-medium"> Establecimiento </CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <div class="text-2xl font-bold capitalize">
+                          {{ nombreEstablecimiento }}
+                        </div>
+                      </CardContent>
+                    </Card>
+                    <Card>
+                      <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
+                        <CardTitle class="text-sm font-medium"> RBD </CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <div class="text-2xl font-bold capitalize">
+                          {{ rbdEstablecimiento }}
+                        </div>
+                      </CardContent>
+                    </Card>
+                    <Card>
+                      <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
+                        <CardTitle class="text-sm font-medium"> Cursos </CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <div class="flex items-center space-x-2 text-2xl font-bold">
+                          <span>{{ resultadoResumen.cursos }} </span>
+                          <Check class="text-green-500" />
+                        </div>
+                      </CardContent>
+                    </Card>
+                    <Card>
+                      <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
+                        <CardTitle class="text-sm font-medium"> Alumnos </CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <div class="flex items-center space-x-2 text-2xl font-bold capitalize">
+                          <span>{{ resultadoResumen.alumnos }}</span>
+                          <Check class="text-green-500" />
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </div>
+                </AlertDescription>
               </Alert>
               <div class="flex space-x-2 pt-4">
                 <Button variant="outline" @click="reiniciarProceso"> Comenzar de nuevo </Button>

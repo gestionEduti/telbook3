@@ -1193,6 +1193,18 @@ export type Database = {
           },
         ]
       }
+      result: {
+        Row: {
+          jsonb_build_object: Json | null
+        }
+        Insert: {
+          jsonb_build_object?: Json | null
+        }
+        Update: {
+          jsonb_build_object?: Json | null
+        }
+        Relationships: []
+      }
       tel_bases_fonoaudiologicas: {
         Row: {
           anio: number
@@ -1829,12 +1841,13 @@ export type Database = {
         Args: {
           input_rbd: number
         }
-        Returns: {
-          rbd_column: number
-          accion: string
-          rut_usuario: string
-          accion_count: number
-        }[]
+        Returns: Json
+      }
+      prematricula_procesada_json: {
+        Args: {
+          input_rbd: number
+        }
+        Returns: Json
       }
       registrar_o_modificar_asistencia: {
         Args: {
