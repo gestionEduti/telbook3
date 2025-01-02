@@ -133,6 +133,7 @@ export const usePrematriculaStore = defineStore('prematricula', () => {
     nomina.value = null
     nombreArchivo.value = null
     loading.value = false
+    resultadoResumen.value = { cursos: 0, alumnos: 0 }
   }
 
   async function obtenerResumen() {
