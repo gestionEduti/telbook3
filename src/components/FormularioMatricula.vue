@@ -149,14 +149,6 @@ onMounted(async () => {
           <Separator />
         </CardHeader>
         <CardContent class="mt-0 space-y-2">
-          <Button
-            @click="dataFormulario = loaderStore.datos_ejemplo"
-            variant="destructive"
-            class="mb-4"
-          >
-            <FlaskConical />
-            auto-rellenar formulario
-          </Button>
           <FormKit
             v-model="dataFormulario"
             type="form"

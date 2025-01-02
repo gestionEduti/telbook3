@@ -171,48 +171,6 @@ export const useNuevaMatriculaLoaderStore = defineStore('nuevaMatriculaLoader-st
     ])
   }
 
-  // TEMPORAL SOLO EN DESAROLLO PARA PRUEBAS RAPIDAS Y NO TENER QUE RELLENAR EL FORMULARIO A MANO
-  const datos_ejemplo = {
-    // numbers
-    anio_libro: 2025,
-    codigo_estado_alumno: 1,
-    numero_lista_nivel_alumno: 1,
-    numero_matricula_alumno: 1,
-    rbd_establecimiento: 1,
-    // strings
-    apellidos_alumno: 'Perez Gonzales',
-    apoderado_tutor_alumno: '',
-    causa_retiro_alumno: '',
-    comuna_alumno: 'SANTIAGO',
-    domicilio_alumno: 'San Pablo 123, dpto. 456',
-    email_apoderado_alumno: 'juanperez@gmail.com',
-    estado_alumno: '',
-    jornada_alumno: 'TARDE',
-    nacionalidad_alumno: 'CHILENA',
-    nivel_alumno: 'MMA',
-    nivel_educacional_madre: 'MEDIA COMPLETA',
-    nivel_educacional_padre: 'MEDIA COMPLETA',
-    nombre_apoderado_alumno: 'Juan Perez',
-    nombre_completo_alumno: '',
-    nombres_alumno: 'Juan Carlos',
-    parentezco_con_alumno: 'MADRE',
-    problema_aprendizaje_alumno: 'CON',
-    procedencia_alumno: 'CONTINUIDAD',
-    pueblo_originario_alumno: 'SI',
-    region_alumno: '',
-    rut_alumno: '12456789-k',
-    rut_profesor_alumno: '',
-    sexo_alumno: 'MASCULINO',
-    situacion_social_alumno: 'PRIORITARIO',
-    telefono_apoderado_alumno: '+56981234567',
-    tipo_tel_alumno: 'TEL MIXTO',
-    vive_con_alumno: 'MADRE',
-    // timestamps
-    fecha_incorporacion_alumno: '2024-12-15',
-    fecha_nacimiento_alumno: '2018-10-20',
-    fecha_retiro_escuela: '',
-  }
-
   return {
     fetchAllSelectsData,
     tp_cursos,
@@ -228,7 +186,6 @@ export const useNuevaMatriculaLoaderStore = defineStore('nuevaMatriculaLoader-st
     tp_vive_con,
     tp_parentezco_alumno,
     tp_nivel_educacional_padres,
-    datos_ejemplo,
   }
 })
 

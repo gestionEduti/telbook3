@@ -81,7 +81,9 @@ export const usePrematriculaStore = defineStore('prematricula', () => {
 
     // Separo la primera fila que corresponde a los headers
     const headerRow = rows.shift()
-    if (!headerRow) return
+    if (!headerRow) {
+      throw new Error('El documento no es valido. No tiene la primera columna de headers.')
+    }
 
     // Extraigo los headers de la tabla
     const nodes: NodeListOf<HTMLTableCellElement> = headerRow.querySelectorAll('th, td')
