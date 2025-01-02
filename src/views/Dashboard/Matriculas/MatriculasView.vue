@@ -4,6 +4,10 @@ import { onMounted, ref } from 'vue'
 import ResumenMatriculas from '@/components/views/Matriculas/ResumenMatriculas.vue'
 import TablaMatriculas from '@/components/views/Matriculas/TablaMatriculas.vue'
 
+// jsPDF
+import jsPDF from 'jspdf'
+import autoTable from 'jspdf-autotable'
+
 // shadcn
 import Button from '@/components/ui/button/Button.vue'
 import DropdownMenu from '@/components/ui/dropdown-menu/DropdownMenu.vue'
@@ -20,15 +24,7 @@ import CardTitle from '@/components/ui/card/CardTitle.vue'
 import CardDescription from '@/components/ui/card/CardDescription.vue'
 import Separator from '@/components/ui/separator/Separator.vue'
 // icons
-import {
-  Download,
-  UserPlus,
-  BookCheck,
-  FileText,
-  ListX,
-  ChevronDown,
-  FileSpreadsheet,
-} from 'lucide-vue-next'
+import { Download, UserPlus, FileText, ListX, ChevronDown, FileSpreadsheet } from 'lucide-vue-next'
 
 // store
 import { useAuthStore } from '@/stores/auth'
@@ -58,7 +54,49 @@ const fetchSupabase = async () => {
 }
 
 const exportarResumen = () => {
-  console.log('exportar resumen')
+  const doc = new jsPDF()
+
+  doc.setFontSize(16)
+  doc.text('Resumen', 14, 15)
+  doc.setFontSize(11)
+  doc.text(`Establecimiento: ${authStore.establecimiento?.razon_social}`, 14, 25)
+  doc.text(`RBD: ${authStore.establecimiento?.rbd}`, 14, 32)
+  doc.text(`Fecha: ${new Date().toLocaleDateString()}`, 14, 39)
+  doc.text(`Total de registros: ${alumnos.value?.length}`, 14, 46)
+
+  const tableData = alumnos.value!.map((alumno) => [
+    alumno.numero_matricula_alumno,
+    alumno.rut_alumno,
+    alumno.nombre_completo_alumno,
+    alumno.procedencia_alumno,
+    alumno.fecha_nacimiento_alumno,
+    alumno.fecha_incorporacion_alumno,
+    alumno.estado_alumno,
+    alumno.fecha_retiro_escuela,
+  ])
+
+  const headers = [
+    [
+      'Nº',
+      'Rut',
+      'Nombre',
+      'Procedencia',
+      'Fecha Nacimiento',
+      'Fecha Incorporación',
+      'Estado',
+      'Fecha Retiro',
+    ],
+  ]
+
+  autoTable(doc, {
+    head: headers,
+    body: tableData,
+    startY: 50,
+    margin: { top: 10 },
+    styles: { fontSize: 8, cellPadding: 2 },
+  })
+
+  doc.save('resumen.pdf')
 }
 
 // lifecycle
