@@ -11,7 +11,7 @@ import TabsContent from '@/components/ui/tabs/TabsContent.vue'
 import TabsList from '@/components/ui/tabs/TabsList.vue'
 import TabsTrigger from '@/components/ui/tabs/TabsTrigger.vue'
 // icons
-import { BookA, BookUser, FileUser, SquareUserRound } from 'lucide-vue-next'
+import { BookA, SquareUserRound } from 'lucide-vue-next'
 
 // store
 import { useAuthStore } from '@/stores/auth'

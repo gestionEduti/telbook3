@@ -17,7 +17,7 @@ import Separator from '@/components/ui/separator/Separator.vue'
 import { useToast } from '@/components/ui/toast/use-toast'
 const { toast } = useToast()
 // icons
-import { FlaskConical, Loader } from 'lucide-vue-next'
+import { Loader } from 'lucide-vue-next'
 
 // supabase
 import { supabase } from '@/services/supabaseClient'

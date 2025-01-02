@@ -3,7 +3,6 @@
 describe('probar autenticacion', () => {
   beforeEach(() => cy.visit('http://127.0.0.1:5173/login'))
 
-  const adminCredentials = { email: 'test_admin@mail.com', password: '123456' }
   const profeCredentials = { email: 'test_profesor@mail.com', password: '123456' }
   const sinPerfilCredentials = { email: 'test_no_profile@mail.com', password: '123456' }
 
