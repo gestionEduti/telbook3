@@ -32,7 +32,9 @@ const logout = async () => {
 }
 
 // computed
-const esAdmin = computed(() => perfil.value?.codigo_perfil_usuario === 1)
+const esEduti = computed(() => {
+  return ['sergrodrig@gmail.com', 'juanpablo@eduti.cl'].includes(perfil.value!.email)
+})
 </script>
 
 <template>
@@ -66,7 +68,7 @@ const esAdmin = computed(() => perfil.value?.codigo_perfil_usuario === 1)
           <Contact class="h-4 w-4" />
           <span class="ml-2">Mi perfil</span>
         </DropdownMenuItem>
-        <DropdownMenuItem @click="$router.push({ name: 'panel-admin' })" v-if="esAdmin">
+        <DropdownMenuItem @click="$router.push({ name: 'panel-admin' })" v-if="esEduti">
           <FileSliders class="h-4 w-4" />
           <span class="ml-2">Panel administracion</span>
         </DropdownMenuItem>
