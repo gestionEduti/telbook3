@@ -17,7 +17,7 @@ import { useAuthStore } from '@/stores/auth'
 const { perfil } = useAuthStore()
 
 // computed
-const esAdmin = computed(() => [1, 2].includes(perfil!.codigo_perfil_usuario)) // TODO (modelo) perfil usuario tiene q ser not null
+const esAdmin = computed(() => [1].includes(perfil!.codigo_perfil_usuario)) // TODO (modelo) perfil usuario tiene q ser not null
 const menuUsuario = computed(() => navLinks.filter((item) => !item.admin || esAdmin))
 
 // methods
