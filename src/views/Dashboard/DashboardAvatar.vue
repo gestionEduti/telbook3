@@ -32,9 +32,7 @@ const logout = async () => {
 }
 
 // computed
-const esEduti = computed(() => {
-  return ['sergrodrig@gmail.com', 'juanpablo@eduti.cl'].includes(perfil.value!.email)
-})
+const esEduti = computed(() => perfil.value?.email?.endsWith('@eduti.cl') ?? false)
 </script>
 
 <template>

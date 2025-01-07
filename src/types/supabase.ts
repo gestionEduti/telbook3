@@ -20,8 +20,8 @@ export type Database = {
           domicilio_alumno: string | null
           email_apoderado_alumno: string | null
           estado_alumno: string | null
-          fecha_incorporacion_alumno: number | null
-          fecha_nacimiento_alumno: number | null
+          fecha_incorporacion_alumno: string | null
+          fecha_nacimiento_alumno: string | null
           fecha_retiro_escuela: string | null
           id: number
           jornada_alumno: string | null
@@ -58,8 +58,8 @@ export type Database = {
           domicilio_alumno?: string | null
           email_apoderado_alumno?: string | null
           estado_alumno?: string | null
-          fecha_incorporacion_alumno?: number | null
-          fecha_nacimiento_alumno?: number | null
+          fecha_incorporacion_alumno?: string | null
+          fecha_nacimiento_alumno?: string | null
           fecha_retiro_escuela?: string | null
           id?: number
           jornada_alumno?: string | null
@@ -96,8 +96,8 @@ export type Database = {
           domicilio_alumno?: string | null
           email_apoderado_alumno?: string | null
           estado_alumno?: string | null
-          fecha_incorporacion_alumno?: number | null
-          fecha_nacimiento_alumno?: number | null
+          fecha_incorporacion_alumno?: string | null
+          fecha_nacimiento_alumno?: string | null
           fecha_retiro_escuela?: string | null
           id?: number
           jornada_alumno?: string | null
@@ -436,6 +436,13 @@ export type Database = {
             foreignKeyName: "fk_mv_anotaciones_alumno_rbd"
             columns: ["rbd_escuela"]
             isOneToOne: false
+            referencedRelation: "panel_resumen_establecimientos"
+            referencedColumns: ["rbd"]
+          },
+          {
+            foreignKeyName: "fk_mv_anotaciones_alumno_rbd"
+            columns: ["rbd_escuela"]
+            isOneToOne: false
             referencedRelation: "tp_establecimientos"
             referencedColumns: ["rbd"]
           },
@@ -479,6 +486,13 @@ export type Database = {
           rut_anotador?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "mv_anotaciones_fonoaudiologicas_rbd_escuela_fkey"
+            columns: ["rbd_escuela"]
+            isOneToOne: false
+            referencedRelation: "panel_resumen_establecimientos"
+            referencedColumns: ["rbd"]
+          },
           {
             foreignKeyName: "mv_anotaciones_fonoaudiologicas_rbd_escuela_fkey"
             columns: ["rbd_escuela"]
@@ -541,6 +555,13 @@ export type Database = {
           rut_alumno?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "mv_asistencia_diaria_rbd_fkey"
+            columns: ["rbd"]
+            isOneToOne: false
+            referencedRelation: "panel_resumen_establecimientos"
+            referencedColumns: ["rbd"]
+          },
           {
             foreignKeyName: "mv_asistencia_diaria_rbd_fkey"
             columns: ["rbd"]
@@ -875,6 +896,287 @@ export type Database = {
             referencedRelation: "tp_estado_alumno"
             referencedColumns: ["descripcion_estado"]
           },
+          {
+            foreignKeyName: "mv_libro_matricula_rbd_establecimiento_fkey"
+            columns: ["rbd_establecimiento"]
+            isOneToOne: false
+            referencedRelation: "panel_resumen_establecimientos"
+            referencedColumns: ["rbd"]
+          },
+          {
+            foreignKeyName: "mv_libro_matricula_rbd_establecimiento_fkey"
+            columns: ["rbd_establecimiento"]
+            isOneToOne: false
+            referencedRelation: "tp_establecimientos"
+            referencedColumns: ["rbd"]
+          },
+        ]
+      }
+      mv_libro_matricula_log: {
+        Row: {
+          action_type: string
+          change_date: string | null
+          changed_by: string | null
+          log_id: number
+          new_data: Json | null
+          old_data: Json | null
+        }
+        Insert: {
+          action_type: string
+          change_date?: string | null
+          changed_by?: string | null
+          log_id?: number
+          new_data?: Json | null
+          old_data?: Json | null
+        }
+        Update: {
+          action_type?: string
+          change_date?: string | null
+          changed_by?: string | null
+          log_id?: number
+          new_data?: Json | null
+          old_data?: Json | null
+        }
+        Relationships: []
+      }
+      mv_libro_matricula_temp: {
+        Row: {
+          anio_libro: number | null
+          apellidos_alumno: string
+          apoderado_tutor_alumno: string | null
+          causa_retiro_alumno: string | null
+          codigo_estado_alumno: number
+          comuna_alumno: string | null
+          created_at: string
+          domicilio_alumno: string | null
+          email_apoderado_alumno: string | null
+          estado_alumno: string
+          fecha_incorporacion_alumno: string
+          fecha_nacimiento_alumno: string
+          fecha_retiro_escuela: string | null
+          id: number
+          jornada_alumno: string | null
+          nacionalidad_alumno: string | null
+          nivel_alumno: string
+          nivel_educacional_madre: string | null
+          nivel_educacional_padre: string | null
+          nombre_apoderado_alumno: string | null
+          nombre_completo_alumno: string | null
+          nombres_alumno: string
+          numero_lista_nivel_alumno: number
+          numero_matricula_alumno: number
+          parentezco_con_alumno: string | null
+          problema_aprendizaje_alumno: string | null
+          procedencia_alumno: string | null
+          pueblo_originario_alumno: string | null
+          rbd_establecimiento: number
+          region_alumno: string | null
+          rut_alumno: string
+          rut_profesor_alumno: string | null
+          sexo_alumno: string | null
+          situacion_social_alumno: string | null
+          telefono_apoderado_alumno: string | null
+          tipo_tel_alumno: string | null
+          vive_con_alumno: string | null
+        }
+        Insert: {
+          anio_libro?: number | null
+          apellidos_alumno: string
+          apoderado_tutor_alumno?: string | null
+          causa_retiro_alumno?: string | null
+          codigo_estado_alumno: number
+          comuna_alumno?: string | null
+          created_at?: string
+          domicilio_alumno?: string | null
+          email_apoderado_alumno?: string | null
+          estado_alumno: string
+          fecha_incorporacion_alumno: string
+          fecha_nacimiento_alumno: string
+          fecha_retiro_escuela?: string | null
+          id?: number
+          jornada_alumno?: string | null
+          nacionalidad_alumno?: string | null
+          nivel_alumno: string
+          nivel_educacional_madre?: string | null
+          nivel_educacional_padre?: string | null
+          nombre_apoderado_alumno?: string | null
+          nombre_completo_alumno?: string | null
+          nombres_alumno: string
+          numero_lista_nivel_alumno: number
+          numero_matricula_alumno: number
+          parentezco_con_alumno?: string | null
+          problema_aprendizaje_alumno?: string | null
+          procedencia_alumno?: string | null
+          pueblo_originario_alumno?: string | null
+          rbd_establecimiento: number
+          region_alumno?: string | null
+          rut_alumno: string
+          rut_profesor_alumno?: string | null
+          sexo_alumno?: string | null
+          situacion_social_alumno?: string | null
+          telefono_apoderado_alumno?: string | null
+          tipo_tel_alumno?: string | null
+          vive_con_alumno?: string | null
+        }
+        Update: {
+          anio_libro?: number | null
+          apellidos_alumno?: string
+          apoderado_tutor_alumno?: string | null
+          causa_retiro_alumno?: string | null
+          codigo_estado_alumno?: number
+          comuna_alumno?: string | null
+          created_at?: string
+          domicilio_alumno?: string | null
+          email_apoderado_alumno?: string | null
+          estado_alumno?: string
+          fecha_incorporacion_alumno?: string
+          fecha_nacimiento_alumno?: string
+          fecha_retiro_escuela?: string | null
+          id?: number
+          jornada_alumno?: string | null
+          nacionalidad_alumno?: string | null
+          nivel_alumno?: string
+          nivel_educacional_madre?: string | null
+          nivel_educacional_padre?: string | null
+          nombre_apoderado_alumno?: string | null
+          nombre_completo_alumno?: string | null
+          nombres_alumno?: string
+          numero_lista_nivel_alumno?: number
+          numero_matricula_alumno?: number
+          parentezco_con_alumno?: string | null
+          problema_aprendizaje_alumno?: string | null
+          procedencia_alumno?: string | null
+          pueblo_originario_alumno?: string | null
+          rbd_establecimiento?: number
+          region_alumno?: string | null
+          rut_alumno?: string
+          rut_profesor_alumno?: string | null
+          sexo_alumno?: string | null
+          situacion_social_alumno?: string | null
+          telefono_apoderado_alumno?: string | null
+          tipo_tel_alumno?: string | null
+          vive_con_alumno?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mv_libro_matricula_duplicate_t_problema_aprendizaje_alumno_fkey"
+            columns: ["problema_aprendizaje_alumno"]
+            isOneToOne: false
+            referencedRelation: "tp_problemas_aprendizaje"
+            referencedColumns: ["descripcion_problema_aprendizaje"]
+          },
+          {
+            foreignKeyName: "mv_libro_matricula_duplicate_temp_codigo_estado_alumno_fkey"
+            columns: ["codigo_estado_alumno"]
+            isOneToOne: false
+            referencedRelation: "tp_estado_alumno"
+            referencedColumns: ["codigo_estado"]
+          },
+          {
+            foreignKeyName: "mv_libro_matricula_duplicate_temp_comuna_alumno_fkey"
+            columns: ["comuna_alumno"]
+            isOneToOne: false
+            referencedRelation: "tp_regiones_comunas_chile"
+            referencedColumns: ["nombre_comuna"]
+          },
+          {
+            foreignKeyName: "mv_libro_matricula_duplicate_temp_estado_alumno_fkey"
+            columns: ["estado_alumno"]
+            isOneToOne: false
+            referencedRelation: "tp_estado_alumno"
+            referencedColumns: ["descripcion_estado"]
+          },
+          {
+            foreignKeyName: "mv_libro_matricula_duplicate_temp_jornada_alumno_fkey"
+            columns: ["jornada_alumno"]
+            isOneToOne: false
+            referencedRelation: "tp_jornada_alumno"
+            referencedColumns: ["descripcion_jornada"]
+          },
+          {
+            foreignKeyName: "mv_libro_matricula_duplicate_temp_nacionalidad_alumno_fkey"
+            columns: ["nacionalidad_alumno"]
+            isOneToOne: false
+            referencedRelation: "tp_nacionalidad_alumno"
+            referencedColumns: ["descripcion_nacionalidad"]
+          },
+          {
+            foreignKeyName: "mv_libro_matricula_duplicate_temp_nivel_educacional_madre_fkey"
+            columns: ["nivel_educacional_madre"]
+            isOneToOne: false
+            referencedRelation: "tp_nivel_educacional_padres"
+            referencedColumns: ["descripcion_educacion"]
+          },
+          {
+            foreignKeyName: "mv_libro_matricula_duplicate_temp_nivel_educacional_padre_fkey"
+            columns: ["nivel_educacional_padre"]
+            isOneToOne: false
+            referencedRelation: "tp_nivel_educacional_padres"
+            referencedColumns: ["descripcion_educacion"]
+          },
+          {
+            foreignKeyName: "mv_libro_matricula_duplicate_temp_parentezco_con_alumno_fkey"
+            columns: ["parentezco_con_alumno"]
+            isOneToOne: false
+            referencedRelation: "tp_parentezco_alumno"
+            referencedColumns: ["descripcion_parentezco_alumno"]
+          },
+          {
+            foreignKeyName: "mv_libro_matricula_duplicate_temp_procedencia_alumno_fkey"
+            columns: ["procedencia_alumno"]
+            isOneToOne: false
+            referencedRelation: "tp_procedencia_alumno"
+            referencedColumns: ["descripcion_procedencia"]
+          },
+          {
+            foreignKeyName: "mv_libro_matricula_duplicate_temp_pueblo_originario_alumno_fkey"
+            columns: ["pueblo_originario_alumno"]
+            isOneToOne: false
+            referencedRelation: "tp_pueblo_originario"
+            referencedColumns: ["descripcion_pertenece"]
+          },
+          {
+            foreignKeyName: "mv_libro_matricula_duplicate_temp_rbd_establecimiento_fkey"
+            columns: ["rbd_establecimiento"]
+            isOneToOne: false
+            referencedRelation: "panel_resumen_establecimientos"
+            referencedColumns: ["rbd"]
+          },
+          {
+            foreignKeyName: "mv_libro_matricula_duplicate_temp_rbd_establecimiento_fkey"
+            columns: ["rbd_establecimiento"]
+            isOneToOne: false
+            referencedRelation: "tp_establecimientos"
+            referencedColumns: ["rbd"]
+          },
+          {
+            foreignKeyName: "mv_libro_matricula_duplicate_temp_sexo_alumno_fkey"
+            columns: ["sexo_alumno"]
+            isOneToOne: false
+            referencedRelation: "tp_genero_alumno"
+            referencedColumns: ["descripcion_genero_alumno"]
+          },
+          {
+            foreignKeyName: "mv_libro_matricula_duplicate_temp_situacion_social_alumno_fkey"
+            columns: ["situacion_social_alumno"]
+            isOneToOne: false
+            referencedRelation: "tp_situacion_social"
+            referencedColumns: ["descripcion_situacion_social"]
+          },
+          {
+            foreignKeyName: "mv_libro_matricula_duplicate_temp_tipo_tel_alumno_fkey"
+            columns: ["tipo_tel_alumno"]
+            isOneToOne: false
+            referencedRelation: "tp_tipo_tel"
+            referencedColumns: ["descripcion_tel"]
+          },
+          {
+            foreignKeyName: "mv_libro_matricula_duplicate_temp_vive_con_alumno_fkey"
+            columns: ["vive_con_alumno"]
+            isOneToOne: false
+            referencedRelation: "tp_vive_con"
+            referencedColumns: ["descripcion_vive_con"]
+          },
         ]
       }
       mv_pla_corto_plazo: {
@@ -927,6 +1229,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "mv_pla_mediano_plazo"
             referencedColumns: ["id_planificacion"]
+          },
+          {
+            foreignKeyName: "mv_pla_corto_plazo_rbd_fkey"
+            columns: ["rbd"]
+            isOneToOne: false
+            referencedRelation: "panel_resumen_establecimientos"
+            referencedColumns: ["rbd"]
           },
           {
             foreignKeyName: "mv_pla_corto_plazo_rbd_fkey"
@@ -1050,6 +1359,13 @@ export type Database = {
           rbd?: number
         }
         Relationships: [
+          {
+            foreignKeyName: "mv_pla_mediano_plazo_rbd_fkey"
+            columns: ["rbd"]
+            isOneToOne: false
+            referencedRelation: "panel_resumen_establecimientos"
+            referencedColumns: ["rbd"]
+          },
           {
             foreignKeyName: "mv_pla_mediano_plazo_rbd_fkey"
             columns: ["rbd"]
@@ -1191,7 +1507,33 @@ export type Database = {
             referencedRelation: "tp_perfil_usuario"
             referencedColumns: ["codigo_perfil_usuario"]
           },
+          {
+            foreignKeyName: "mv_usuario_rbd_usuario_fkey"
+            columns: ["rbd_usuario"]
+            isOneToOne: false
+            referencedRelation: "panel_resumen_establecimientos"
+            referencedColumns: ["rbd"]
+          },
+          {
+            foreignKeyName: "mv_usuario_rbd_usuario_fkey"
+            columns: ["rbd_usuario"]
+            isOneToOne: false
+            referencedRelation: "tp_establecimientos"
+            referencedColumns: ["rbd"]
+          },
         ]
+      }
+      numerito: {
+        Row: {
+          coalesce: number | null
+        }
+        Insert: {
+          coalesce?: number | null
+        }
+        Update: {
+          coalesce?: number | null
+        }
+        Relationships: []
       }
       result: {
         Row: {
@@ -1324,6 +1666,13 @@ export type Database = {
           sigla_nivel_curso?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "tp_cursos_tp_establecimientos__fk"
+            columns: ["rbd_establecimiento"]
+            isOneToOne: false
+            referencedRelation: "panel_resumen_establecimientos"
+            referencedColumns: ["rbd"]
+          },
           {
             foreignKeyName: "tp_cursos_tp_establecimientos__fk"
             columns: ["rbd_establecimiento"]
@@ -1746,7 +2095,15 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      panel_resumen_establecimientos: {
+        Row: {
+          cursos: number | null
+          matriculas: number | null
+          razon_social: string | null
+          rbd: number | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       actualizar_estado_alumno: {
@@ -1848,6 +2205,19 @@ export type Database = {
           input_rbd: number
         }
         Returns: Json
+      }
+      prueba_transaccion_prematricula: {
+        Args: {
+          rbd: number
+          alumnos: Json
+        }
+        Returns: Json
+      }
+      prueba_transaccion_prematricula_upsert: {
+        Args: {
+          rut: string
+        }
+        Returns: undefined
       }
       registrar_o_modificar_asistencia: {
         Args: {

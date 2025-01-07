@@ -16,17 +16,21 @@ const errorStore = useErrorStore()
 
 // supabase
 import { supabase } from '@/services/supabaseClient'
-import type { Tables } from '@/types/supabase'
-const query = supabase.from('tp_establecimientos').select().order('rbd', { ascending: true })
+import type { Database } from '@/types/supabase'
+const query = supabase
+  .from('panel_resumen_establecimientos')
+  .select()
+  .order('rbd', { ascending: true })
 
 // data
-const establecimientos = ref<Tables<'tp_establecimientos'>[] | null>(null)
+type Resumen = Database['public']['Views']['panel_resumen_establecimientos']['Row'][]
+const resumen = ref<Resumen | null>(null)
 
 // methods
 const fetch = async () => {
   const { data, error, status } = await query
   if (error) errorStore.setError({ error: error, customCode: status })
-  else establecimientos.value = data
+  else resumen.value = data
 }
 
 // lifecycle
@@ -37,11 +41,11 @@ onMounted(async () => {
 
 <template>
   <Transition name="fade" mode="out-in">
-    <Table v-if="establecimientos" class="border border-slate-300 bg-white">
+    <Table v-if="resumen" class="border border-slate-300 bg-white">
       <TableCaption>
         {{
-          establecimientos?.length
-            ? `Hay un total de ${establecimientos?.length || 0} establecimientos en la tabla`
+          resumen?.length
+            ? `Hay un total de ${resumen?.length || 0} establecimientos en la tabla`
             : 'No hay establecimientos'
         }}
       </TableCaption>
@@ -49,17 +53,25 @@ onMounted(async () => {
         <TableRow>
           <TableHead class="w-[1px] py-2 text-left"> RBD </TableHead>
           <TableHead class="w-[1px] py-2 text-left"> Nombre </TableHead>
+          <TableHead class="w-[1px] py-2 text-left"> Cursos </TableHead>
+          <TableHead class="w-[1px] py-2 text-left"> Matriculas </TableHead>
         </TableRow>
       </TableHeader>
       <Transition name="company" mode="out-in">
         <TableBody>
           <TransitionGroup name="list">
-            <TableRow v-for="establecimiento in establecimientos" :key="establecimiento.id">
+            <TableRow v-for="establecimiento in resumen" :key="establecimiento.rbd!">
               <TableCell class="text-center font-medium">
                 {{ establecimiento.rbd }}
               </TableCell>
               <TableCell class="w-full text-left font-medium">
                 {{ establecimiento.razon_social }}
+              </TableCell>
+              <TableCell class="w-full text-center font-medium">
+                {{ establecimiento.cursos || '-' }}
+              </TableCell>
+              <TableCell class="w-full text-center font-medium">
+                {{ establecimiento.matriculas || '-' }}
               </TableCell>
             </TableRow>
           </TransitionGroup>
