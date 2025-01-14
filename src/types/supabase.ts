@@ -719,7 +719,7 @@ export type Database = {
           causa_retiro_alumno?: string | null
           codigo_estado_alumno: number
           comuna_alumno?: string | null
-          created_at: string
+          created_at?: string
           domicilio_alumno?: string | null
           email_apoderado_alumno?: string | null
           estado_alumno: string
@@ -1601,6 +1601,24 @@ export type Database = {
         }
         Relationships: []
       }
+      tp_anio_academico: {
+        Row: {
+          anio: number
+          estado: boolean
+          id: number
+        }
+        Insert: {
+          anio: number
+          estado: boolean
+          id?: number
+        }
+        Update: {
+          anio?: number
+          estado?: boolean
+          id?: number
+        }
+        Relationships: []
+      }
       tp_bases_curriculares: {
         Row: {
           anio: number
@@ -2117,28 +2135,6 @@ export type Database = {
         }
         Returns: string
       }
-      gestionar_alumnos_pre_matricula: {
-        Args: {
-          v_anio: number
-          v_rbd: number
-          v_descripcion_nivel: string
-          v_letra_nivel: string
-          v_rut_alumno: string
-          v_genero: string
-          v_nombres_alumno: string
-          v_apellido_paterno: string
-          v_apellido_materno: string
-          v_direccion_alumno: string
-          v_comuna: string
-          v_email: string
-          v_telefono: string
-          v_fecha_nacimiento: string
-          v_fecha_incorporacion_escuela: string
-          v_fecha_retiro_escuela: string
-          v_rut_usuario: string
-        }
-        Returns: string
-      }
       gestionar_pla_corto_plazo: {
         Args: {
           p_id_planificacion?: number
@@ -2206,19 +2202,6 @@ export type Database = {
         }
         Returns: Json
       }
-      prueba_transaccion_prematricula: {
-        Args: {
-          rbd: number
-          alumnos: Json
-        }
-        Returns: Json
-      }
-      prueba_transaccion_prematricula_upsert: {
-        Args: {
-          rut: string
-        }
-        Returns: undefined
-      }
       registrar_o_modificar_asistencia: {
         Args: {
           p_id_asistencia?: number
@@ -2238,6 +2221,32 @@ export type Database = {
           p_observacion_modificacion?: string
         }
         Returns: string
+      }
+      transaccion_prematricula: {
+        Args: {
+          rbd: number
+          alumnos: Json
+          usuario_ingreso: string
+        }
+        Returns: Json
+      }
+      transaccion_prematricula_pdf: {
+        Args: {
+          v_anio: number
+          v_rbd: string
+          v_rut_usuario: string
+          v_rut_alumno: string
+          v_nombre_completo: string
+          v_nivel: string
+          v_letra: string
+        }
+        Returns: string
+      }
+      transaccion_prematricula_upsert: {
+        Args: {
+          rut: string
+        }
+        Returns: undefined
       }
     }
     Enums: {

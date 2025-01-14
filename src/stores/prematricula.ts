@@ -1,7 +1,8 @@
 import { acceptHMRUpdate, defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import { supabase } from '@/services/supabaseClient'
-import type { NominaAlumnoInterface } from '@/types/nomina'
+import type { NominaAlumnoXLS, NominaAlumnoPDF } from '@/types/nomina'
+import * as pdfjsLib from 'pdfjs-dist'
 
 // store
 import { useAuthStore } from '@/stores/auth'
@@ -9,9 +10,12 @@ import { useErrorStore } from './error'
 const authStore = useAuthStore()
 const errorStore = useErrorStore()
 
+// pdf.js
+pdfjsLib.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjsLib.version}/build/pdf.worker.min.js`
+
 export const usePrematriculaStore = defineStore('prematricula', () => {
   // data
-  const nomina = ref<NominaAlumnoInterface[] | null>(null)
+  const nomina = ref<NominaAlumnoXLS[] | NominaAlumnoPDF[] | null>(null)
   const nombreArchivo = ref<string | null>(null)
   const loading = ref(false)
   const resultadoResumen = ref({ cursos: 0, alumnos: 0 })
@@ -32,135 +36,160 @@ export const usePrematriculaStore = defineStore('prematricula', () => {
   )
 
   // methods
-  async function procesarArchivo(f: File) {
+  async function procesarArchivo(file: File) {
     loading.value = true
-    const contenidoArchivo = await leerArchivo(f) // lee el archivo
-    if (!contenidoArchivo) return // si no hay archivo, termina
-    nomina.value = await parsearXHTML(contenidoArchivo) // actualiza el estado
-    if (!nomina.value) return // si no se pudo parsear, termina
-    // await new Promise((resolve) => setTimeout(resolve, 800)
-    loading.value = false
-  }
+    const isPDF = file.name.toLowerCase().endsWith('.pdf')
 
-  async function leerArchivo(f: File): Promise<string | null> {
-    nombreArchivo.value = f.name
-    return new Promise<string | null>((resolve, reject) => {
-      const reader = new FileReader()
-      reader.readAsText(f, 'ISO-8859-1')
-      reader.onload = (event) => {
-        const text = event.target?.result as string
-        if (!text) reject(null)
-        resolve(text)
-      }
-      reader.onerror = () => reject(null)
-    })
-  }
+    try {
+      // Lee el archivo según el tipo
+      const contenidoArchivo = isPDF ? await leerArchivoPDF(file) : await leerArchivoXLS(file)
+      if (!contenidoArchivo) return // si no hay archivo, termina
 
-  function parsearXHTML(fileContent: string): NominaAlumnoInterface[] {
-    // Creo un parseador
-    const parser = new DOMParser()
-
-    // Parseo el contenido del archivo
-    const xhtml = parser.parseFromString(fileContent, 'application/xhtml+xml')
-
-    // Extraigo los nodos que corresponden a las filas de la tabla
-    const rows: HTMLTableRowElement[] = Array.from(xhtml.querySelectorAll('table tr'))
-
-    // Separo la primera fila que corresponde a los headers
-    const headerRow = rows.shift()
-    if (!headerRow) {
-      throw new Error('El documento no es valido. No tiene la primera columna de headers.')
+      // Parsea el contenido según el tipo
+      nomina.value = isPDF
+        ? await parsearPDF(contenidoArchivo as ArrayBuffer)
+        : parsearXHTML(contenidoArchivo as string)
+      if (!nomina.value) return // si no se pudo parsear, termina
+    } catch (error) {
+      console.error('Error procesando archivo:', error)
+    } finally {
+      loading.value = false
     }
+  }
 
-    // Extraigo los headers de la tabla
-    const nodes: NodeListOf<HTMLTableCellElement> = headerRow.querySelectorAll('th, td')
-    const nodesArray: HTMLTableCellElement[] = Array.from(nodes)
-    const headers: string[] = nodesArray.map((cell) => cell.textContent?.trim() || '')
+  // PDF
+  async function leerArchivoPDF(file: File) {
+    return await file.arrayBuffer()
+  }
+  const parsearPDF = async (arrayBuffer: ArrayBuffer) => {
+    try {
+      const pdf = await pdfjsLib.getDocument(arrayBuffer).promise
+      const page = await pdf.getPage(1)
+      const textContent = await page.getTextContent()
 
-    // Procesa cada fila de la tabla
-    const result: NominaAlumnoInterface[] = rows.map((row: HTMLTableRowElement) => {
-      const cells: HTMLTableCellElement[] = Array.from(row.querySelectorAll('td'))
-      const rowData = {} as NominaAlumnoInterface
-      headers.forEach((header: string, index: number) => {
-        // TODO revisar si lo puedo arreglar con buenas practicas de TS luego
-        // @ts-expect-error debido a que ts espera que tenga un header valido de la interfaz, pero no lo puedo asegurar por ahroa
-        rowData[header] = cells[index]?.textContent?.trim() || null
+      // Obtener el texto manteniendo el orden y posición
+      const textItems = textContent.items.map((item) => ({
+        text: item.str,
+        y: item.transform[5], // Posición vertical
+      }))
+
+      // Agrupar elementos por línea basado en su posición vertical
+      const lineThreshold = 5 // Umbral para considerar elementos en la misma línea
+      const lines = []
+      let currentLine = []
+      let lastY = null
+
+      textItems.forEach((item) => {
+        if (lastY === null || Math.abs(item.y - lastY) < lineThreshold) {
+          currentLine.push(item.text)
+        } else {
+          if (currentLine.length > 0) {
+            lines.push(currentLine.join(' '))
+          }
+          currentLine = [item.text]
+        }
+        lastY = item.y
       })
-      return rowData
-    })
+      if (currentLine.length > 0) {
+        lines.push(currentLine.join(' '))
+      }
 
-    // Devuelvo el resultado
-    return result
+      // Extraer y procesar el curso
+      const cursoMatch = lines.find(
+        (line) =>
+          line.toUpperCase().includes('NIVEL') || line.toUpperCase().includes('MEDIO MAYOR'),
+      )
+      const cursoCompleto = cursoMatch || 'Segundo Nivel de Transición A'
+
+      const { curso, letra } = procesarCursoYLetra(cursoCompleto)
+
+      const estudiantesData = []
+
+      // Procesar cada línea
+      lines.forEach((line) => {
+        const rutMatch = line.match(/\b\d{8}-[\dkK]\b/)
+        if (rutMatch) {
+          const rut = rutMatch[0]
+
+          const nombreCompleto = line
+            .substring(line.indexOf(rut) + rut.length)
+            .trim()
+            .split(/\b\d{8}-[\dkK]\b/)[0]
+            .trim()
+            .replace(/\d+/g, '')
+            .trim()
+
+          if (nombreCompleto) {
+            const {
+              nombreCompleto: nombreProcesado,
+              apellidos,
+              nombres,
+            } = separarNombre(nombreCompleto)
+            estudiantesData.push({
+              rut,
+              nombreCompleto: nombreProcesado,
+              apellidos,
+              nombres,
+              curso,
+              letra,
+            })
+          }
+        }
+      })
+
+      console.log('Estudiantes procesados:', estudiantesData)
+    } catch (error) {
+      console.error('Error al procesar el PDF:', error)
+      alert('Error al procesar el PDF. Por favor, intente con otro archivo.')
+    }
   }
 
-  async function cargarAlumnos() {
-    loading.value = true
-    // await new Promise((resolve) => setTimeout(resolve, 2000))
-    if (!nomina.value) return
-    for (const alumno of nomina.value) {
-      const { error, status } = await queryMatricularAlumno(alumno)
-      if (error) {
-        errorStore.setError({ error: error, customCode: status })
-        return
+  const procesarCursoYLetra = (cursoTexto) => {
+    // Mapa de niveles
+    const nivelesEducacion = {
+      'MEDIO MAYOR': 'Medio Mayor',
+      'MEDIO MAYOR-': 'Medio Mayor',
+      PRIMER: 'Primer Nivel de Transición',
+      PRIMERO: 'Primer Nivel de Transición',
+      1: 'Primer Nivel de Transición',
+      SEGUNDO: 'Segundo Nivel de Transición',
+      'TRANSICION 2': 'Segundo Nivel de Transición',
+      2: 'Segundo Nivel de Transición',
+    }
+
+    // Normalizar el texto para la búsqueda
+    const textoNormalizado = cursoTexto.toUpperCase()
+
+    let curso = 'Medio Mayor' // valor por defecto
+    let letra = 'A' // valor por defecto
+
+    // Buscar el nivel en el texto
+    for (const [clave, valor] of Object.entries(nivelesEducacion)) {
+      if (textoNormalizado.includes(clave)) {
+        curso = valor
+        break
       }
     }
-    loading.value = false
+
+    // Buscar la letra (A, B, C, etc.)
+    const letraMatch = textoNormalizado.match(/[- ]([A-Z])(?:\s|$)/)
+    if (letraMatch) {
+      letra = letraMatch[1]
+    }
+
+    return { curso, letra }
   }
 
-  async function queryMatricularAlumno(alumno: NominaAlumnoInterface) {
-    return supabase.rpc('gestionar_alumnos_pre_matricula', {
-      v_anio: 2025, // TODO cambiar a año sacado desde la futura tabla de configuraciones
-      v_apellido_materno: alumno['Apellido Materno'],
-      v_apellido_paterno: alumno['Apellido Paterno'],
-      v_comuna: alumno['Comuna Residencia'],
-      v_descripcion_nivel: alumno['Desc Grado'],
-      v_direccion_alumno: alumno.Dirección,
-      v_email: alumno.Email,
-      v_fecha_incorporacion_escuela: alumno['Fecha Incorporación Curso'],
-      v_fecha_nacimiento: alumno['Fecha Nacimiento'],
-      v_fecha_retiro_escuela: alumno['Fecha Retiro'],
-      v_genero: alumno.Genero,
-      v_letra_nivel: alumno['Letra Curso'],
-      v_nombres_alumno: alumno.Nombres,
-      v_rbd: alumno.RBD,
-      v_rut_alumno: `${alumno.Run}-${alumno['Dígito Ver.']}`,
-      v_rut_usuario: authStore.perfil!.rut_usuario,
-      v_telefono: alumno.Telefono,
-    })
-  }
+  const separarNombre = (nombreCompleto) => {
+    const palabras = nombreCompleto.split(' ').filter((word) => word.length > 0)
+    const apellidos = palabras.slice(0, 2).join(' ')
+    const nombres = palabras.slice(2).join(' ')
 
-  async function reiniciarStore() {
-    nomina.value = null
-    nombreArchivo.value = null
-    loading.value = false
-    resultadoResumen.value = { cursos: 0, alumnos: 0 }
-  }
-
-  async function obtenerResumen() {
-    const { data, error, status } = await supabase.rpc('prematricula_procesada_json', {
-      input_rbd: rbdEstablecimiento.value,
-    })
-    if (error) errorStore.setError({ error: error, customCode: status })
-    else resultadoResumen.value = data as { cursos: number; alumnos: number }
-  }
-
-  return {
-    // data
-    nomina,
-    loading,
-    resultadoResumen,
-
-    // getters
-    rbdEstablecimiento,
-    nombreEstablecimiento,
-    totalAlumnos,
-    totalCursos,
-
-    // methods
-    procesarArchivo,
-    cargarAlumnos,
-    reiniciarStore,
-    obtenerResumen,
+    return {
+      nombreCompleto,
+      apellidos,
+      nombres,
+    }
   }
 })
 

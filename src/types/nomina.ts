@@ -1,5 +1,11 @@
 // Representa el objeto que genera Formkit al hacer submit del form.
-export interface FormKitFormData {
+export interface FormKitFormDataXls {
+  license: License[]
+  __init: boolean
+}
+
+export interface FormKitFormDataPdf {
+  razon_social: number
   license: License[]
   __init: boolean
 }
@@ -15,7 +21,7 @@ interface License {
 // Refleja las columnas del excel.
 // Las que estan comentadas no son relevantes.
 // Estan en el mismo orden de las columnas del excel.
-export interface NominaAlumnoStatic {
+export interface NominaAlumnoXLSStatic {
   Año: number
   RBD: number
   // 'Cod Tipo Enseñanza': string // no aplica
@@ -43,7 +49,18 @@ export interface NominaAlumnoStatic {
   [key: string]: string | number
 }
 
-export type NominaAlumnoInterface = NominaAlumnoStatic & Record<string, string | null>
+export type NominaAlumnoXLS = NominaAlumnoXLSStatic & Record<string, string | null>
+
+export interface NominaAlumnoPDFStatic {
+  rut: string
+  nombreCompleto: string
+  apellidos: string
+  nombres: string
+  curso: string
+  letra: string
+  [key: string]: string | number
+}
+export type NominaAlumnoPDF = NominaAlumnoPDFStatic & Record<string, string | null>
 
 // anio_libro integer null,
 // rbd_establecimiento integer null,
