@@ -6,7 +6,9 @@ import * as pdfjsLib from 'pdfjs-dist'
 
 // store
 import { useAuthStore } from '@/stores/auth'
+import { useErrorStore } from '@/stores/error'
 const authStore = useAuthStore()
+const errorStore = useErrorStore()
 
 export const usePrematriculaPdfStore = defineStore('prematriculapdf', () => {
   // pdf.js
@@ -119,7 +121,10 @@ export const usePrematriculaPdfStore = defineStore('prematriculapdf', () => {
       })
       return estudiantesData
     } catch (error) {
-      console.error('Error al procesar el PDF:', error)
+      console.error(error)
+      errorStore.setError({
+        error: 'Error al procesar el PDF. Por favor, intente con otro archivo.',
+      })
       alert('Error al procesar el PDF. Por favor, intente con otro archivo.')
     }
   }
@@ -141,7 +146,8 @@ export const usePrematriculaPdfStore = defineStore('prematriculapdf', () => {
     loading.value = true
     if (!nomina.value) return
     for (const alumno of nomina.value) {
-      await queryMatricularAlumno(alumno)
+      const { error, status } = await queryMatricularAlumno(alumno)
+      if (error) errorStore.setError({ error, customCode: status })
     }
     loading.value = false
   }

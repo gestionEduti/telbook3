@@ -38,10 +38,12 @@ import {
   ArrowLeft,
   ArrowRight,
   Check,
+  CheckCheck,
+  FileCog,
   FileSpreadsheet,
   Info,
-  ListTodo,
   Loader,
+  SquareCheckBig,
 } from 'lucide-vue-next'
 
 // types
@@ -148,7 +150,8 @@ onMounted(async () => {
           <StepperItem :step="2" disabled class="w-32 justify-center text-center">
             <StepperTrigger>
               <StepperIndicator>
-                <ListTodo />
+                <!-- <ListTodo /> -->
+                <FileCog />
               </StepperIndicator>
               <StepperTitle>Paso 2</StepperTitle>
               <StepperDescription>Procesar archivo</StepperDescription>
@@ -157,7 +160,7 @@ onMounted(async () => {
           <StepperItem :step="3" disabled class="w-32 justify-center text-center">
             <StepperTrigger>
               <StepperIndicator>
-                <Check />
+                <SquareCheckBig />
               </StepperIndicator>
               <StepperTitle>Paso 3</StepperTitle>
               <StepperDescription>Confirmar</StepperDescription>
@@ -166,7 +169,7 @@ onMounted(async () => {
           <StepperItem :step="4" disabled class="w-32 justify-center text-center">
             <StepperTrigger>
               <StepperIndicator>
-                <Check />
+                <CheckCheck />
               </StepperIndicator>
               <StepperTitle>Paso 4</StepperTitle>
               <StepperDescription>Finalizar</StepperDescription>
@@ -391,79 +394,95 @@ onMounted(async () => {
             <Check class="h-4 w-4" />
             <AlertTitle> Finalizado </AlertTitle>
             <AlertDescription>
-              <p class="py-2">Resumen de los datos cargados:</p>
-              <Alert>
-                <AlertDescription>
-                  <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-                    <Card>
-                      <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle class="text-sm font-medium"> Establecimiento </CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <div class="text-2xl font-bold capitalize">
-                          <span v-if="formatoArchivoSeleccionado === 'pdf'">
-                            {{ nombreEstablecimientoPdf }}
-                          </span>
-                          <span v-else>
-                            {{ nombreEstablecimientoXls }}
-                          </span>
-                        </div>
-                      </CardContent>
-                    </Card>
-                    <Card>
-                      <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle class="text-sm font-medium"> RBD </CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <div class="text-2xl font-bold capitalize">
-                          <span v-if="formatoArchivoSeleccionado === 'pdf'">
-                            {{ rbdEstablecimientoPdf }}
-                          </span>
-                          <span v-else>
-                            {{ rbdEstablecimientoXls }}
-                          </span>
-                        </div>
-                      </CardContent>
-                    </Card>
-                    <Card>
-                      <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle class="text-sm font-medium"> Cursos </CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <div class="flex items-center space-x-2 text-2xl font-bold">
-                          <span v-if="formatoArchivoSeleccionado === 'pdf'">
-                            {{ resultadoResumenPdf.cursos }}
-                          </span>
-                          <span v-else>
-                            {{ resultadoResumenXls.cursos }}
-                          </span>
-                          <Check class="text-green-500" />
-                        </div>
-                      </CardContent>
-                    </Card>
-                    <Card>
-                      <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle class="text-sm font-medium"> Alumnos </CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <div class="flex items-center space-x-2 text-2xl font-bold capitalize">
-                          <span v-if="formatoArchivoSeleccionado === 'pdf'">
-                            {{ resultadoResumenPdf.alumnos }}
-                          </span>
-                          <span v-else>
-                            {{ resultadoResumenXls.alumnos }}
-                          </span>
-                          <Check class="text-green-500" />
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </div>
-                </AlertDescription>
-              </Alert>
-              <div class="flex space-x-2 pt-4">
-                <Button variant="outline" @click="reiniciarProceso"> Comenzar de nuevo </Button>
-                <Button @click="salir">Finalizar y volver al libro</Button>
-              </div>
+              <!-- caso pdf -->
+              <template v-if="formatoArchivoSeleccionado == 'pdf'">
+                <p class="py-2">Archivo PDF cargado exitosamente</p>
+              </template>
+
+              <!-- caso xls -->
+              <template v-else>
+                <p class="py-2">Resumen de los datos cargados:</p>
+                <Alert>
+                  <AlertDescription>
+                    <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+                      <Card>
+                        <CardHeader
+                          class="flex flex-row items-center justify-between space-y-0 pb-2"
+                        >
+                          <CardTitle class="text-sm font-medium"> Establecimiento </CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                          <div class="text-2xl font-bold capitalize">
+                            <span v-if="formatoArchivoSeleccionado === 'pdf'">
+                              {{ nombreEstablecimientoPdf }}
+                            </span>
+                            <span v-else>
+                              {{ nombreEstablecimientoXls }}
+                            </span>
+                          </div>
+                        </CardContent>
+                      </Card>
+                      <Card>
+                        <CardHeader
+                          class="flex flex-row items-center justify-between space-y-0 pb-2"
+                        >
+                          <CardTitle class="text-sm font-medium"> RBD </CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                          <div class="text-2xl font-bold capitalize">
+                            <span v-if="formatoArchivoSeleccionado === 'pdf'">
+                              {{ rbdEstablecimientoPdf }}
+                            </span>
+                            <span v-else>
+                              {{ rbdEstablecimientoXls }}
+                            </span>
+                          </div>
+                        </CardContent>
+                      </Card>
+                      <Card>
+                        <CardHeader
+                          class="flex flex-row items-center justify-between space-y-0 pb-2"
+                        >
+                          <CardTitle class="text-sm font-medium"> Cursos </CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                          <div class="flex items-center space-x-2 text-2xl font-bold">
+                            <span v-if="formatoArchivoSeleccionado === 'pdf'">
+                              {{ resultadoResumenPdf.cursos }}
+                            </span>
+                            <span v-else>
+                              {{ resultadoResumenXls.cursos }}
+                            </span>
+                            <Check class="text-green-500" />
+                          </div>
+                        </CardContent>
+                      </Card>
+                      <Card>
+                        <CardHeader
+                          class="flex flex-row items-center justify-between space-y-0 pb-2"
+                        >
+                          <CardTitle class="text-sm font-medium"> Alumnos </CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                          <div class="flex items-center space-x-2 text-2xl font-bold capitalize">
+                            <span v-if="formatoArchivoSeleccionado === 'pdf'">
+                              {{ resultadoResumenPdf.alumnos }}
+                            </span>
+                            <span v-else>
+                              {{ resultadoResumenXls.alumnos }}
+                            </span>
+                            <Check class="text-green-500" />
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </div>
+                  </AlertDescription>
+                </Alert>
+                <div class="flex space-x-2 pt-4">
+                  <Button variant="outline" @click="reiniciarProceso"> Comenzar de nuevo </Button>
+                  <Button @click="salir">Finalizar y volver al libro</Button>
+                </div>
+              </template>
             </AlertDescription>
           </Alert>
         </div>
