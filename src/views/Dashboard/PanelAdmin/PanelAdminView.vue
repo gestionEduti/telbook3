@@ -19,6 +19,8 @@ import SidebarMenu from '@/components/ui/sidebar/SidebarMenu.vue'
 import SidebarMenuItem from '@/components/ui/sidebar/SidebarMenuItem.vue'
 import SidebarMenuButton from '@/components/ui/sidebar/SidebarMenuButton.vue'
 import SidebarTrigger from '@/components/ui/sidebar/SidebarTrigger.vue'
+// icons
+import { List, ListPlus } from 'lucide-vue-next'
 
 const componenteActivo = shallowRef(null)
 
@@ -52,38 +54,46 @@ onMounted(async () => {
                   <SidebarRail />
                   <SidebarContent>
                     <SidebarGroup>
-                      <SidebarGroupLabel>Usuarios</SidebarGroupLabel>
+                      <SidebarGroupLabel>
+                        <span class="tracking-tight text-gray-500">Usuarios</span>
+                      </SidebarGroupLabel>
                       <SidebarGroupContent>
                         <SidebarMenu>
                           <SidebarMenuItem>
                             <SidebarMenuButton @click.stop="cargarComponente('PanelUsuariosLista')">
-                              Todos
+                              <List />
+                              <span>Ver todos</span>
                             </SidebarMenuButton>
                           </SidebarMenuItem>
                           <SidebarMenuItem>
                             <SidebarMenuButton @click.stop="cargarComponente('PanelUsuariosNuevo')">
-                              Agregar
+                              <ListPlus />
+                              <span>Agregar</span>
                             </SidebarMenuButton>
                           </SidebarMenuItem>
                         </SidebarMenu>
                       </SidebarGroupContent>
                     </SidebarGroup>
                     <SidebarGroup>
-                      <SidebarGroupLabel>Establecimientos</SidebarGroupLabel>
+                      <SidebarGroupLabel>
+                        <span class="tracking-tight text-gray-500">Establecimientos</span>
+                      </SidebarGroupLabel>
                       <SidebarGroupContent>
                         <SidebarMenu>
                           <SidebarMenuItem>
                             <SidebarMenuButton
                               @click.stop="cargarComponente('PanelEstablecimientosLista')"
                             >
-                              Todos
+                              <List />
+                              <span>Ver todos</span>
                             </SidebarMenuButton>
                           </SidebarMenuItem>
                           <SidebarMenuItem>
                             <SidebarMenuButton
                               @click.stop="cargarComponente('PanelEstablecimientosLista')"
                             >
-                              Agregar
+                              <ListPlus />
+                              <span>Agregar</span>
                             </SidebarMenuButton>
                           </SidebarMenuItem>
                         </SidebarMenu>

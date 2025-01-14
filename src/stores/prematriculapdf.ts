@@ -155,7 +155,7 @@ export const usePrematriculaPdfStore = defineStore('prematriculapdf', () => {
       v_letra: alumno.letra,
       v_nivel: alumno.curso,
       v_nombre_completo: alumno.nombreCompleto,
-      v_rbd: String(rbdEstablecimiento.value), // TODO: pide string pero es integer
+      v_rbd: rbdEstablecimiento.value, // TODO: pide string pero es integer
       v_rut_alumno: alumno.rut,
       v_rut_usuario: authStore.perfil!.rut_usuario,
     })

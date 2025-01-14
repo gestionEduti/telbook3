@@ -361,7 +361,7 @@ export type Database = {
           id: number
           letra_nivel_curso: string | null
           mes: number
-          rbd: number | null
+          rbd_establecimiento: number | null
           rut_alumno: string | null
           rut_usuario: string
           sigla_nivel_curso: string | null
@@ -374,7 +374,7 @@ export type Database = {
           id?: number
           letra_nivel_curso?: string | null
           mes: number
-          rbd?: number | null
+          rbd_establecimiento?: number | null
           rut_alumno?: string | null
           rut_usuario: string
           sigla_nivel_curso?: string | null
@@ -387,7 +387,7 @@ export type Database = {
           id?: number
           letra_nivel_curso?: string | null
           mes?: number
-          rbd?: number | null
+          rbd_establecimiento?: number | null
           rut_alumno?: string | null
           rut_usuario?: string
           sigla_nivel_curso?: string | null
@@ -2230,18 +2230,31 @@ export type Database = {
         }
         Returns: Json
       }
-      transaccion_prematricula_pdf: {
-        Args: {
-          v_anio: number
-          v_rbd: string
-          v_rut_usuario: string
-          v_rut_alumno: string
-          v_nombre_completo: string
-          v_nivel: string
-          v_letra: string
-        }
-        Returns: string
-      }
+      transaccion_prematricula_pdf:
+        | {
+            Args: {
+              v_anio: number
+              v_rbd: number
+              v_rut_usuario: string
+              v_rut_alumno: string
+              v_nombre_completo: string
+              v_nivel: string
+              v_letra: string
+            }
+            Returns: string
+          }
+        | {
+            Args: {
+              v_anio: number
+              v_rbd: string
+              v_rut_usuario: string
+              v_rut_alumno: string
+              v_nombre_completo: string
+              v_nivel: string
+              v_letra: string
+            }
+            Returns: string
+          }
       transaccion_prematricula_upsert: {
         Args: {
           rut: string
