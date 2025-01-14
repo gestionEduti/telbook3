@@ -19,7 +19,6 @@ export const usePrematriculaPdfStore = defineStore('prematriculapdf', () => {
   const establecimiento = ref()
 
   // getters
-  const rbdEstablecimiento = computed(() => 0)
   const nombreEstablecimiento = computed(() => '')
   const totalAlumnos = computed(() => nomina.value?.length || 0)
 
@@ -118,8 +117,6 @@ export const usePrematriculaPdfStore = defineStore('prematriculapdf', () => {
           }
         }
       })
-
-      console.log('Estudiantes procesados:', estudiantesData)
       return estudiantesData
     } catch (error) {
       console.error('Error al procesar el PDF:', error)
@@ -155,7 +152,7 @@ export const usePrematriculaPdfStore = defineStore('prematriculapdf', () => {
       v_letra: alumno.letra,
       v_nivel: alumno.curso,
       v_nombre_completo: alumno.nombreCompleto,
-      v_rbd: rbdEstablecimiento.value, // TODO: pide string pero es integer
+      v_rbd: establecimiento.value, // TODO: pide string pero es integer
       v_rut_alumno: alumno.rut,
       v_rut_usuario: authStore.perfil!.rut_usuario,
     })
@@ -175,7 +172,6 @@ export const usePrematriculaPdfStore = defineStore('prematriculapdf', () => {
     establecimiento,
 
     // getters
-    rbdEstablecimiento,
     nombreEstablecimiento,
     totalAlumnos,
 
