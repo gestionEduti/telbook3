@@ -2,7 +2,7 @@
 import { computed, ref } from 'vue'
 
 // utils
-import { formatearRut } from '@/lib/formato'
+import { formatearFecha, formatearRut } from '@/lib/formato'
 
 // store
 import { useAuthStore } from '@/stores/auth'
@@ -88,7 +88,9 @@ const alumnosFiltrados = computed(() => {
     if (!filtroAlumnos.value) return true
     const regex = new RegExp(filtroAlumnos.value, 'i')
     return (
-      regex.test(a.nombres_alumno) || regex.test(a.apellidos_alumno) || regex.test(a.rut_alumno)
+      regex.test(a.nombres_alumno || '') ||
+      regex.test(a.apellidos_alumno || '') ||
+      regex.test(a.rut_alumno || '')
     )
   })
   const ordenados = filtrados?.sort((a, b) => {
@@ -197,8 +199,12 @@ const retirarAlumno = async (alumno: Tables<'mv_libro_matricula'>) => {
             <TableCell class="text-right">{{ formatearRut(alumno.rut_alumno) }}</TableCell>
             <TableCell class="text-left">{{ alumno.nombre_completo_alumno }}</TableCell>
             <TableCell class="text-center"> {{ alumno.procedencia_alumno }} </TableCell>
-            <TableCell class="text-center">{{ alumno.fecha_nacimiento_alumno }} </TableCell>
-            <TableCell class="text-center">{{ alumno.fecha_incorporacion_alumno }} </TableCell>
+            <TableCell class="text-center">
+              {{ formatearFecha(alumno.fecha_nacimiento_alumno) }}
+            </TableCell>
+            <TableCell class="text-center">
+              {{ formatearFecha(alumno.fecha_incorporacion_alumno) }}
+            </TableCell>
             <TableCell class="text-center"> {{ alumno.estado_alumno }} </TableCell>
             <TableCell class="text-center">
               <div class="flex items-center justify-center space-x-2">
