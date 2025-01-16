@@ -30,6 +30,7 @@ import { ArrowLeft, Map, NotebookPen, User, Users } from 'lucide-vue-next'
 // supabase
 import { supabase } from '@/services/supabaseClient'
 import type { Tables } from '@/types/supabase'
+import InfoMensajeSinData from '@/components/InfoMensajeSinData.vue'
 const querySelect = supabase
   .from('mv_libro_matricula')
   .select()
@@ -83,36 +84,49 @@ onMounted(async () => {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div v-if="alumno.nombres_alumno">
-                <p class="telbook-label">Nombres</p>
-                <p class="mb-3 capitalize">
-                  {{ alumno.nombres_alumno?.toLocaleLowerCase() }}
-                </p>
-              </div>
-              <div v-if="alumno.apellidos_alumno">
-                <p class="telbook-label">Apellidos</p>
-                <p class="mb-3 capitalize">
-                  {{ alumno.apellidos_alumno?.toLocaleLowerCase() }}
-                </p>
-              </div>
-              <div v-if="alumno.nacionalidad_alumno">
-                <p class="telbook-label">Nacionalidad</p>
-                <p class="mb-3 capitalize">
-                  {{ formatearNacionalidad(alumno.nacionalidad_alumno?.toLowerCase() || '') }}
-                </p>
-              </div>
-              <div v-if="alumno.sexo_alumno">
-                <p class="telbook-label">Sexo</p>
-                <p class="mb-3 capitalize">
-                  {{ alumno.sexo_alumno === 'MASCULINO' ? 'Masculino ♂' : 'Femenino ♀' }}
-                </p>
-              </div>
-              <div v-if="alumno.fecha_nacimiento_alumno">
-                <p class="telbook-label">Fecha nacimiento</p>
-                <p class="mb-3 capitalize">
-                  {{ formatearFechaNacimiento(alumno.fecha_nacimiento_alumno) }}
-                </p>
-              </div>
+              <template
+                v-if="
+                  !alumno.nombres_alumno &&
+                  !alumno.apellidos_alumno &&
+                  !alumno.nacionalidad_alumno &&
+                  !alumno.sexo_alumno &&
+                  !alumno.fecha_nacimiento_alumno
+                "
+              >
+                <InfoMensajeSinData icono="vacio" mensaje="No hay datos personales" />
+              </template>
+              <template v-else>
+                <div v-if="alumno.nombres_alumno">
+                  <p class="telbook-label">Nombres</p>
+                  <p class="mb-3 capitalize">
+                    {{ alumno.nombres_alumno?.toLocaleLowerCase() }}
+                  </p>
+                </div>
+                <div v-if="alumno.apellidos_alumno">
+                  <p class="telbook-label">Apellidos</p>
+                  <p class="mb-3 capitalize">
+                    {{ alumno.apellidos_alumno?.toLocaleLowerCase() }}
+                  </p>
+                </div>
+                <div v-if="alumno.nacionalidad_alumno">
+                  <p class="telbook-label">Nacionalidad</p>
+                  <p class="mb-3 capitalize">
+                    {{ formatearNacionalidad(alumno.nacionalidad_alumno?.toLowerCase() || '') }}
+                  </p>
+                </div>
+                <div v-if="alumno.sexo_alumno">
+                  <p class="telbook-label">Sexo</p>
+                  <p class="mb-3 capitalize">
+                    {{ alumno.sexo_alumno === 'MASCULINO' ? 'Masculino ♂' : 'Femenino ♀' }}
+                  </p>
+                </div>
+                <div v-if="alumno.fecha_nacimiento_alumno">
+                  <p class="telbook-label">Fecha nacimiento</p>
+                  <p class="mb-3 capitalize">
+                    {{ formatearFechaNacimiento(alumno.fecha_nacimiento_alumno) }}
+                  </p>
+                </div>
+              </template>
             </CardContent>
           </Card>
 
@@ -125,25 +139,36 @@ onMounted(async () => {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div v-if="alumno.apoderado_tutor_alumno">
-                <p class="telbook-label">Nombre apoderado</p>
-                <p class="mb-3 capitalize">
-                  {{ alumno.apoderado_tutor_alumno?.toLowerCase() }}
-                </p>
-              </div>
-              <div v-if="alumno.email_apoderado_alumno">
-                <p class="telbook-label">Email apoderado</p>
-                <p class="mb-3">
-                  <!-- TODO: truncate ó elipsis porque a veces es muy largo. revisar en toda la app el caso -->
-                  {{ alumno.email_apoderado_alumno?.toLowerCase() }}
-                </p>
-              </div>
-              <div v-if="alumno.vive_con_alumno">
-                <p class="telbook-label">Vive con</p>
-                <p class="mb-3 capitalize">
-                  {{ alumno.vive_con_alumno?.toLocaleLowerCase() }}
-                </p>
-              </div>
+              <template
+                v-if="
+                  !alumno.apoderado_tutor_alumno &&
+                  !alumno.email_apoderado_alumno &&
+                  !alumno.vive_con_alumno
+                "
+              >
+                <InfoMensajeSinData icono="vacio" mensaje="No hay datos de familia" />
+              </template>
+              <template v-else>
+                <div v-if="alumno.apoderado_tutor_alumno">
+                  <p class="telbook-label">Nombre apoderado</p>
+                  <p class="mb-3 capitalize">
+                    {{ alumno.apoderado_tutor_alumno?.toLowerCase() }}
+                  </p>
+                </div>
+                <div v-if="alumno.email_apoderado_alumno">
+                  <p class="telbook-label">Email apoderado</p>
+                  <p class="mb-3">
+                    <!-- TODO: truncate ó elipsis porque a veces es muy largo. revisar en toda la app el caso -->
+                    {{ alumno.email_apoderado_alumno?.toLowerCase() }}
+                  </p>
+                </div>
+                <div v-if="alumno.vive_con_alumno">
+                  <p class="telbook-label">Vive con</p>
+                  <p class="mb-3 capitalize">
+                    {{ alumno.vive_con_alumno?.toLocaleLowerCase() }}
+                  </p>
+                </div>
+              </template>
             </CardContent>
           </Card>
 
@@ -156,19 +181,23 @@ onMounted(async () => {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div v-if="alumno.domicilio_alumno && alumno.comuna_alumno">
+              <template v-if="!alumno.domicilio_alumno && !alumno.comuna_alumno">
+                <InfoMensajeSinData icono="vacio" mensaje="No hay datos demograficos" />
+              </template>
+              <template v-else>
                 <p class="telbook-label">Dirección</p>
-                <p class="mb-3 capitalize">
-                  {{
-                    alumno.domicilio_alumno?.toLowerCase() +
-                    ', ' +
-                    alumno.comuna_alumno?.toLowerCase() +
-                    ', ' +
-                    alumno.region_alumno?.toLowerCase()
-                  }}
-                  <!-- TODO: manejar de mejor manera cuando no venga un dato como la region por que me aparee UNDEFINED -->
-                </p>
-              </div>
+                <div class="mb-3">
+                  <p class="capitalize" v-if="alumno.domicilio_alumno">
+                    {{ alumno.domicilio_alumno?.toLowerCase() }}
+                  </p>
+                  <p class="capitalize" v-if="alumno.comuna_alumno">
+                    {{ alumno.comuna_alumno?.toLowerCase() }}
+                  </p>
+                  <p class="capitalize" v-if="alumno.region_alumno">
+                    {{ alumno.region_alumno?.toLowerCase() }}
+                  </p>
+                </div>
+              </template>
             </CardContent>
           </Card>
         </div>
