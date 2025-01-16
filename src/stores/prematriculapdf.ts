@@ -88,7 +88,7 @@ export const usePrematriculaPdfStore = defineStore('prematriculapdf', () => {
 
       // Procesar cada línea
       lines.forEach((line) => {
-        const rutMatch = line.match(/\b\d{9}-[\dkK]\b/)
+        const rutMatch = line.match(/\b\d{8,9}-[\dkK]\b/)
         if (rutMatch) {
           const rut = rutMatch[0]
 
