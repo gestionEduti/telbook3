@@ -675,7 +675,7 @@ export type Database = {
       mv_libro_matricula: {
         Row: {
           anio_libro: number | null
-          apellidos_alumno: string
+          apellidos_alumno: string | null
           apoderado_tutor_alumno: string | null
           causa_retiro_alumno: string | null
           codigo_estado_alumno: number
@@ -685,7 +685,7 @@ export type Database = {
           email_apoderado_alumno: string | null
           estado_alumno: string
           fecha_incorporacion_alumno: string
-          fecha_nacimiento_alumno: string
+          fecha_nacimiento_alumno: string | null
           fecha_retiro_escuela: string | null
           id: number
           jornada_alumno: string | null
@@ -695,7 +695,7 @@ export type Database = {
           nivel_educacional_padre: string | null
           nombre_apoderado_alumno: string | null
           nombre_completo_alumno: string | null
-          nombres_alumno: string
+          nombres_alumno: string | null
           numero_lista_nivel_alumno: number
           numero_matricula_alumno: number
           parentezco_con_alumno: string | null
@@ -714,7 +714,7 @@ export type Database = {
         }
         Insert: {
           anio_libro?: number | null
-          apellidos_alumno: string
+          apellidos_alumno?: string | null
           apoderado_tutor_alumno?: string | null
           causa_retiro_alumno?: string | null
           codigo_estado_alumno: number
@@ -724,7 +724,7 @@ export type Database = {
           email_apoderado_alumno?: string | null
           estado_alumno: string
           fecha_incorporacion_alumno: string
-          fecha_nacimiento_alumno: string
+          fecha_nacimiento_alumno?: string | null
           fecha_retiro_escuela?: string | null
           id?: number
           jornada_alumno?: string | null
@@ -734,7 +734,7 @@ export type Database = {
           nivel_educacional_padre?: string | null
           nombre_apoderado_alumno?: string | null
           nombre_completo_alumno?: string | null
-          nombres_alumno: string
+          nombres_alumno?: string | null
           numero_lista_nivel_alumno: number
           numero_matricula_alumno: number
           parentezco_con_alumno?: string | null
@@ -753,7 +753,7 @@ export type Database = {
         }
         Update: {
           anio_libro?: number | null
-          apellidos_alumno?: string
+          apellidos_alumno?: string | null
           apoderado_tutor_alumno?: string | null
           causa_retiro_alumno?: string | null
           codigo_estado_alumno?: number
@@ -763,7 +763,7 @@ export type Database = {
           email_apoderado_alumno?: string | null
           estado_alumno?: string
           fecha_incorporacion_alumno?: string
-          fecha_nacimiento_alumno?: string
+          fecha_nacimiento_alumno?: string | null
           fecha_retiro_escuela?: string | null
           id?: number
           jornada_alumno?: string | null
@@ -773,7 +773,7 @@ export type Database = {
           nivel_educacional_padre?: string | null
           nombre_apoderado_alumno?: string | null
           nombre_completo_alumno?: string | null
-          nombres_alumno?: string
+          nombres_alumno?: string | null
           numero_lista_nivel_alumno?: number
           numero_matricula_alumno?: number
           parentezco_con_alumno?: string | null
@@ -1713,24 +1713,24 @@ export type Database = {
           create_at: string | null
           id: number
           nombre_corto: string | null
-          razon_social: string | null
-          rbd: number | null
+          razon_social: string
+          rbd: number
         }
         Insert: {
           codigo_perfil?: number | null
           create_at?: string | null
           id: number
           nombre_corto?: string | null
-          razon_social?: string | null
-          rbd?: number | null
+          razon_social: string
+          rbd: number
         }
         Update: {
           codigo_perfil?: number | null
           create_at?: string | null
           id?: number
           nombre_corto?: string | null
-          razon_social?: string | null
-          rbd?: number | null
+          razon_social?: string
+          rbd?: number
         }
         Relationships: [
           {
@@ -2230,31 +2230,18 @@ export type Database = {
         }
         Returns: Json
       }
-      transaccion_prematricula_pdf:
-        | {
-            Args: {
-              v_anio: number
-              v_rbd: number
-              v_rut_usuario: string
-              v_rut_alumno: string
-              v_nombre_completo: string
-              v_nivel: string
-              v_letra: string
-            }
-            Returns: string
-          }
-        | {
-            Args: {
-              v_anio: number
-              v_rbd: string
-              v_rut_usuario: string
-              v_rut_alumno: string
-              v_nombre_completo: string
-              v_nivel: string
-              v_letra: string
-            }
-            Returns: string
-          }
+      transaccion_prematricula_pdf: {
+        Args: {
+          v_anio: number
+          v_rbd: number
+          v_rut_usuario: string
+          v_rut_alumno: string
+          v_nombre_completo: string
+          v_nivel: string
+          v_letra: string
+        }
+        Returns: string
+      }
       transaccion_prematricula_upsert: {
         Args: {
           rut: string
