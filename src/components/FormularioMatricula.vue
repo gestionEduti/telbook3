@@ -56,8 +56,15 @@ const handleForm = async (formData: Tables<'mv_libro_matricula'>) => {
       .update(formData)
       .eq('id', formData.id)
       .select()
-    if (updateError) console.error(updateError)
-    else {
+    if (updateError?.code == '23505') {
+      toast({
+        title: 'Exito',
+        description: 'El numero de matricula ya existe.',
+        variant: 'destructive',
+      })
+    } else if (updateError) {
+      errorStore.setError({ error: updateError })
+    } else {
       toast({
         title: 'Exito',
         description: 'Matricula actualizada exitosamente.',
@@ -77,6 +84,7 @@ const handleForm = async (formData: Tables<'mv_libro_matricula'>) => {
     } = await supabase
       .from('mv_libro_matricula')
       .select('numero_matricula_alumno')
+      .eq('rbd_establecimiento', authStore.perfil!.rbd_usuario)
       .order('numero_matricula_alumno', { ascending: false })
       .limit(1)
 
@@ -87,6 +95,8 @@ const handleForm = async (formData: Tables<'mv_libro_matricula'>) => {
     } = await supabase
       .from('mv_libro_matricula')
       .select('numero_lista_nivel_alumno')
+      .eq('rbd_establecimiento', authStore.perfil!.rbd_usuario)
+      .eq('nivel_alumno', formData.nivel_alumno)
       .order('numero_lista_nivel_alumno', { ascending: false })
       .limit(1)
 
@@ -102,8 +112,12 @@ const handleForm = async (formData: Tables<'mv_libro_matricula'>) => {
       formData.codigo_estado_alumno = 1 // en duro porque siempre empiezan activos
       formData.nombre_completo_alumno = `${formData.apellidos_alumno} ${formData.nombres_alumno}`
       formData.rbd_establecimiento = authStore.perfil?.rbd_usuario || 0
-      formData.numero_matricula_alumno = dataUnm[0].numero_matricula_alumno + 1 || 1 // el ultimo numero, ó 1 si no hay
-      formData.numero_lista_nivel_alumno = dataUnl[0].numero_lista_nivel_alumno + 1 // el ultimo numero, ó 1 si no hay
+      formData.numero_matricula_alumno = dataUnm[0]?.numero_matricula_alumno
+        ? dataUnm[0].numero_matricula_alumno + 1
+        : 1 // si existe, asignar +1, si no, asignar 1
+      formData.numero_lista_nivel_alumno = dataUnl[0]?.numero_lista_nivel_alumno
+        ? dataUnl[0]?.numero_lista_nivel_alumno + 1
+        : 1 // el ultimo numero, ó 1 si no hay
     }
 
     // insert en supabase
@@ -112,13 +126,13 @@ const handleForm = async (formData: Tables<'mv_libro_matricula'>) => {
       console.error(error)
       toast({
         title: 'Error',
-        description: 'Hubo un problema en la creacion de la matricula.',
+        description: 'Hubo un problema en la creación de la matricula.',
         variant: 'destructive',
       })
     } else {
       toast({
         title: 'Exito',
-        description: 'Matricula creada exitosamente.',
+        description: 'Matricula creada exitósamente.',
         variant: 'exitoso',
       })
       reset('nuevoAlumnoForm')
@@ -159,7 +173,26 @@ onMounted(async () => {
           >
             <!-- slot que contiene los input -->
             <template #default>
-              <p class="telbook-label">Sección Datos personales</p>
+              <div v-if="formularioSeEstaEditando" class="flex gap-4">
+                <FormKit
+                  type="number"
+                  name="numero_matricula_alumno"
+                  id="numero_matricula"
+                  label="Numero de matricula"
+                  validation="required"
+                />
+                <FormKit
+                  type="number"
+                  name="numero_lista_nivel_alumno"
+                  id="numero_lista"
+                  label="Numero de lista"
+                  validation="required"
+                />
+              </div>
+
+              <p class="telbook-label" :class="[formularioSeEstaEditando ? 'mt-8' : '']">
+                Sección Datos personales
+              </p>
               <Separator class="mb-4" />
               <FormKit
                 type="text"
@@ -214,11 +247,11 @@ onMounted(async () => {
                 />
               </div>
 
-              <p class="telbook-label mt-8">Sección Incorporacion</p>
+              <p class="telbook-label mt-8">Sección Incorporación</p>
               <Separator class="mb-4" />
               <FormKit
                 type="date"
-                label="Fecha incorporacion"
+                label="Fecha incorporación"
                 name="fecha_incorporacion_alumno"
                 validation="required"
               />
@@ -250,14 +283,24 @@ onMounted(async () => {
                 help="Calle, numero, departamento"
                 validation=""
               />
-              <FormKit
-                type="select"
-                label="Comuna"
-                name="comuna_alumno"
-                placeholder="Selecciona la comuna"
-                validation=""
-                :options="loaderStore.tp_regiones_comunas_chile"
-              />
+              <div class="flex gap-4">
+                <FormKit
+                  type="select"
+                  label="Región"
+                  name="region_alumno"
+                  placeholder="Selecciona la región"
+                  validation=""
+                  :options="loaderStore.tp_regiones_chile"
+                />
+                <FormKit
+                  type="select"
+                  label="Comuna"
+                  name="comuna_alumno"
+                  placeholder="Selecciona la comuna"
+                  validation=""
+                  :options="loaderStore.tp_regiones_comunas_chile"
+                />
+              </div>
 
               <p class="telbook-label mt-8">Sección Situacion alumno</p>
               <Separator class="mb-4" />
