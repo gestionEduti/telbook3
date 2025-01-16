@@ -46,7 +46,7 @@ const querySelect = supabase
   .eq('rbd_establecimiento', authStore.perfil!.rbd_usuario)
   .eq('codigo_estado_alumno', '1') // TODO confirmar si es solo activos
   .ilike('nivel_alumno', props.nivel + props.letra)
-  .order('apellidos_alumno', { ascending: true })
+  .order('numero_lista_nivel_alumno', { ascending: true })
 
 // methods
 const fetchSupabase = async () => {
@@ -87,7 +87,9 @@ onMounted(async () => {
                 class="cursor-pointer"
                 @click="$router.push({ name: 'alumno', params: { rut: alumno.rut_alumno } })"
               >
-                <TableCell class="text-center font-medium"> {{ alumno.id }} </TableCell>
+                <TableCell class="text-center font-medium">
+                  {{ alumno.numero_lista_nivel_alumno }}
+                </TableCell>
                 <TableCell class="text-right">{{ formatearRut(alumno.rut_alumno) }}</TableCell>
                 <TableCell class="text-left capitalize">{{
                   alumno.nombre_completo_alumno?.toLowerCase()
