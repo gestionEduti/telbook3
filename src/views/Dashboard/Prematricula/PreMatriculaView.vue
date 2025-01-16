@@ -65,30 +65,48 @@ const {
 const {
   loading: loadingPdf,
   establecimiento: establecimientoPdf,
-  resultadoResumen: resultadoResumenPdf,
-  rbdEstablecimiento: rbdEstablecimientoPdf,
-  nombreEstablecimiento: nombreEstablecimientoPdf,
   totalAlumnos: totalAlumnosPdf,
 } = storeToRefs(prematriculaPdfStore)
 
 // data
 const pasoActual = ref(1)
 const formatoArchivoSeleccionado = ref<string>('')
-const establecimientosSelect = ref<{ value: number | null; label: string | null }[]>([])
+const establecimientosSelect = ref<{ value: number; label: string }[]>([])
 
 // methods
-const procesarArchivoPdf = async (data: FormKitFormDataPdf) => {
-  establecimientoPdf.value = data.razon_social
-  const primerArchivo = data.license[0].file // viene 1 o mas archivos en un array. este es el primero
-  await prematriculaPdfStore.procesarArchivo(primerArchivo)
-  pasoActual.value = 3
+
+/**
+ * Llama al store de prematriculaPdf para procesar el archivo pdf.
+ *   - Extrae la data del PDF y la guarda en el store.
+ *   - Luego cambia el paso actual a 3.
+ * @param data La data del formulario enviada por FormKit
+ */
+async function procesarArchivoPdf(data: FormKitFormDataPdf) {
+  console.log(data)
+  // establecimientoPdf.value = data.razon_social
+  // const primerArchivo = data.archivopdf[0].file // viene 1 o mas archivos en un array. este es el primero
+  // await prematriculaPdfStore.procesarArchivo(primerArchivo)
+  // pasoActual.value = 3
 }
-const procesarArchivoXls = async (data: FormKitFormDataXls) => {
-  const primerArchivo = data.license[0].file // viene 1 o mas archivos en un array. este es el primero
+
+/**
+ * Llama al store de prematriculaXls para procesar el archivo xls.
+ *   - Extrae la data del XLS y la guarda en el store.
+ *   - Luego cambia el paso actual a 3.
+ * @param data La data del formulario enviada por FormKit
+ */
+async function procesarArchivoXls(data: FormKitFormDataXls) {
+  const primerArchivo = data.archivoxls[0].file // viene 1 o mas archivos en un array. este es el primero
   await prematriculaXlsStore.procesarArchivo(primerArchivo)
   pasoActual.value = 3
 }
-const enviarAlumnosSupabase = async () => {
+
+/**
+ * Se encarga de enviar los datos a la base de datos.
+ *   - Llama a la funcion de cargarAlumnos del store correspondiente.
+ *   - Luego cambia el paso actual a 4.
+ */
+async function enviarAlumnosSupabase() {
   pasoActual.value = 4
   if (formatoArchivoSeleccionado.value === 'pdf') {
     await prematriculaPdfStore.cargarAlumnos()
@@ -96,19 +114,35 @@ const enviarAlumnosSupabase = async () => {
     await prematriculaXlsStore.cargarAlumnos()
   }
 }
-const reiniciarProceso = async () => {
+
+/**
+ * Reinicia el proceso de prematricula.
+ *   - Limpia el formato de archivo seleccionado.
+ *   - Reinicia los stores de prematriculaXls y prematriculaPdf.
+ *   - Cambia el paso actual a 1.
+ */
+function reiniciarProceso() {
   formatoArchivoSeleccionado.value = ''
   prematriculaXlsStore.reiniciarStore()
   prematriculaPdfStore.reiniciarStore()
   pasoActual.value = 1
 }
-const salir = () => {
+
+/**
+ * Sale de la vista de prematricula y vuelve a la pagina de dashboard.
+ *   - Reinicia el store de prematriculaXls y prematriculaPdf.
+ *   - Navega a la pagina de dashboard.
+ */
+function salir() {
   prematriculaXlsStore.reiniciarStore()
   prematriculaPdfStore.reiniciarStore()
   router.push({ name: 'dashboard' })
 }
 
-onMounted(async () => {
+/**
+ * Puebla el <select> de establecimientos con los establecimientos de la base de datos.
+ */
+async function poblarEstablecimientos() {
   const { data, error, status } = await supabase
     .from('tp_establecimientos')
     .select('rbd,razon_social')
@@ -119,6 +153,11 @@ onMounted(async () => {
       value: item.rbd,
       label: item.razon_social,
     }))
+}
+
+// lifecycle hooks
+onMounted(async () => {
+  await poblarEstablecimientos()
 })
 </script>
 
@@ -213,7 +252,7 @@ onMounted(async () => {
           <!-- formulario para pdf -->
           <FormKit
             v-if="formatoArchivoSeleccionado === 'pdf'"
-            id="licenseForm"
+            id="formularioArchivoPdf"
             type="form"
             @submit="procesarArchivoPdf"
             :actions="false"
@@ -226,12 +265,26 @@ onMounted(async () => {
                 name="razon_social"
                 help="La prematricula se realizará para el establecimiento seleccionado"
                 validation="required"
-                :options="establecimientosSelect"
+                :options="[
+                  {
+                    value: '',
+                    label: 'Lista de establecimientos',
+                    attrs: { disabled: true },
+                  },
+                  ...establecimientosSelect,
+                ]"
+              />
+              <FormKit
+                type="date"
+                label="Selecciona la fecha de incorporación"
+                name="fecha_incorporacion"
+                help="Esta sera la fecha de incorporación de todos los alumnos del PDF"
+                :validation="`required|date_after_or_equal:${new Date().toISOString().split('T')[0]}`"
               />
               <FormKit
                 type="file"
                 label="Selecciona un archivo"
-                name="license"
+                name="archivopdf"
                 help="Solo un archivo a la vez del tipo .pdf"
                 accept=".pdf"
                 validation="required"
@@ -241,7 +294,7 @@ onMounted(async () => {
                   <ArrowLeft class="mr-2" />
                   Volver
                 </Button>
-                <Button :disabled="state.loading || !state.valid" class="mx-auto">
+                <Button :disabled="state.loading" class="mx-auto">
                   <Loader v-if="state.loading" class="mr-2 h-6 w-6 animate-spin" />
                   Procesar archivo
                   <ArrowRight />
@@ -253,7 +306,7 @@ onMounted(async () => {
           <!-- formulario para xls -->
           <FormKit
             v-else
-            id="licenseForm"
+            id="formularioArchivoXls"
             type="form"
             @submit="procesarArchivoXls"
             :actions="false"
@@ -263,7 +316,7 @@ onMounted(async () => {
               <FormKit
                 type="file"
                 label="Selecciona un archivo"
-                name="license"
+                name="archivoxls"
                 :help="`Solo un archivo a la vez del tipo ${formatoArchivoSeleccionado === 'pdf' ? '.pdf' : '.xls'}`"
                 :accept="formatoArchivoSeleccionado === 'pdf' ? '.pdf' : '.xls'"
                 validation="required"
@@ -288,8 +341,8 @@ onMounted(async () => {
           <Alert>
             <Info class="h-4 w-4" color="black" />
             <AlertTitle>
-              A continuacion un resumen de la informacion extraida de la nomina que sera agregada a
-              la base de datos:
+              A continuacion un resumen de la informacion extraida de la nomina que sera agregada al
+              libro de matriculas:
             </AlertTitle>
             <AlertDescription class="pt-4">
               <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
@@ -334,7 +387,7 @@ onMounted(async () => {
                 </Card>
                 <Card>
                   <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle class="text-sm font-medium"> Alumnos </CardTitle>
+                    <CardTitle class="text-sm font-medium"> Registros </CardTitle>
                   </CardHeader>
                   <CardContent>
                     <div class="text-2xl font-bold capitalize">
@@ -413,12 +466,7 @@ onMounted(async () => {
                         </CardHeader>
                         <CardContent>
                           <div class="text-2xl font-bold capitalize">
-                            <span v-if="formatoArchivoSeleccionado === 'pdf'">
-                              {{ nombreEstablecimientoPdf }}
-                            </span>
-                            <span v-else>
-                              {{ nombreEstablecimientoXls }}
-                            </span>
+                            {{ nombreEstablecimientoXls }}
                           </div>
                         </CardContent>
                       </Card>
@@ -430,12 +478,7 @@ onMounted(async () => {
                         </CardHeader>
                         <CardContent>
                           <div class="text-2xl font-bold capitalize">
-                            <span v-if="formatoArchivoSeleccionado === 'pdf'">
-                              {{ rbdEstablecimientoPdf }}
-                            </span>
-                            <span v-else>
-                              {{ rbdEstablecimientoXls }}
-                            </span>
+                            {{ rbdEstablecimientoXls }}
                           </div>
                         </CardContent>
                       </Card>
@@ -447,12 +490,7 @@ onMounted(async () => {
                         </CardHeader>
                         <CardContent>
                           <div class="flex items-center space-x-2 text-2xl font-bold">
-                            <span v-if="formatoArchivoSeleccionado === 'pdf'">
-                              {{ resultadoResumenPdf.cursos }}
-                            </span>
-                            <span v-else>
-                              {{ resultadoResumenXls.cursos }}
-                            </span>
+                            {{ resultadoResumenXls.cursos }}
                             <Check class="text-green-500" />
                           </div>
                         </CardContent>
@@ -465,12 +503,7 @@ onMounted(async () => {
                         </CardHeader>
                         <CardContent>
                           <div class="flex items-center space-x-2 text-2xl font-bold capitalize">
-                            <span v-if="formatoArchivoSeleccionado === 'pdf'">
-                              {{ resultadoResumenPdf.alumnos }}
-                            </span>
-                            <span v-else>
-                              {{ resultadoResumenXls.alumnos }}
-                            </span>
+                            {{ resultadoResumenXls.alumnos }}
                             <Check class="text-green-500" />
                           </div>
                         </CardContent>

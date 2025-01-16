@@ -5,10 +5,12 @@ import type { NominaAlumnoXLS } from '@/types/nomina'
 
 // store
 import { useAuthStore } from '@/stores/auth'
+import { useErrorStore } from '@/stores/error'
 const authStore = useAuthStore()
+const errorStore = useErrorStore()
 
 export const usePrematriculaXlsStore = defineStore('prematriculaxls', () => {
-  // data
+  // state
   const nomina = ref<NominaAlumnoXLS[] | null>(null)
   const nombreArchivo = ref<string | null>(null)
   const loading = ref(false)
@@ -29,26 +31,40 @@ export const usePrematriculaXlsStore = defineStore('prematriculaxls', () => {
       ).length || 0,
   )
 
-  // methods
+  // actions
+
+  /**
+   * Esta funcion engloba el proceso de leer el archivo, parsearlo y guardarlo en el store.
+   * - Setea el loading a true
+   * - Llama a la funcion leerArchivo para obtener el contenido del archivo
+   * - Llama a la funcion parsearXHTML para parsear el contenido del archivo
+   * - Guarda el contenido en el store (state nomina)
+   *
+   * @param file El archivo que viene del formulario de FormKit
+   */
   async function procesarArchivo(file: File) {
     loading.value = true
 
     try {
-      // Lee el archivo según el tipo
       const contenidoArchivo = await leerArchivo(file)
       if (!contenidoArchivo) return // si no hay archivo, termina
-
-      // Parsea el contenido
-      nomina.value = parsearXHTML(contenidoArchivo as string)
+      nomina.value = parsearXHTML(contenidoArchivo as string) // Parsea el contenido
       if (!nomina.value) return // si no se pudo parsear, termina
     } catch (error) {
-      console.error('Error procesando archivo:', error)
+      console.error(error)
+      errorStore.setError({ error: 'Error parseando XLS.' })
     } finally {
       loading.value = false
     }
   }
 
-  // XLS
+  /**
+   * - Guarda el nombre del archivo en el store (contiene el nombre del establecimiento)
+   * - Devuelve el contenido del archivo o null si no se pudo leer
+   *
+   * @param f El archivo que viene del formulario de FormKit
+   * @returns El contenido del archivo o null si no se pudo leer
+   */
   async function leerArchivo(f: File): Promise<string | null> {
     nombreArchivo.value = f.name
     return new Promise<string | null>((resolve, reject) => {
@@ -63,6 +79,15 @@ export const usePrematriculaXlsStore = defineStore('prematriculaxls', () => {
     })
   }
 
+  /**
+   * - Parsea el contenido del archivo
+   * - Extrae los headers de la tabla
+   * - Procesa cada fila de la tabla
+   * - Devuelve el resultado
+   *
+   * @param fileContent El contenido del archivo como string
+   * @returns El resultado del parseo
+   */
   function parsearXHTML(fileContent: string): NominaAlumnoXLS[] {
     // Creo un parseador
     const parser = new DOMParser()
@@ -101,22 +126,33 @@ export const usePrematriculaXlsStore = defineStore('prematriculaxls', () => {
   }
 
   // SUPABASE
+
+  /**
+   * Inserta los alumnos en la base de datos
+   */
   async function cargarAlumnos() {
     loading.value = true
     if (!nomina.value) return
-    await queryMatricularAlumno()
-    loading.value = false
-  }
 
-  async function queryMatricularAlumno() {
-    return supabase.rpc('transaccion_prematricula', {
+    const { data, error, status } = await supabase.rpc('transaccion_prematricula', {
       rbd: rbdEstablecimiento.value,
       alumnos: nomina.value,
       usuario_ingreso: authStore.perfil!.rut_usuario,
     })
+
+    if (error) {
+      errorStore.setError({ error, customCode: status })
+    } else {
+      resultadoResumen.value = { cursos: data.cursos, alumnos: data.alumnos }
+    }
+
+    loading.value = false
   }
 
-  async function reiniciarStore() {
+  /**
+   * Reinicia el store
+   */
+  function reiniciarStore() {
     nomina.value = null
     nombreArchivo.value = null
     loading.value = false

@@ -14,17 +14,15 @@ export const usePrematriculaPdfStore = defineStore('prematriculapdf', () => {
   // pdf.js
   pdfjsLib.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjsLib.version}/build/pdf.worker.min.js`
 
-  // data
+  // state
   const nomina = ref<NominaAlumnoPDF[] | null>(null)
   const loading = ref(false)
-  const resultadoResumen = ref({ cursos: 0, alumnos: 0 })
   const establecimiento = ref()
 
   // getters
-  const nombreEstablecimiento = computed(() => '')
   const totalAlumnos = computed(() => nomina.value?.length || 0)
 
-  // methods
+  // actions
   async function procesarArchivo(file: File) {
     loading.value = true
 
@@ -158,7 +156,7 @@ export const usePrematriculaPdfStore = defineStore('prematriculapdf', () => {
       v_letra: alumno.letra,
       v_nivel: alumno.curso,
       v_nombre_completo: alumno.nombreCompleto,
-      v_rbd: establecimiento.value, // TODO: pide string pero es integer
+      v_rbd: establecimiento.value,
       v_rut_alumno: alumno.rut,
       v_rut_usuario: authStore.perfil!.rut_usuario,
     })
@@ -167,18 +165,15 @@ export const usePrematriculaPdfStore = defineStore('prematriculapdf', () => {
   function reiniciarStore() {
     nomina.value = null
     loading.value = false
-    resultadoResumen.value = { cursos: 0, alumnos: 0 }
   }
 
   return {
     // data
     nomina,
     loading,
-    resultadoResumen,
     establecimiento,
 
     // getters
-    nombreEstablecimiento,
     totalAlumnos,
 
     // methods

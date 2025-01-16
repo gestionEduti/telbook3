@@ -13,6 +13,7 @@ export const useNuevaMatriculaLoaderStore = defineStore('nuevaMatriculaLoader-st
   const tp_procedencia_alumno = ref<string[]>([])
   const tp_tipo_tel = ref<string[]>([])
   const tp_problemas_aprendizaje = ref<string[]>([])
+  const tp_regiones_chile = ref<string[]>([])
   const tp_regiones_comunas_chile = ref<string[]>([])
   const tp_nacionalidad_alumno = ref<string[]>([])
   const tp_genero_alumno = ref<string[]>([])
@@ -72,6 +73,17 @@ export const useNuevaMatriculaLoaderStore = defineStore('nuevaMatriculaLoader-st
       tp_problemas_aprendizaje.value = data.map(
         (item: Tables<'tp_problemas_aprendizaje'>) => item.descripcion_problema_aprendizaje || '', // TODO (modelo) corregir modelo,
       )
+    }
+  }
+
+  const poblar_tp_regiones_chile = async () => {
+    const { data, error, status } = await supabase
+      .from('tp_regiones_comunas_chile')
+      .select('nombre_region')
+    if (error) useErrorStore().setError({ error: error, customCode: status })
+    else {
+      const uniqueRegions = [...new Set(data.map((i) => i.nombre_region || ''))]
+      tp_regiones_chile.value = uniqueRegions
     }
   }
 
@@ -160,6 +172,7 @@ export const useNuevaMatriculaLoaderStore = defineStore('nuevaMatriculaLoader-st
       poblar_tp_procedencia_alumno(),
       poblar_tp_tipo_tel(),
       poblar_tp_problemas_aprendizaje(),
+      poblar_tp_regiones_chile(),
       poblar_tp_regiones_comunas_chile(),
       poblar_tp_nacionalidad_alumno(),
       poblar_tp_genero_alumno(),
@@ -178,6 +191,7 @@ export const useNuevaMatriculaLoaderStore = defineStore('nuevaMatriculaLoader-st
     tp_procedencia_alumno,
     tp_tipo_tel,
     tp_problemas_aprendizaje,
+    tp_regiones_chile,
     tp_regiones_comunas_chile,
     tp_nacionalidad_alumno,
     tp_genero_alumno,
