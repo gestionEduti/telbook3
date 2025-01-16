@@ -1,3 +1,9 @@
+export function formatearFecha(fecha: string): string {
+  if (!fecha) return ''
+  const [year, month, day] = fecha.split('-')
+  return `${day}-${month}-${year}`
+}
+
 export function formatearRut(rut: string | null) {
   if (!rut) return ''
   return rut.replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.')
