@@ -2,6 +2,9 @@
 // vue imports
 import { ref, onMounted } from 'vue'
 
+// components
+// import InfoMensajeSinData from '@/components/InfoMensajeSinData.vue'
+
 // props
 const props = defineProps<{
   nivel: string
@@ -14,24 +17,38 @@ import CardContent from '@/components/ui/card/CardContent.vue'
 import CardDescription from '@/components/ui/card/CardDescription.vue'
 import CardHeader from '@/components/ui/card/CardHeader.vue'
 import CardTitle from '@/components/ui/card/CardTitle.vue'
+import CardFooter from '@/components/ui/card/CardFooter.vue'
 import Separator from '@/components/ui/separator/Separator.vue'
+import Switch from '@/components/ui/switch/Switch.vue'
+import Input from '@/components/ui/input/Input.vue'
+import Dialog from '@/components/ui/dialog/Dialog.vue'
+import Button from '@/components/ui/button/Button.vue'
+import DialogContent from '@/components/ui/dialog/DialogContent.vue'
+import DialogHeader from '@/components/ui/dialog/DialogHeader.vue'
+import DialogTitle from '@/components/ui/dialog/DialogTitle.vue'
+import DialogDescription from '@/components/ui/dialog/DialogDescription.vue'
+import DialogTrigger from '@/components/ui/dialog/DialogTrigger.vue'
+import DialogFooter from '@/components/ui/dialog/DialogFooter.vue'
+import DialogClose from '@/components/ui/dialog/DialogClose.vue'
+import Label from '@/components/ui/label/Label.vue'
+import { toast } from '@/components/ui/toast'
+import { Pen } from 'lucide-vue-next'
 
 // store
-import { useErrorStore } from '@/stores/error'
-const errorStore = useErrorStore()
 import { useAuthStore } from '@/stores/auth'
+import { useErrorStore } from '@/stores/error'
 const authStore = useAuthStore()
+const errorStore = useErrorStore()
 
 // supabase
 import type { Tables } from '@/types/supabase'
 import { supabase } from '@/services/supabaseClient'
-import InfoMensajeSinData from '@/components/InfoMensajeSinData.vue'
 const querySelect = supabase
   .from('mv_libro_matricula')
   .select()
   .eq('rbd_establecimiento', authStore.perfil!.rbd_usuario) // TODO: asegurar 100% que el perfil va a existir
   .ilike('nivel_alumno', props.nivel + props.letra)
-  .order('apellidos_alumno', { ascending: true })
+  .order('numero_lista_nivel_alumno', { ascending: true })
 
 // data
 const alumnos = ref<Tables<'mv_libro_matricula'>[] | null>(null)
@@ -57,8 +74,8 @@ onMounted(async () => {
       <Separator />
     </CardHeader>
     <CardContent>
-      <InfoMensajeSinData icono="mantencion" mensaje="En mantención" />
-      <!-- <ul class="mb-3 divide-y">
+      <!-- <InfoMensajeSinData icono="mantencion" mensaje="En mantención" /> -->
+      <ul class="mb-3 divide-y">
         <li class="telbook-label grid grid-cols-12 items-center gap-2 py-3">
           <span class="col-span-4">Nombre</span>
           <span class="col-span-2">Estado</span>
@@ -75,9 +92,9 @@ onMounted(async () => {
           <Switch class="col-span-2" />
           <Input class="col-span-6 w-full" />
         </li>
-      </ul> -->
+      </ul>
     </CardContent>
-    <!-- <CardFooter class="flex items-center justify-between">
+    <CardFooter class="flex items-center justify-between">
       <Dialog>
         <DialogTrigger as-child>
           <Button>
@@ -108,7 +125,7 @@ onMounted(async () => {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-    </CardFooter> -->
+    </CardFooter>
   </Card>
 </template>
 
