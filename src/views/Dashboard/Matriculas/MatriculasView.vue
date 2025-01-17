@@ -7,6 +7,8 @@ import TablaMatriculas from '@/components/views/Matriculas/TablaMatriculas.vue'
 // jsPDF
 import jsPDF from 'jspdf'
 import autoTable from 'jspdf-autotable'
+// xlsx
+import * as XLSX from 'xlsx'
 
 // shadcn
 import Button from '@/components/ui/button/Button.vue'
@@ -47,13 +49,16 @@ const querySelect = supabase
   .order('id', { ascending: true })
 
 // methods
-const fetchSupabase = async () => {
+async function fetchSupabase() {
   const { data, error, status } = await querySelect
   if (error) errorStore.setError({ error: error, customCode: status })
   else alumnos.value = data
 }
 
-const exportarResumen = () => {
+/**
+ * Exporta el resumen de matriculas en formato PDF
+ */
+async function exportarResumen() {
   const doc = new jsPDF()
 
   doc.setFontSize(16)
@@ -99,6 +104,52 @@ const exportarResumen = () => {
   doc.save('resumen.pdf')
 }
 
+/**
+ * Exporta el libro de matriculas completo en formato Excel
+ */
+function exportarCompleto() {
+  const datosExcel = alumnos.value?.map((alumno) => ({
+    Año: alumno.anio_libro,
+    RBD: alumno.rbd_establecimiento,
+    'Rut Alumno': alumno.rut_alumno,
+    'Apeliidos Alumno': alumno.apellidos_alumno,
+    'Nombres Alumno': alumno.nombres_alumno,
+    'Fecha de Nacimiento': alumno.fecha_nacimiento_alumno,
+    'Sexo Alumno': alumno.sexo_alumno,
+    'Número Matricula': alumno.numero_matricula_alumno,
+    'Nivel Alumno': alumno.nivel_alumno,
+    Jornada: alumno.jornada_alumno,
+    'Numero de Lista': alumno.numero_lista_nivel_alumno,
+    Procedencia: alumno.procedencia_alumno,
+    'Fecha Incorporación': alumno.fecha_incorporacion_alumno,
+    'Código Alumno': alumno.codigo_estado_alumno,
+    Estado: alumno.estado_alumno,
+    'Fecha Retiro': alumno.fecha_retiro_escuela,
+    'Causa Retiro': alumno.causa_retiro_alumno,
+    Domicilio: alumno.domicilio_alumno,
+    Comuna: alumno.comuna_alumno,
+    Región: alumno.region_alumno,
+    Nacionalidad: alumno.nacionalidad_alumno,
+    'PertenecePueblo Originario': alumno.pueblo_originario_alumno,
+    'Problema Aprendizaje': alumno.problema_aprendizaje_alumno,
+    'Tipo TEL': alumno.tipo_tel_alumno,
+    'Nombre Apoderado': alumno.nombre_apoderado_alumno,
+    'Parentezco con Alumno': alumno.parentezco_con_alumno,
+    'Vive Con': alumno.vive_con_alumno,
+    'Nivel Educacional Madre': alumno.nivel_educacional_madre,
+    'Nivel Educacional Padre': alumno.nivel_educacional_padre,
+    Email: alumno.email_apoderado_alumno,
+    'Teléfono Apoderado': alumno.telefono_apoderado_alumno,
+    'Situación Social': alumno.situacion_social_alumno,
+  }))
+
+  const libro = XLSX.utils.book_new()
+  const hoja = XLSX.utils.json_to_sheet(datosExcel)
+  XLSX.utils.book_append_sheet(libro, hoja, 'Libro de Matriculas')
+  const nombreArchivo = `Libro_Matriculas_RBD_${authStore.establecimiento?.rbd || 'Desconocido'}.xlsx`
+  XLSX.writeFile(libro, nombreArchivo)
+}
+
 // lifecycle
 onMounted(async () => {
   await fetchSupabase()
@@ -129,7 +180,7 @@ onMounted(async () => {
                   <DropdownMenuLabel>Descargar Libro</DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuGroup>
-                    <DropdownMenuItem disabled>
+                    <DropdownMenuItem @click="exportarCompleto">
                       <FileSpreadsheet class="h-4 w-4" />
                       <span class="ml-2 hidden md:block">Libro completo (Excel)</span>
                     </DropdownMenuItem>
