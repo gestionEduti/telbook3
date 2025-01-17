@@ -65,6 +65,7 @@ const {
 const {
   loading: loadingPdf,
   establecimiento: establecimientoPdf,
+  fechaIncorporacion: fechaIncorporacionPdf,
   totalAlumnos: totalAlumnosPdf,
 } = storeToRefs(prematriculaPdfStore)
 
@@ -82,11 +83,11 @@ const establecimientosSelect = ref<{ value: number; label: string }[]>([])
  * @param data La data del formulario enviada por FormKit
  */
 async function procesarArchivoPdf(data: FormKitFormDataPdf) {
-  console.log(data)
-  // establecimientoPdf.value = data.razon_social
-  // const primerArchivo = data.archivopdf[0].file // viene 1 o mas archivos en un array. este es el primero
-  // await prematriculaPdfStore.procesarArchivo(primerArchivo)
-  // pasoActual.value = 3
+  establecimientoPdf.value = data.razon_social
+  fechaIncorporacionPdf.value = data.fechaIncorporacion
+  const primerArchivo = data.archivopdf[0].file // viene 1 o mas archivos en un array. este es el primero
+  await prematriculaPdfStore.procesarArchivo(primerArchivo)
+  pasoActual.value = 3
 }
 
 /**
@@ -277,8 +278,8 @@ onMounted(async () => {
               <FormKit
                 type="date"
                 label="Selecciona la fecha de incorporación"
-                name="fecha_incorporacion"
-                help="Esta sera la fecha de incorporación de todos los alumnos del PDF"
+                name="fechaIncorporacion"
+                help="Esta sera la fecha de incorporación para todos los alumnos del PDF. "
                 :validation="`required|date_after_or_equal:${new Date().toISOString().split('T')[0]}`"
               />
               <FormKit

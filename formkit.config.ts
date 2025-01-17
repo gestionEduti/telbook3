@@ -8,4 +8,12 @@ export default defaultConfig({
   config: {
     rootClasses,
   },
+  messages: {
+    es: {
+      validation: {
+        date_after_or_equal: 'La fecha debe ser mayor o igual a la fecha actual.',
+        required: 'Este campo es obligatorio.',
+      },
+    },
+  },
 })

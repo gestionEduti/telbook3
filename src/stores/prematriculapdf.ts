@@ -18,6 +18,7 @@ export const usePrematriculaPdfStore = defineStore('prematriculapdf', () => {
   const nomina = ref<NominaAlumnoPDF[] | null>(null)
   const loading = ref(false)
   const establecimiento = ref()
+  const fechaIncorporacion = ref()
 
   // getters
   const totalAlumnos = computed(() => nomina.value?.length || 0)
@@ -159,6 +160,7 @@ export const usePrematriculaPdfStore = defineStore('prematriculapdf', () => {
       v_rbd: establecimiento.value,
       v_rut_alumno: alumno.rut,
       v_rut_usuario: authStore.perfil!.rut_usuario,
+      v_fecha_incorporacion: fechaIncorporacion.value,
     })
   }
 
@@ -172,6 +174,7 @@ export const usePrematriculaPdfStore = defineStore('prematriculapdf', () => {
     nomina,
     loading,
     establecimiento,
+    fechaIncorporacion,
 
     // getters
     totalAlumnos,
