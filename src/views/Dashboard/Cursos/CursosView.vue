@@ -2,22 +2,12 @@
 // componentes
 import ListaCursos from '@/components/views/Cursos/ListaCursos.vue'
 
-// icons
-import { ListX } from 'lucide-vue-next'
+import type { Tables } from '@/types/supabase' // types de supabase
 
-// store
+import { ListX } from 'lucide-vue-next' // iconos
+
 const authStore = useAuthStore()
 const errorStore = useErrorStore()
-
-// supabase
-const queryNiveles = supabase.from('tp_niveles').select()
-const queryCursos = supabase
-  .from('tp_cursos')
-  .select()
-  .eq('anio_curso', 2025) // TODO cambiar a año sacado desde la futura tabla de configuraciones
-  .eq('rbd_establecimiento', String(authStore.establecimiento?.rbd)) // TODO: setear error si es que el perfil no existe
-  .order('sigla_nivel_curso', { ascending: true })
-  .order('letra_nivel_curso', { ascending: true })
 
 // data
 const cursos = ref<Tables<'tp_cursos'>[] | null>(null)
@@ -25,17 +15,22 @@ const niveles = ref<Tables<'tp_niveles'>[] | null>(null)
 
 // methods
 const fetchCursos = async () => {
-  const { data, error, status } = await queryCursos
+  const { data, error, status } = await supabase
+    .from('tp_cursos')
+    .select()
+    .eq('anio_curso', 2025) // TODO cambiar a año sacado desde la futura tabla de configuraciones
+    .eq('rbd_establecimiento', String(authStore.establecimiento?.rbd)) // TODO: setear error si es que el perfil no existe
+    .order('sigla_nivel_curso', { ascending: true })
+    .order('letra_nivel_curso', { ascending: true })
   if (error) errorStore.setError({ error: error, customCode: status })
   else cursos.value = data
 }
 const fetchNiveles = async () => {
-  const { data, error, status } = await queryNiveles
+  const { data, error, status } = await supabase.from('tp_niveles').select()
   if (error) errorStore.setError({ error: error, customCode: status })
   else niveles.value = data
 }
 
-// lifecycle
 onMounted(async () => {
   await Promise.all([fetchNiveles(), fetchCursos()])
 })

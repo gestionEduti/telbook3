@@ -1,39 +1,35 @@
 <script setup lang="ts">
-// store
-const errorStore = useErrorStore()
-
-// props
-const props = defineProps<{ rut: string }>()
-
-// utils
-import { formatearFechaNacimiento, formatearNacionalidad } from '@/lib/formato'
-
 // components
 import FormularioObservacionesFonoaudiologicas from './AlumnoComponenteObservacionesFonoaudiologicas.vue'
 import FormularioObservacionesConvivencia from './AlumnoComponenteObservacionesConvivencia.vue'
-
-// icons
-import { ArrowLeft, Map, NotebookPen, User, Users } from 'lucide-vue-next'
-
-// supabase
 import InfoMensajeSinData from '@/components/InfoMensajeSinData.vue'
-const querySelect = supabase
-  .from('mv_libro_matricula')
-  .select()
-  .eq('rut_alumno', props.rut)
-  .single()
+
+import type { Tables } from '@/types/supabase' // types de supabase
+
+const errorStore = useErrorStore()
+
+const props = defineProps<{
+  rut: string
+}>()
+
+import { formatearFechaNacimiento, formatearNacionalidad } from '@/lib/formato' // utilidades para formatear
+
+import { ArrowLeft, Map, NotebookPen, User, Users } from 'lucide-vue-next' // iconos
 
 // data
 const alumno = ref<Tables<'mv_libro_matricula'> | null>(null)
 
 // methods
 const fetchAlumno = async () => {
-  const { data, error, status } = await querySelect
+  const { data, error, status } = await supabase
+    .from('mv_libro_matricula')
+    .select()
+    .eq('rut_alumno', props.rut)
+    .single()
   if (error) errorStore.setError({ error: error, customCode: status })
   else alumno.value = data
 }
 
-// lifecycle
 onMounted(async () => {
   await fetchAlumno()
 })

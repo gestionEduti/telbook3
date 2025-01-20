@@ -1,36 +1,33 @@
 <script setup lang="ts">
-// vue imports
+// componentes
 import ResumenMatriculas from '@/components/views/Matriculas/ResumenMatriculas.vue'
 import TablaMatriculas from '@/components/views/Matriculas/TablaMatriculas.vue'
+
+import type { Tables } from '@/types/supabase' // types de supabase
 
 // jsPDF
 import jsPDF from 'jspdf'
 import autoTable from 'jspdf-autotable'
+
 // xlsx
 import * as XLSX from 'xlsx'
 
-// icons
-import { Download, UserPlus, FileText, ListX, ChevronDown, FileSpreadsheet } from 'lucide-vue-next'
+import { Download, UserPlus, FileText, ListX, ChevronDown, FileSpreadsheet } from 'lucide-vue-next' // iconos
 
-// store
 const authStore = useAuthStore()
 const errorStore = useErrorStore()
 
 // data
 const alumnos = ref<Tables<'mv_libro_matricula'>[] | null>(null)
 
-// supabase
-// supabase queries
-const querySelect = supabase
-  .from('mv_libro_matricula')
-  .select()
-  .or('codigo_estado_alumno.eq.0,codigo_estado_alumno.eq.1')
-  .eq('rbd_establecimiento', authStore.perfil!.rbd_usuario) // // TODO: setear error si es que el perfil no existe
-  .order('id', { ascending: true })
-
 // methods
 async function fetchSupabase() {
-  const { data, error, status } = await querySelect
+  const { data, error, status } = await supabase
+    .from('mv_libro_matricula')
+    .select()
+    .or('codigo_estado_alumno.eq.0,codigo_estado_alumno.eq.1')
+    .eq('rbd_establecimiento', authStore.perfil!.rbd_usuario) // // TODO: setear error si es que el perfil no existe
+    .order('id', { ascending: true })
   if (error) errorStore.setError({ error: error, customCode: status })
   else alumnos.value = data
 }
@@ -130,7 +127,6 @@ function exportarCompleto() {
   XLSX.writeFile(libro, nombreArchivo)
 }
 
-// lifecycle
 onMounted(async () => {
   await fetchSupabase()
 })

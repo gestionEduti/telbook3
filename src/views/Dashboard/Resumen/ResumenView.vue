@@ -1,19 +1,7 @@
 <script setup lang="ts">
-import { BookA, SquareUserRound } from 'lucide-vue-next'
+import { BookA, SquareUserRound } from 'lucide-vue-next' // iconos
 
 const authStore = useAuthStore()
-
-// supabase
-const queryTotalCursos = supabase
-  .from('tp_cursos')
-  .select('id', { count: 'exact' })
-  .eq('anio_curso', 2025) // TODO cambiar a año sacado desde la futura tabla de configuraciones
-  .eq('rbd_establecimiento', String(authStore.establecimiento?.rbd)) // TODO: setear error si es que el perfil no existe
-const queryTotalMatriculas = supabase
-  .from('mv_libro_matricula')
-  .select('id', { count: 'exact' })
-  .eq('anio_libro', 2025) // TODO cambiar a año sacado desde la futura tabla de configuraciones
-  .eq('rbd_establecimiento', String(authStore.establecimiento?.rbd)) // TODO: setear error si es que el perfil no existe
 
 // data
 const totalCursos = ref<number | null>(null)
@@ -21,17 +9,24 @@ const totalMatriculas = ref<number | null>(null)
 
 // mehods
 const obtenerTotalCursos = async () => {
-  const { count, error, status } = await queryTotalCursos
+  const { count, error, status } = await supabase
+    .from('tp_cursos')
+    .select('id', { count: 'exact' })
+    .eq('anio_curso', 2025) // TODO cambiar a año sacado desde la futura tabla de configuraciones
+    .eq('rbd_establecimiento', String(authStore.establecimiento?.rbd)) // TODO: setear error si es que el perfil no existe
   if (error) useErrorStore().setError({ error: error, customCode: status })
   else totalCursos.value = count
 }
 const obtenerTotalMatriculas = async () => {
-  const { count, error, status } = await queryTotalMatriculas
+  const { count, error, status } = await supabase
+    .from('mv_libro_matricula')
+    .select('id', { count: 'exact' })
+    .eq('anio_libro', 2025) // TODO cambiar a año sacado desde la futura tabla de configuraciones
+    .eq('rbd_establecimiento', String(authStore.establecimiento?.rbd)) // TODO: setear error si es que el perfil no existe
   if (error) useErrorStore().setError({ error: error, customCode: status })
   else totalMatriculas.value = count
 }
 
-// lifecycle
 onMounted(async () => {
   await obtenerTotalCursos()
   await obtenerTotalMatriculas()

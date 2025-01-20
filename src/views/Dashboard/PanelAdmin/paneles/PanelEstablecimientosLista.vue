@@ -1,24 +1,23 @@
 <script setup lang="ts">
+import type { Database } from '@/types/supabase'
+
 const errorStore = useErrorStore()
 
-// supabase
-const query = supabase
-  .from('panel_resumen_establecimientos')
-  .select()
-  .order('rbd', { ascending: true })
+type Resumen = Database['public']['Views']['panel_resumen_establecimientos']['Row'][]
 
 // data
-type Resumen = Database['public']['Views']['panel_resumen_establecimientos']['Row'][]
 const resumen = ref<Resumen | null>(null)
 
 // methods
 const fetch = async () => {
-  const { data, error, status } = await query
+  const { data, error, status } = await supabase
+    .from('panel_resumen_establecimientos')
+    .select()
+    .order('rbd', { ascending: true })
   if (error) errorStore.setError({ error: error, customCode: status })
   else resumen.value = data
 }
 
-// lifecycle
 onMounted(async () => {
   await fetch()
 })

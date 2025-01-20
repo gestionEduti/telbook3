@@ -1,7 +1,6 @@
 <script setup lang="ts">
 const router = useRouter()
 
-// shadcn
 import {
   ArrowLeft,
   ArrowRight,
@@ -12,13 +11,13 @@ import {
   Info,
   Loader,
   SquareCheckBig,
-} from 'lucide-vue-next'
+} from 'lucide-vue-next' // iconos
 
-// types
 import type { FormKitFormDataXls, FormKitFormDataPdf } from '@/types/nomina'
-// prematricula store
+
 const prematriculaXlsStore = usePrematriculaXlsStore()
 const prematriculaPdfStore = usePrematriculaPdfStore()
+
 const {
   loading: loadingXls,
   resultadoResumen: resultadoResumenXls,
@@ -27,6 +26,7 @@ const {
   totalAlumnos: totalAlumnosXls,
   totalCursos: totalCursosXls,
 } = storeToRefs(prematriculaXlsStore)
+
 const {
   loading: loadingPdf,
   establecimiento: establecimientoPdf,
@@ -121,7 +121,6 @@ async function poblarEstablecimientos() {
     }))
 }
 
-// lifecycle hooks
 onMounted(async () => {
   await poblarEstablecimientos()
 })

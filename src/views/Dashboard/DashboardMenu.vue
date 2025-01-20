@@ -1,6 +1,7 @@
 <script setup lang="ts">
-// router
 const route = useRoute()
+
+const { perfil } = useAuthStore()
 
 // data
 const navLinks = [
@@ -9,10 +10,6 @@ const navLinks = [
   { routeName: 'prematricula', text: 'Pre-Matricula', admin: true },
 ]
 
-// store
-const { perfil } = useAuthStore()
-
-// computed
 const esAdmin = computed(() => [1].includes(perfil!.codigo_perfil_usuario)) // TODO (modelo) perfil usuario tiene q ser not null
 const menuUsuario = computed(() => navLinks.filter((item) => !item.admin || esAdmin))
 

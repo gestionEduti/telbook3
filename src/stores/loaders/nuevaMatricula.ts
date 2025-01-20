@@ -1,3 +1,5 @@
+import type { Tables } from '@/types/supabase'
+
 export const useNuevaMatriculaLoaderStore = defineStore('nuevaMatriculaLoader-store', () => {
   const authStore = useAuthStore()
 

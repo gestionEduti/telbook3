@@ -1,17 +1,8 @@
 <script setup lang="ts">
-import type { Tables } from '@/types/supabase'
+import type { Database, Tables } from '@/types/supabase'
 
-// shadcn
 import { useToast } from '@/components/ui/toast/use-toast'
 const { toast } = useToast()
-
-// store
-const { establecimiento, perfil } = storeToRefs(useAuthStore())
-const errorStore = useErrorStore()
-
-// data
-const nuevaObservacion = ref<string>('')
-const observacionesFonoaudiologicas = ref<Tables<'mv_anotaciones_fonoaudiologicas'>[] | null>([])
 
 // vueuse
 import { useDateFormat, useNow } from '@vueuse/core'
@@ -20,8 +11,16 @@ const month = useDateFormat(useNow(), 'MM')
 const day = useDateFormat(useNow(), 'DD')
 const fecha_anotacion = useDateFormat(useNow(), 'YYYYMMDD')
 
-// props
-const props = defineProps<{ alumno: Tables<'mv_libro_matricula'> }>()
+const { establecimiento, perfil } = storeToRefs(useAuthStore())
+const errorStore = useErrorStore()
+
+const props = defineProps<{
+  alumno: Tables<'mv_libro_matricula'>
+}>()
+
+// data
+const nuevaObservacion = ref<string>('')
+const observacionesFonoaudiologicas = ref<Tables<'mv_anotaciones_fonoaudiologicas'>[] | null>([])
 
 // supabase
 type InsertType = Database['public']['Tables']['mv_anotaciones_fonoaudiologicas']['Insert']

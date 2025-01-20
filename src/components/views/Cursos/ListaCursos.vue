@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import type { Tables } from '@/types/supabase'
+import type { Tables } from '@/types/supabase' // types de supabase
 
-// props
 const props = defineProps<{
   cursos: Tables<'tp_cursos'>[]
   niveles: Tables<'tp_niveles'>[]

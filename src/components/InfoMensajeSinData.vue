@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Construction, ListX } from 'lucide-vue-next'
+import { Construction, ListX } from 'lucide-vue-next' // iconos
 
 const iconos = {
   mantencion: Construction,

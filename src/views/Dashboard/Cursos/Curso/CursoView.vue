@@ -2,26 +2,15 @@
 // components
 import CursoMenu from './CursoMenu.vue'
 
-// store
+import type { Tables } from '@/types/supabase'
+
 const errorStore = useErrorStore()
 const authStore = useAuthStore()
 
-// props
 const props = defineProps<{
   nivel: string
   letra: string
 }>()
-
-// supabase
-const queryNiveles = supabase.from('tp_niveles').select()
-const queryCurso = supabase
-  .from('tp_cursos')
-  .select()
-  .eq('rbd_establecimiento', String(authStore.establecimiento?.rbd))
-  .eq('anio_curso', 2025) // TODO cambiar a año sacado desde la futura tabla de configuraciones
-  .ilike('sigla_nivel_curso', props.nivel)
-  .ilike('letra_nivel_curso', props.letra)
-  .single()
 
 // data
 const curso = ref<Tables<'tp_cursos'> | null>(null)
@@ -29,17 +18,23 @@ const niveles = ref<Tables<'tp_niveles'>[] | null>([])
 
 // methods
 const fetchCurso = async () => {
-  const { data, error, status } = await queryCurso
+  const { data, error, status } = await supabase
+    .from('tp_cursos')
+    .select()
+    .eq('rbd_establecimiento', String(authStore.establecimiento?.rbd))
+    .eq('anio_curso', 2025) // TODO cambiar a año sacado desde la futura tabla de configuraciones
+    .ilike('sigla_nivel_curso', props.nivel)
+    .ilike('letra_nivel_curso', props.letra)
+    .single()
   if (error) errorStore.setError({ error, customCode: status })
   else curso.value = data
 }
 const fetchNiveles = async () => {
-  const { data, error, status } = await queryNiveles
+  const { data, error, status } = await supabase.from('tp_niveles').select()
   if (error) errorStore.setError({ error, customCode: status })
   else niveles.value = data
 }
 
-// lifecycle
 onMounted(async () => {
   await Promise.all([fetchNiveles(), fetchCurso()])
 })

@@ -1,6 +1,5 @@
 import type { NominaAlumnoXLS } from '@/types/nomina'
 
-// store
 const authStore = useAuthStore()
 const errorStore = useErrorStore()
 

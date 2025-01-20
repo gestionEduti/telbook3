@@ -1,5 +1,4 @@
 <script setup lang="ts">
-// shadcn
 import { useToast } from '@/components/ui/toast/use-toast'
 const { toast } = useToast()
 </script>

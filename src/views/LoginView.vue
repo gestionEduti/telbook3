@@ -1,20 +1,19 @@
 <script setup lang="ts">
-// vue router
 const router = useRouter()
 
-// shadcn
-import { Loader } from 'lucide-vue-next'
 import { useToast } from '@/components/ui/toast/use-toast'
 const { toast } = useToast()
 
-// data
-const dataFormulario = ref({ email: '', password: '' })
+import { Loader } from 'lucide-vue-next' // iconos
 
 // TS interface
 interface FormData {
   email: string
   password: string
 }
+
+// data
+const dataFormulario = ref({ email: '', password: '' })
 
 // methods
 const handleForm = async (formData: FormData) => {

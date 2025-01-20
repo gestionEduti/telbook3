@@ -1,3 +1,5 @@
+import type { Tables } from '@/types/supabase'
+
 import { useToast } from '@/components/ui/toast/use-toast'
 const { toast } = useToast()
 

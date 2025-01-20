@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { navigationMenuTriggerStyle } from '@/components/ui/navigation-menu'
 
-// props
 const props = defineProps<{
   nivel: string
   letra: string

@@ -1,8 +1,7 @@
 <script setup lang="ts">
 const { usuario, perfil, establecimiento } = useAuthStore()
 
-// utils
-import { formatearRut } from '@/lib/formato'
+import { formatearRut } from '@/lib/formato' // utilidades para formatear
 </script>
 
 <template>

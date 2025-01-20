@@ -1,34 +1,37 @@
 <script setup lang="ts">
-const props = defineProps<{ nivel: string; letra: string }>()
+const props = defineProps<{
+  nivel: string
+  letra: string
+}>()
+
+import type { Tables } from '@/types/supabase' // types de supabase
 
 import { formatearRut } from '@/lib/formato' // utils
 
 const authStore = useAuthStore()
 const errorStore = useErrorStore()
 
-import { ListX, UserPlus } from 'lucide-vue-next'
+import { ListX, UserPlus } from 'lucide-vue-next' // iconos
 
 // data
 const alumnos = ref<Tables<'mv_libro_matricula'>[] | null>(null)
 
-// supabase
-const querySelect = supabase
-  .from('mv_libro_matricula')
-  .select()
-  .eq('rbd_establecimiento', authStore.perfil!.rbd_usuario)
-  .eq('codigo_estado_alumno', '1') // TODO confirmar si es solo activos
-  .ilike('nivel_alumno', props.nivel + props.letra)
-  .order('numero_lista_nivel_alumno', { ascending: true })
-
 // methods
 const fetchSupabase = async () => {
-  const { data, error, status } = await querySelect
+  const { data, error, status } = await supabase
+    .from('mv_libro_matricula')
+    .select()
+    .eq('rbd_establecimiento', authStore.perfil!.rbd_usuario)
+    .eq('codigo_estado_alumno', '1') // TODO confirmar si es solo activos
+    .ilike('nivel_alumno', props.nivel + props.letra)
+    .order('numero_lista_nivel_alumno', { ascending: true })
   if (error) errorStore.setError({ error: error, customCode: status })
   else alumnos.value = data
 }
 
-// lifecycle
-onMounted(async () => await fetchSupabase())
+onMounted(async () => {
+  await fetchSupabase()
+})
 </script>
 
 <template>

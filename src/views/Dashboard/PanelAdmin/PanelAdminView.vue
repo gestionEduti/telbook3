@@ -1,6 +1,5 @@
 <script setup lang="ts">
-// icons
-import { List, ListPlus } from 'lucide-vue-next'
+import { List, ListPlus } from 'lucide-vue-next' // iconos
 
 const componenteActivo = shallowRef(null)
 
@@ -8,7 +7,9 @@ const cargarComponente = async (componentName: string) => {
   componenteActivo.value = (await import(`./paneles/${componentName}.vue`)).default
 }
 
-onMounted(async () => await cargarComponente('PanelUsuariosNuevo'))
+onMounted(async () => {
+  await cargarComponente('PanelUsuariosNuevo')
+})
 </script>
 
 <template>

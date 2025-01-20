@@ -1,7 +1,6 @@
 import type { NominaAlumnoPDF } from '@/types/nomina'
 import * as pdfjsLib from 'pdfjs-dist'
 
-// store
 const authStore = useAuthStore()
 const errorStore = useErrorStore()
 

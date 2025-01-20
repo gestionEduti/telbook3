@@ -1,18 +1,22 @@
 <script setup lang="ts">
+import type { Tables } from '@/types/supabase' // types de supabase
+
 const router = useRouter()
+
 const authStore = useAuthStore()
 const errorStore = useErrorStore()
 const loaderStore = useNuevaMatriculaLoaderStore()
-const props = defineProps<{ matriculaParaEditar?: Tables<'mv_libro_matricula'> }>()
+
+const props = defineProps<{
+  matriculaParaEditar?: Tables<'mv_libro_matricula'>
+}>()
 
 import { useToast } from '@/components/ui/toast/use-toast'
 const { toast } = useToast()
 
-import { Loader } from 'lucide-vue-next' // icons
+import { Loader } from 'lucide-vue-next' // iconos
 
-// formkit
-import { reset } from '@formkit/vue'
-import type { Tables } from '@/types/supabase'
+import { reset } from '@formkit/vue' // funcion de formkit para reiniciar el formulario
 
 // data
 const loadersReady = ref(false)
@@ -119,7 +123,6 @@ const resetForm = () => {
   reset('nuevoAlumnoForm')
 }
 
-// lifecycle
 onMounted(async () => {
   await loaderStore.fetchAllSelectsData()
   loadersReady.value = true

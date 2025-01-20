@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { CircleHelp, Contact, FileSliders, LogOut } from 'lucide-vue-next' // icons
-
 const router = useRouter()
+
+import { CircleHelp, Contact, FileSliders, LogOut } from 'lucide-vue-next' // iconos
 
 const { perfil } = storeToRefs(useAuthStore())
 

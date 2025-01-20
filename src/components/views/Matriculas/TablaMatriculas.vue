@@ -1,20 +1,16 @@
 <script setup lang="ts">
-// utils
-import { formatearFecha, formatearRut } from '@/lib/formato'
+import { formatearFecha, formatearRut } from '@/lib/formato' // utilidades para formatear
 
-// store
 const authStore = useAuthStore()
 const errorStore = useErrorStore()
 
-// shadcn
 import { useToast } from '@/components/ui/toast/use-toast'
 const { toast } = useToast()
 
-// icons
-import { EllipsisVertical, UserX, UserPen, Trash2 } from 'lucide-vue-next'
+import { EllipsisVertical, UserX, UserPen, Trash2 } from 'lucide-vue-next' // iconos
 
 // supabase
-import type { Tables } from '@/types/supabase'
+import type { Tables } from '@/types/supabase' // types de supabase
 const queryEliminarAlumno = (id: number) =>
   supabase
     .from('mv_libro_matricula')
@@ -30,7 +26,6 @@ const queryRetirarAlumno = ({ rut, numeroMatricula }: { rut: string; numeroMatri
     p_rut_modificador: authStore.perfil!.rut_usuario,
   })
 
-// props
 const props = defineProps<{
   alumnos: Tables<'mv_libro_matricula'>[]
 }>()

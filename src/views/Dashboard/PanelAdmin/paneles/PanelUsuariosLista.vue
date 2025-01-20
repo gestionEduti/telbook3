@@ -1,6 +1,9 @@
 <script setup lang="ts">
 const errorStore = useErrorStore()
 
+// data
+const usuarios = ref<UsuariosConPerfil | null>(null)
+
 // supabase
 const query = supabase
   .from('mv_usuario')
@@ -9,10 +12,7 @@ const query = supabase
   .order('nombre_usuario', { ascending: true })
   .order('apellido_usuario', { ascending: true })
   .order('email', { ascending: true })
-
-// data
 type UsuariosConPerfil = QueryData<typeof query>
-const usuarios = ref<UsuariosConPerfil | null>(null)
 
 // method
 const fetch = async () => {
@@ -21,7 +21,6 @@ const fetch = async () => {
   else usuarios.value = data
 }
 
-// lifecycle
 onMounted(async () => {
   await fetch()
 })

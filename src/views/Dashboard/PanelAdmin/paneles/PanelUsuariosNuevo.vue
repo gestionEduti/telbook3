@@ -1,6 +1,19 @@
 <script setup lang="ts">
 import { reset } from '@formkit/vue'
-import { Loader } from 'lucide-vue-next'
+
+import { Loader } from 'lucide-vue-next' // iconos
+
+const formData = ref<FormDataType>({
+  apellido_usuario: '',
+  codigo_estado_usuario: 1,
+  codigo_perfil_usuario: 1,
+  email: '',
+  nombre_usuario: '',
+  password: '',
+  rbd_usuario: 1,
+  rut_usuario: '',
+  telefono: '',
+})
 
 // data
 interface FormDataType {
@@ -14,21 +27,6 @@ interface FormDataType {
   rut_usuario: string
   telefono: string
 }
-
-// types
-const formData = ref<FormDataType>({
-  apellido_usuario: '',
-  codigo_estado_usuario: 1,
-  codigo_perfil_usuario: 1,
-  email: '',
-  nombre_usuario: '',
-  password: '',
-  rbd_usuario: 1,
-  rut_usuario: '',
-  telefono: '',
-})
-
-// type InsertType = Database['public']['Tables']['mv_usuario']['Insert']
 
 const handleForm = async (formData: FormDataType) => {
   const { error } = await supabase.auth.signUp({

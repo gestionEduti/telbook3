@@ -1,8 +1,14 @@
 <script setup lang="ts">
-import { Pen } from 'lucide-vue-next'
+import { Pen } from 'lucide-vue-next' // iconos
+
+import type { Tables } from '@/types/supabase' // types de supabase
 
 const authStore = useAuthStore()
-const props = defineProps<{ nivel: string; letra: string }>()
+
+const props = defineProps<{
+  nivel: string
+  letra: string
+}>()
 
 const alumnos = ref<Tables<'mv_libro_matricula'>[] | null>(null)
 const asistenciaData = ref<{ rut: string; nombre: string; comment: string; isPresent: boolean }[]>(
@@ -36,7 +42,9 @@ function saveAsistencia() {
   console.log(asistenciaData.value)
 }
 
-onMounted(async () => await fetchSupabase())
+onMounted(async () => {
+  await fetchSupabase()
+})
 </script>
 
 <template>
