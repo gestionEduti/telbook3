@@ -5,7 +5,6 @@ const errorStore = useErrorStore()
 const loaderStore = useNuevaMatriculaLoaderStore()
 const props = defineProps<{ matriculaParaEditar?: Tables<'mv_libro_matricula'> }>()
 
-// shadcn
 import { useToast } from '@/components/ui/toast/use-toast'
 const { toast } = useToast()
 

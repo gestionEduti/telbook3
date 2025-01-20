@@ -38,11 +38,11 @@ export default defineConfig({
           // add more here instead of creating another object
         },
         // types
-        {
-          from: 'src/types/supabase',
-          imports: ['Database', 'Tables'],
-          type: true,
-        },
+        // {
+        //   from: 'src/types/supabase',
+        //   imports: ['Database', 'Tables'],
+        //   type: true,
+        // },
         {
           from: 'src/types/Error',
           imports: ['CustomError', 'ExtendedPostgresError'],

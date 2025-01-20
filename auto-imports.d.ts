@@ -85,9 +85,6 @@ declare global {
   export type { Component, ComponentPublicInstance, ComputedRef, DirectiveBinding, ExtractDefaultPropTypes, ExtractPropTypes, ExtractPublicPropTypes, InjectionKey, PropType, Ref, MaybeRef, MaybeRefOrGetter, VNode, WritableComputedRef } from 'vue'
   import('vue')
   // @ts-ignore
-  export type { Database, Tables } from 'src/types/supabase'
-  import('src/types/supabase')
-  // @ts-ignore
   export type { CustomError, ExtendedPostgresError } from 'src/types/Error'
   import('src/types/Error')
   // @ts-ignore
