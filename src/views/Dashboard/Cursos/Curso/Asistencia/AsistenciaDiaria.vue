@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 
 const props = defineProps<{
   nivel: string
@@ -43,6 +43,9 @@ const alumnos = ref<Tables<'mv_libro_matricula'>[] | null>(null)
 const asistenciaData = ref<{ rut: string; nombre: string; comment: string; isPresent: boolean }[]>(
   [],
 )
+const codigo = ref('')
+const presentes = computed(() => asistenciaData.value.filter((alumno) => alumno.isPresent))
+const ausentes = computed(() => asistenciaData.value.filter((alumno) => !alumno.isPresent))
 
 const fetchSupabase = async () => {
   const { data, error } = await queryGetAlumnos
@@ -76,28 +79,47 @@ onMounted(async () => {
       <Separator />
     </CardHeader>
     <CardContent>
-      <div id="asistencia">
-        <div class="mb-2 grid grid-cols-12 gap-4">
-          <span class="telbook-label col-span-1 place-self-center">Presente</span>
-          <span class="telbook-label col-span-5">Nombre</span>
-          <span class="telbook-label col-span-6">Comentario</span>
-        </div>
-        <div
-          v-for="(alumno, index) in asistenciaData"
-          :key="index"
-          class="mb-2 grid grid-cols-12 gap-4"
-        >
-          <Switch
-            :checked="alumno.isPresent"
-            v-on:update:checked="alumno.isPresent = $event"
-            class="col-span-1 place-self-center"
-          />
-          <span class="col-span-5">{{ alumno.nombre || alumno.rut }}</span>
-          <Input v-model="alumno.comment" placeholder="Comentario opcional" class="col-span-6" />
-        </div>
+      <div class="grid grid-cols-12 gap-4 border-b px-4 pb-2">
+        <span class="telbook-label col-span-1 place-self-center">Presente</span>
+        <span class="telbook-label col-span-5">Nombre</span>
+        <span class="telbook-label col-span-6">Comentario</span>
+      </div>
+      <div
+        v-for="(alumno, index) in asistenciaData"
+        :key="index"
+        class="grid grid-cols-12 gap-4 border-b p-4"
+      >
+        <Switch
+          :checked="alumno.isPresent"
+          v-on:update:checked="alumno.isPresent = $event"
+          class="col-span-1 place-self-center"
+        />
+        <span class="col-span-5 self-center">{{ alumno.nombre || alumno.rut }}</span>
+        <Input v-model="alumno.comment" placeholder="Comentario opcional" class="col-span-6" />
       </div>
     </CardContent>
-    <CardFooter class="flex items-center justify-between">
+    <CardFooter class="flex flex-col items-start">
+      <!--  resumen presentes y ausentes -->
+      <div class="mb-4 flex gap-4">
+        <Card class="w-36">
+          <CardHeader>
+            <CardDescription class="text-center text-green-600">Presentes</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <p class="text-center text-xl font-bold">{{ presentes.length }}</p>
+          </CardContent>
+        </Card>
+        <Card class="w-36">
+          <CardHeader>
+            <CardDescription class="text-center text-red-600">Ausentes</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <p class="text-center text-xl font-bold">{{ ausentes.length }}</p>
+          </CardContent>
+        </Card>
+      </div>
+
+      <!-- boton para firmar asistencia -->
       <Dialog>
         <DialogTrigger as-child>
           <Button>
@@ -115,12 +137,12 @@ onMounted(async () => {
           <div class="grid gap-4 py-4">
             <div class="grid grid-cols-4 items-center gap-4">
               <Label for="codigo" class="text-right"> Codigo </Label>
-              <Input id="codigo" class="col-span-3" />
+              <Input id="codigo" class="col-span-3" v-model="codigo" />
             </div>
           </div>
           <DialogFooter>
             <DialogClose>
-              <Button @click="saveAsistencia">
+              <Button @click="saveAsistencia" :disabled="!codigo">
                 <Pen />
                 <span>Firmar asistencia</span>
               </Button>
