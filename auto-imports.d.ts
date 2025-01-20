@@ -50,6 +50,8 @@ declare global {
   const shallowReadonly: typeof import('vue')['shallowReadonly']
   const shallowRef: typeof import('vue')['shallowRef']
   const storeToRefs: typeof import('pinia')['storeToRefs']
+  const supabase: typeof import('@/services/supabaseClient')['supabase']
+  const supabaseClient: typeof import('@/services/supabaseClient')['supabaseClient']
   const toRaw: typeof import('vue')['toRaw']
   const toRef: typeof import('vue')['toRef']
   const toRefs: typeof import('vue')['toRefs']
@@ -85,4 +87,10 @@ declare global {
   // @ts-ignore
   export type { Database, Tables } from 'src/types/supabase'
   import('src/types/supabase')
+  // @ts-ignore
+  export type { CustomError, ExtendedPostgresError } from 'src/types/Error'
+  import('src/types/Error')
+  // @ts-ignore
+  export type { QueryData, Session, User, PostgrestError } from '@supabase/supabase-js'
+  import('@supabase/supabase-js')
 }

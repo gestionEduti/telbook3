@@ -1,17 +1,7 @@
 <script setup lang="ts">
+import type { Tables } from '@/types/supabase'
+
 // shadcn
-import Button from '@/components/ui/button/Button.vue'
-import Textarea from '@/components/ui/textarea/Textarea.vue'
-import Label from '@/components/ui/label/Label.vue'
-import AlertDialog from '@/components/ui/alert-dialog/AlertDialog.vue'
-import AlertDialogTrigger from '@/components/ui/alert-dialog/AlertDialogTrigger.vue'
-import AlertDialogContent from '@/components/ui/alert-dialog/AlertDialogContent.vue'
-import AlertDialogHeader from '@/components/ui/alert-dialog/AlertDialogHeader.vue'
-import AlertDialogTitle from '@/components/ui/alert-dialog/AlertDialogTitle.vue'
-import AlertDialogDescription from '@/components/ui/alert-dialog/AlertDialogDescription.vue'
-import AlertDialogFooter from '@/components/ui/alert-dialog/AlertDialogFooter.vue'
-import AlertDialogCancel from '@/components/ui/alert-dialog/AlertDialogCancel.vue'
-import AlertDialogAction from '@/components/ui/alert-dialog/AlertDialogAction.vue'
 import { useToast } from '@/components/ui/toast/use-toast'
 const { toast } = useToast()
 
@@ -32,21 +22,6 @@ const fecha_anotacion = useDateFormat(useNow(), 'YYYYMMDD')
 
 // props
 const props = defineProps<{ alumno: Tables<'mv_libro_matricula'> }>()
-
-// supabase
-import { supabase } from '@/services/supabaseClient'
-import Sheet from '@/components/ui/sheet/Sheet.vue'
-import SheetTrigger from '@/components/ui/sheet/SheetTrigger.vue'
-import SheetContent from '@/components/ui/sheet/SheetContent.vue'
-import SheetTitle from '@/components/ui/sheet/SheetTitle.vue'
-import SheetHeader from '@/components/ui/sheet/SheetHeader.vue'
-import SheetDescription from '@/components/ui/sheet/SheetDescription.vue'
-import Card from '@/components/ui/card/Card.vue'
-import CardContent from '@/components/ui/card/CardContent.vue'
-import ScrollArea from '@/components/ui/scroll-area/ScrollArea.vue'
-import ScrollBar from '@/components/ui/scroll-area/ScrollBar.vue'
-import CardFooter from '@/components/ui/card/CardFooter.vue'
-import SheetFooter from '@/components/ui/sheet/SheetFooter.vue'
 
 // supabase
 type InsertType = Database['public']['Tables']['mv_anotaciones_fonoaudiologicas']['Insert']

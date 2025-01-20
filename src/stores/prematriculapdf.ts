@@ -1,4 +1,3 @@
-import { supabase } from '@/services/supabaseClient'
 import type { NominaAlumnoPDF } from '@/types/nomina'
 import * as pdfjsLib from 'pdfjs-dist'
 

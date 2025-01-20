@@ -7,48 +7,13 @@ const authStore = useAuthStore()
 const errorStore = useErrorStore()
 
 // shadcn
-import AlertDialog from '@/components/ui/alert-dialog/AlertDialog.vue'
-import AlertDialogTrigger from '@/components/ui/alert-dialog/AlertDialogTrigger.vue'
-import AlertDialogContent from '@/components/ui/alert-dialog/AlertDialogContent.vue'
-import AlertDialogHeader from '@/components/ui/alert-dialog/AlertDialogHeader.vue'
-import AlertDialogTitle from '@/components/ui/alert-dialog/AlertDialogTitle.vue'
-import AlertDialogDescription from '@/components/ui/alert-dialog/AlertDialogDescription.vue'
-import AlertDialogFooter from '@/components/ui/alert-dialog/AlertDialogFooter.vue'
-import AlertDialogCancel from '@/components/ui/alert-dialog/AlertDialogCancel.vue'
-import AlertDialogAction from '@/components/ui/alert-dialog/AlertDialogAction.vue'
-import Button from '@/components/ui/button/Button.vue'
-import DropdownMenu from '@/components/ui/dropdown-menu/DropdownMenu.vue'
-import DropdownMenuContent from '@/components/ui/dropdown-menu/DropdownMenuContent.vue'
-import DropdownMenuGroup from '@/components/ui/dropdown-menu/DropdownMenuGroup.vue'
-import DropdownMenuItem from '@/components/ui/dropdown-menu/DropdownMenuItem.vue'
-import DropdownMenuLabel from '@/components/ui/dropdown-menu/DropdownMenuLabel.vue'
-import DropdownMenuSeparator from '@/components/ui/dropdown-menu/DropdownMenuSeparator.vue'
-import DropdownMenuTrigger from '@/components/ui/dropdown-menu/DropdownMenuTrigger.vue'
-import Input from '@/components/ui/input/Input.vue'
-import Label from '@/components/ui/label/Label.vue'
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
-import Table from '@/components/ui/table/Table.vue'
-import TableBody from '@/components/ui/table/TableBody.vue'
-import TableCaption from '@/components/ui/table/TableCaption.vue'
-import TableCell from '@/components/ui/table/TableCell.vue'
-import TableHead from '@/components/ui/table/TableHead.vue'
-import TableHeader from '@/components/ui/table/TableHeader.vue'
-import TableRow from '@/components/ui/table/TableRow.vue'
-import Textarea from '@/components/ui/textarea/Textarea.vue'
 import { useToast } from '@/components/ui/toast/use-toast'
 const { toast } = useToast()
+
 // icons
 import { EllipsisVertical, UserX, UserPen, Trash2 } from 'lucide-vue-next'
 
 // supabase
-import { supabase } from '@/services/supabaseClient'
 import type { Tables } from '@/types/supabase'
 const queryEliminarAlumno = (id: number) =>
   supabase

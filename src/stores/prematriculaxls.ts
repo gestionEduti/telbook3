@@ -1,4 +1,3 @@
-import { supabase } from '@/services/supabaseClient'
 import type { NominaAlumnoXLS } from '@/types/nomina'
 
 // store

@@ -11,7 +11,6 @@ const props = defineProps<{
 const matricula = ref<Tables<'mv_libro_matricula'> | null>(null)
 
 // supabase
-import { supabase } from '@/services/supabaseClient'
 const query = supabase.from('mv_libro_matricula').select().eq('id', props.matriculaId).single()
 
 // methods

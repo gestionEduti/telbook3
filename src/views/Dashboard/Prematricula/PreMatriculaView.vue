@@ -1,36 +1,7 @@
 <script setup lang="ts">
-import { supabase } from '@/services/supabaseClient'
 const router = useRouter()
 
 // shadcn
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import Button from '@/components/ui/button/Button.vue'
-import CardDescription from '@/components/ui/card/CardDescription.vue'
-import Separator from '@/components/ui/separator/Separator.vue'
-import StepperIndicator from '@/components/ui/stepper/StepperIndicator.vue'
-import Alert from '@/components/ui/alert/Alert.vue'
-import AlertTitle from '@/components/ui/alert/AlertTitle.vue'
-import AlertDescription from '@/components/ui/alert/AlertDescription.vue'
-import AlertDialog from '@/components/ui/alert-dialog/AlertDialog.vue'
-import AlertDialogTrigger from '@/components/ui/alert-dialog/AlertDialogTrigger.vue'
-import AlertDialogContent from '@/components/ui/alert-dialog/AlertDialogContent.vue'
-import AlertDialogTitle from '@/components/ui/alert-dialog/AlertDialogTitle.vue'
-import AlertDialogDescription from '@/components/ui/alert-dialog/AlertDialogDescription.vue'
-import AlertDialogHeader from '@/components/ui/alert-dialog/AlertDialogHeader.vue'
-import AlertDialogFooter from '@/components/ui/alert-dialog/AlertDialogFooter.vue'
-import AlertDialogCancel from '@/components/ui/alert-dialog/AlertDialogCancel.vue'
-import AlertDialogAction from '@/components/ui/alert-dialog/AlertDialogAction.vue'
-import RadioGroupItem from '@/components/ui/radio-group/RadioGroupItem.vue'
-import RadioGroup from '@/components/ui/radio-group/RadioGroup.vue'
-import Label from '@/components/ui/label/Label.vue'
-import {
-  Stepper,
-  StepperDescription,
-  StepperItem,
-  StepperSeparator,
-  StepperTitle,
-  StepperTrigger,
-} from '@/components/ui/stepper'
 import {
   ArrowLeft,
   ArrowRight,

@@ -1,7 +1,5 @@
 <script setup lang="ts">
-// shadcn
-import ListaCursosItem from './ListaCursosItem.vue'
-import Separator from '@/components/ui/separator/Separator.vue'
+import type { Tables } from '@/types/supabase'
 
 // props
 const props = defineProps<{

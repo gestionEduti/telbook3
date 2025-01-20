@@ -1,9 +1,6 @@
 <script setup lang="ts">
 import { reset } from '@formkit/vue'
-import Button from '@/components/ui/button/Button.vue'
 import { Loader } from 'lucide-vue-next'
-
-import { supabase } from '@/services/supabaseClient'
 
 // data
 interface FormDataType {

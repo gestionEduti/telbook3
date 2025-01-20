@@ -1,5 +1,3 @@
-import { supabase } from '@/services/supabaseClient'
-
 export const useNuevaMatriculaLoaderStore = defineStore('nuevaMatriculaLoader-store', () => {
   const authStore = useAuthStore()
 

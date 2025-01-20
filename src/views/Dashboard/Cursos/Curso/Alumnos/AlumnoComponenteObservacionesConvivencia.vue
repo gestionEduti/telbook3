@@ -1,8 +1,5 @@
 <script setup lang="ts">
 // shadcn
-import Button from '@/components/ui/button/Button.vue'
-import Textarea from '@/components/ui/textarea/Textarea.vue'
-import Label from '@/components/ui/label/Label.vue'
 import { useToast } from '@/components/ui/toast/use-toast'
 const { toast } = useToast()
 </script>

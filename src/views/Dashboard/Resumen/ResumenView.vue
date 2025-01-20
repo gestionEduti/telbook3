@@ -1,21 +1,9 @@
 <script setup lang="ts">
-// shadcn
-import Card from '@/components/ui/card/Card.vue'
-import CardContent from '@/components/ui/card/CardContent.vue'
-import CardHeader from '@/components/ui/card/CardHeader.vue'
-import CardTitle from '@/components/ui/card/CardTitle.vue'
-import Tabs from '@/components/ui/tabs/Tabs.vue'
-import TabsContent from '@/components/ui/tabs/TabsContent.vue'
-import TabsList from '@/components/ui/tabs/TabsList.vue'
-import TabsTrigger from '@/components/ui/tabs/TabsTrigger.vue'
-// icons
 import { BookA, SquareUserRound } from 'lucide-vue-next'
 
-// store
 const authStore = useAuthStore()
 
 // supabase
-import { supabase } from '@/services/supabaseClient'
 const queryTotalCursos = supabase
   .from('tp_cursos')
   .select('id', { count: 'exact' })

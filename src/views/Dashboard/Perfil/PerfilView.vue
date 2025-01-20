@@ -3,13 +3,6 @@ const { usuario, perfil, establecimiento } = useAuthStore()
 
 // utils
 import { formatearRut } from '@/lib/formato'
-
-// shadcn
-import Card from '@/components/ui/card/Card.vue'
-import CardContent from '@/components/ui/card/CardContent.vue'
-import CardHeader from '@/components/ui/card/CardHeader.vue'
-import CardTitle from '@/components/ui/card/CardTitle.vue'
-import Separator from '@/components/ui/separator/Separator.vue'
 </script>
 
 <template>

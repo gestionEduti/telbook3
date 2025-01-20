@@ -3,12 +3,9 @@
 const router = useRouter()
 
 // shadcn
-import Button from '@/components/ui/button/Button.vue'
 import { Loader } from 'lucide-vue-next'
 import { useToast } from '@/components/ui/toast/use-toast'
 const { toast } = useToast()
-
-import { supabase } from '@/services/supabaseClient'
 
 // data
 const dataFormulario = ref({ email: '', password: '' })

@@ -9,21 +9,6 @@ import autoTable from 'jspdf-autotable'
 // xlsx
 import * as XLSX from 'xlsx'
 
-// shadcn
-import Button from '@/components/ui/button/Button.vue'
-import DropdownMenu from '@/components/ui/dropdown-menu/DropdownMenu.vue'
-import DropdownMenuContent from '@/components/ui/dropdown-menu/DropdownMenuContent.vue'
-import DropdownMenuGroup from '@/components/ui/dropdown-menu/DropdownMenuGroup.vue'
-import DropdownMenuItem from '@/components/ui/dropdown-menu/DropdownMenuItem.vue'
-import DropdownMenuLabel from '@/components/ui/dropdown-menu/DropdownMenuLabel.vue'
-import DropdownMenuSeparator from '@/components/ui/dropdown-menu/DropdownMenuSeparator.vue'
-import DropdownMenuTrigger from '@/components/ui/dropdown-menu/DropdownMenuTrigger.vue'
-import Card from '@/components/ui/card/Card.vue'
-import CardContent from '@/components/ui/card/CardContent.vue'
-import CardHeader from '@/components/ui/card/CardHeader.vue'
-import CardTitle from '@/components/ui/card/CardTitle.vue'
-import CardDescription from '@/components/ui/card/CardDescription.vue'
-import Separator from '@/components/ui/separator/Separator.vue'
 // icons
 import { Download, UserPlus, FileText, ListX, ChevronDown, FileSpreadsheet } from 'lucide-vue-next'
 
@@ -35,7 +20,6 @@ const errorStore = useErrorStore()
 const alumnos = ref<Tables<'mv_libro_matricula'>[] | null>(null)
 
 // supabase
-import { supabase } from '@/services/supabaseClient'
 // supabase queries
 const querySelect = supabase
   .from('mv_libro_matricula')

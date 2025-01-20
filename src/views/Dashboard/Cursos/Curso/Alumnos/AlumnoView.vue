@@ -12,19 +12,10 @@ import { formatearFechaNacimiento, formatearNacionalidad } from '@/lib/formato'
 import FormularioObservacionesFonoaudiologicas from './AlumnoComponenteObservacionesFonoaudiologicas.vue'
 import FormularioObservacionesConvivencia from './AlumnoComponenteObservacionesConvivencia.vue'
 
-// shadcn
-import Card from '@/components/ui/card/Card.vue'
-import CardContent from '@/components/ui/card/CardContent.vue'
-import CardHeader from '@/components/ui/card/CardHeader.vue'
-import CardTitle from '@/components/ui/card/CardTitle.vue'
-import Separator from '@/components/ui/separator/Separator.vue'
-import Button from '@/components/ui/button/Button.vue'
-import CardDescription from '@/components/ui/card/CardDescription.vue'
 // icons
 import { ArrowLeft, Map, NotebookPen, User, Users } from 'lucide-vue-next'
 
 // supabase
-import { supabase } from '@/services/supabaseClient'
 import InfoMensajeSinData from '@/components/InfoMensajeSinData.vue'
 const querySelect = supabase
   .from('mv_libro_matricula')

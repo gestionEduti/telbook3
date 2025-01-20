@@ -6,20 +6,10 @@ const loaderStore = useNuevaMatriculaLoaderStore()
 const props = defineProps<{ matriculaParaEditar?: Tables<'mv_libro_matricula'> }>()
 
 // shadcn
-import Button from '@/components/ui/button/Button.vue'
-import Card from '@/components/ui/card/Card.vue'
-import CardContent from '@/components/ui/card/CardContent.vue'
-import CardDescription from '@/components/ui/card/CardDescription.vue'
-import CardHeader from '@/components/ui/card/CardHeader.vue'
-import CardTitle from '@/components/ui/card/CardTitle.vue'
-import Separator from '@/components/ui/separator/Separator.vue'
 import { useToast } from '@/components/ui/toast/use-toast'
 const { toast } = useToast()
-// icons
-import { Loader } from 'lucide-vue-next'
 
-// supabase
-import { supabase } from '@/services/supabaseClient'
+import { Loader } from 'lucide-vue-next' // icons
 
 // formkit
 import { reset } from '@formkit/vue'

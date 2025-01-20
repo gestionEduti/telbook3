@@ -8,6 +8,7 @@ import autoprefixer from 'autoprefixer'
 import tailwind from 'tailwindcss'
 
 import AutoImport from 'unplugin-auto-import/vite'
+import Components from 'unplugin-vue-components/vite'
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -31,16 +32,35 @@ export default defineConfig({
         'vue',
         'vue-router',
         { pinia: ['defineStore', 'storeToRefs', 'acceptHMRUpdate'] },
+        // custom
+        {
+          '@/services/supabaseClient': ['supabase', 'supabaseClient'],
+          // add more here instead of creating another object
+        },
         // types
         {
           from: 'src/types/supabase',
           imports: ['Database', 'Tables'],
           type: true,
         },
+        {
+          from: 'src/types/Error',
+          imports: ['CustomError', 'ExtendedPostgresError'],
+          type: true,
+        },
+        {
+          from: '@supabase/supabase-js',
+          imports: ['QueryData', 'Session', 'User', 'PostgrestError'],
+          type: true,
+        },
       ],
       dirs: ['src/stores/**/*.ts'],
       dts: true,
       viteOptimizeDeps: true,
+    }),
+    Components({
+      dts: true,
+      dirs: ['src/components', 'src/views'],
     }),
   ],
   resolve: {

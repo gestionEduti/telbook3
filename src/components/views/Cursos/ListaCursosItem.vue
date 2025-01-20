@@ -1,7 +1,5 @@
 <script setup lang="ts">
-// shadcn
-import Card from '@/components/ui/card/Card.vue'
-import CardContent from '@/components/ui/card/CardContent.vue'
+import type { Tables } from '@/types/supabase'
 
 // props
 const props = defineProps<{

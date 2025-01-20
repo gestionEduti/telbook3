@@ -1,20 +1,11 @@
 <script setup lang="ts">
+import { navigationMenuTriggerStyle } from '@/components/ui/navigation-menu'
+
 // props
 const props = defineProps<{
   nivel: string
   letra: string
 }>()
-
-// shadcn
-import {
-  NavigationMenu,
-  NavigationMenuContent,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-  NavigationMenuTrigger,
-  navigationMenuTriggerStyle,
-} from '@/components/ui/navigation-menu'
 
 // data
 const menuPlanificaciones: { title: string; to: string; description: string }[] = [

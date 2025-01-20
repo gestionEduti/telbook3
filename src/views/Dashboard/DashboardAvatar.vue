@@ -1,32 +1,12 @@
 <script setup lang="ts">
-// shadcn
-import { DropdownMenu } from '@/components/ui/dropdown-menu'
-import DropdownMenuTrigger from '@/components/ui/dropdown-menu/DropdownMenuTrigger.vue'
-import Button from '@/components/ui/button/Button.vue'
-import Avatar from '@/components/ui/avatar/Avatar.vue'
-import AvatarImage from '@/components/ui/avatar/AvatarImage.vue'
-import AvatarFallback from '@/components/ui/avatar/AvatarFallback.vue'
-import DropdownMenuContent from '@/components/ui/dropdown-menu/DropdownMenuContent.vue'
-import DropdownMenuLabel from '@/components/ui/dropdown-menu/DropdownMenuLabel.vue'
-import DropdownMenuSeparator from '@/components/ui/dropdown-menu/DropdownMenuSeparator.vue'
-import DropdownMenuGroup from '@/components/ui/dropdown-menu/DropdownMenuGroup.vue'
-import DropdownMenuItem from '@/components/ui/dropdown-menu/DropdownMenuItem.vue'
-import DropdownMenuShortcut from '@/components/ui/dropdown-menu/DropdownMenuShortcut.vue'
-// icons
-import { CircleHelp, Contact, FileSliders, LogOut } from 'lucide-vue-next'
+import { CircleHelp, Contact, FileSliders, LogOut } from 'lucide-vue-next' // icons
 
-// vue router
 const router = useRouter()
 
-// store
 const { perfil } = storeToRefs(useAuthStore())
 
-// methods
-const logout = async () => {
-  await router.push({ name: 'logout' })
-}
+const logout = async () => await router.push({ name: 'logout' })
 
-// computed
 const esEduti = computed(() => perfil.value?.email?.endsWith('@eduti.cl') ?? false)
 </script>
 

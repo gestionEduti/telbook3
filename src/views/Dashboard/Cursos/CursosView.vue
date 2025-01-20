@@ -2,14 +2,6 @@
 // componentes
 import ListaCursos from '@/components/views/Cursos/ListaCursos.vue'
 
-// shadcn
-import Card from '@/components/ui/card/Card.vue'
-import CardHeader from '@/components/ui/card/CardHeader.vue'
-import CardTitle from '@/components/ui/card/CardTitle.vue'
-import CardContent from '@/components/ui/card/CardContent.vue'
-import CardFooter from '@/components/ui/card/CardFooter.vue'
-import CardDescription from '@/components/ui/card/CardDescription.vue'
-import Separator from '@/components/ui/separator/Separator.vue'
 // icons
 import { ListX } from 'lucide-vue-next'
 
@@ -18,7 +10,6 @@ const authStore = useAuthStore()
 const errorStore = useErrorStore()
 
 // supabase
-import { supabase } from '@/services/supabaseClient'
 const queryNiveles = supabase.from('tp_niveles').select()
 const queryCursos = supabase
   .from('tp_cursos')

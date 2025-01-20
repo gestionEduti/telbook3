@@ -1,9 +1,6 @@
 <script setup lang="ts">
 // components
 import CursoMenu from './CursoMenu.vue'
-// shadcn
-import Card from '@/components/ui/card/Card.vue'
-import CardContent from '@/components/ui/card/CardContent.vue'
 
 // store
 const errorStore = useErrorStore()
@@ -16,7 +13,6 @@ const props = defineProps<{
 }>()
 
 // supabase
-import { supabase } from '@/services/supabaseClient'
 const queryNiveles = supabase.from('tp_niveles').select()
 const queryCurso = supabase
   .from('tp_cursos')

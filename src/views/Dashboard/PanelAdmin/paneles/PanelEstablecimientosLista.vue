@@ -1,18 +1,7 @@
 <script setup lang="ts">
-// shadcn
-import Table from '@/components/ui/table/Table.vue'
-import TableBody from '@/components/ui/table/TableBody.vue'
-import TableCaption from '@/components/ui/table/TableCaption.vue'
-import TableCell from '@/components/ui/table/TableCell.vue'
-import TableHead from '@/components/ui/table/TableHead.vue'
-import TableHeader from '@/components/ui/table/TableHeader.vue'
-import TableRow from '@/components/ui/table/TableRow.vue'
-
-// store
 const errorStore = useErrorStore()
 
 // supabase
-import { supabase } from '@/services/supabaseClient'
 const query = supabase
   .from('panel_resumen_establecimientos')
   .select()

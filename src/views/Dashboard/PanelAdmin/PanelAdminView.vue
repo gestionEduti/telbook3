@@ -1,22 +1,4 @@
 <script setup lang="ts">
-import Card from '@/components/ui/card/Card.vue'
-import CardContent from '@/components/ui/card/CardContent.vue'
-import CardHeader from '@/components/ui/card/CardHeader.vue'
-import CardTitle from '@/components/ui/card/CardTitle.vue'
-import CardDescription from '@/components/ui/card/CardDescription.vue'
-import Separator from '@/components/ui/separator/Separator.vue'
-import Sidebar from '@/components/ui/sidebar/Sidebar.vue'
-import SidebarProvider from '@/components/ui/sidebar/SidebarProvider.vue'
-import SidebarInset from '@/components/ui/sidebar/SidebarInset.vue'
-import SidebarRail from '@/components/ui/sidebar/SidebarRail.vue'
-import SidebarContent from '@/components/ui/sidebar/SidebarContent.vue'
-import SidebarGroup from '@/components/ui/sidebar/SidebarGroup.vue'
-import SidebarGroupLabel from '@/components/ui/sidebar/SidebarGroupLabel.vue'
-import SidebarGroupContent from '@/components/ui/sidebar/SidebarGroupContent.vue'
-import SidebarMenu from '@/components/ui/sidebar/SidebarMenu.vue'
-import SidebarMenuItem from '@/components/ui/sidebar/SidebarMenuItem.vue'
-import SidebarMenuButton from '@/components/ui/sidebar/SidebarMenuButton.vue'
-import SidebarTrigger from '@/components/ui/sidebar/SidebarTrigger.vue'
 // icons
 import { List, ListPlus } from 'lucide-vue-next'
 
@@ -26,9 +8,7 @@ const cargarComponente = async (componentName: string) => {
   componenteActivo.value = (await import(`./paneles/${componentName}.vue`)).default
 }
 
-onMounted(async () => {
-  await cargarComponente('PanelUsuariosNuevo')
-})
+onMounted(async () => await cargarComponente('PanelUsuariosNuevo'))
 </script>
 
 <template>

@@ -1,39 +1,17 @@
 <script setup lang="ts">
-// props
-const props = defineProps<{
-  nivel: string
-  letra: string
-}>()
+const props = defineProps<{ nivel: string; letra: string }>()
 
-// utils
-import { formatearRut } from '@/lib/formato'
+import { formatearRut } from '@/lib/formato' // utils
 
-// store
 const authStore = useAuthStore()
 const errorStore = useErrorStore()
 
-// shadcn
-import Table from '@/components/ui/table/Table.vue'
-import TableCaption from '@/components/ui/table/TableCaption.vue'
-import TableBody from '@/components/ui/table/TableBody.vue'
-import TableCell from '@/components/ui/table/TableCell.vue'
-import TableHead from '@/components/ui/table/TableHead.vue'
-import TableHeader from '@/components/ui/table/TableHeader.vue'
-import TableRow from '@/components/ui/table/TableRow.vue'
-import Card from '@/components/ui/card/Card.vue'
-import CardContent from '@/components/ui/card/CardContent.vue'
-import CardHeader from '@/components/ui/card/CardHeader.vue'
-import CardDescription from '@/components/ui/card/CardDescription.vue'
-import CardTitle from '@/components/ui/card/CardTitle.vue'
-import Separator from '@/components/ui/separator/Separator.vue'
 import { ListX, UserPlus } from 'lucide-vue-next'
 
 // data
 const alumnos = ref<Tables<'mv_libro_matricula'>[] | null>(null)
 
 // supabase
-import { supabase } from '@/services/supabaseClient'
-import Button from '@/components/ui/button/Button.vue'
 const querySelect = supabase
   .from('mv_libro_matricula')
   .select()
@@ -50,9 +28,7 @@ const fetchSupabase = async () => {
 }
 
 // lifecycle
-onMounted(async () => {
-  await fetchSupabase()
-})
+onMounted(async () => await fetchSupabase())
 </script>
 
 <template>

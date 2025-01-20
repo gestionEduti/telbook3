@@ -1,51 +1,25 @@
 <script setup lang="ts">
-const props = defineProps<{
-  nivel: string
-  letra: string
-}>()
-
-const authStore = useAuthStore()
-
-import Card from '@/components/ui/card/Card.vue'
-import CardHeader from '@/components/ui/card/CardHeader.vue'
-import CardTitle from '@/components/ui/card/CardTitle.vue'
-import CardDescription from '@/components/ui/card/CardDescription.vue'
-import CardContent from '@/components/ui/card/CardContent.vue'
-import CardFooter from '@/components/ui/card/CardFooter.vue'
-import Input from '@/components/ui/input/Input.vue'
-import Switch from '@/components/ui/switch/Switch.vue'
-import Separator from '@/components/ui/separator/Separator.vue'
-import Dialog from '@/components/ui/dialog/Dialog.vue'
-import Button from '@/components/ui/button/Button.vue'
-import DialogContent from '@/components/ui/dialog/DialogContent.vue'
-import DialogHeader from '@/components/ui/dialog/DialogHeader.vue'
-import DialogTitle from '@/components/ui/dialog/DialogTitle.vue'
-import DialogDescription from '@/components/ui/dialog/DialogDescription.vue'
-import DialogTrigger from '@/components/ui/dialog/DialogTrigger.vue'
-import DialogFooter from '@/components/ui/dialog/DialogFooter.vue'
-import DialogClose from '@/components/ui/dialog/DialogClose.vue'
-import Label from '@/components/ui/label/Label.vue'
 import { Pen } from 'lucide-vue-next'
 
-import { supabase } from '@/services/supabaseClient'
-
-const queryGetAlumnos = supabase
-  .from('mv_libro_matricula')
-  .select()
-  .eq('rbd_establecimiento', authStore.perfil!.rbd_usuario) // TODO: asegurar 100% que el perfil va a existir
-  .ilike('nivel_alumno', props.nivel + props.letra)
-  .order('numero_lista_nivel_alumno', { ascending: true })
+const authStore = useAuthStore()
+const props = defineProps<{ nivel: string; letra: string }>()
 
 const alumnos = ref<Tables<'mv_libro_matricula'>[] | null>(null)
 const asistenciaData = ref<{ rut: string; nombre: string; comment: string; isPresent: boolean }[]>(
   [],
 )
-const codigo = ref('')
+const otp = ref('')
+
 const presentes = computed(() => asistenciaData.value.filter((alumno) => alumno.isPresent))
 const ausentes = computed(() => asistenciaData.value.filter((alumno) => !alumno.isPresent))
 
 const fetchSupabase = async () => {
-  const { data, error } = await queryGetAlumnos
+  const { data, error } = await supabase
+    .from('mv_libro_matricula')
+    .select()
+    .eq('rbd_establecimiento', authStore.perfil!.rbd_usuario) // TODO: asegurar 100% que el perfil va a existir
+    .ilike('nivel_alumno', props.nivel + props.letra)
+    .order('numero_lista_nivel_alumno', { ascending: true })
   if (error) console.error(error)
   else {
     alumnos.value = data
@@ -62,10 +36,7 @@ function saveAsistencia() {
   console.log(asistenciaData.value)
 }
 
-// lifecycle
-onMounted(async () => {
-  await fetchSupabase()
-})
+onMounted(async () => await fetchSupabase())
 </script>
 
 <template>
@@ -134,12 +105,12 @@ onMounted(async () => {
           <div class="grid gap-4 py-4">
             <div class="grid grid-cols-4 items-center gap-4">
               <Label for="codigo" class="text-right"> Codigo </Label>
-              <Input id="codigo" class="col-span-3" v-model="codigo" />
+              <Input id="codigo" class="col-span-3" v-model="otp" />
             </div>
           </div>
           <DialogFooter>
             <DialogClose>
-              <Button @click="saveAsistencia" :disabled="!codigo">
+              <Button @click="saveAsistencia" :disabled="!otp">
                 <Pen />
                 <span>Firmar asistencia</span>
               </Button>

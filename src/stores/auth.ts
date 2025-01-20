@@ -1,8 +1,3 @@
-import { supabase } from '@/services/supabaseClient'
-import type { Session, User } from '@supabase/supabase-js'
-
-import { useErrorStore } from './error'
-
 import { useToast } from '@/components/ui/toast/use-toast'
 const { toast } = useToast()
 

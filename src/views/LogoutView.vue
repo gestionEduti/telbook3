@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { supabase } from '@/services/supabaseClient'
 const router = useRouter()
 
 onMounted(async () => {
