@@ -7,6 +7,8 @@ import vueDevTools from 'vite-plugin-vue-devtools'
 import autoprefixer from 'autoprefixer'
 import tailwind from 'tailwindcss'
 
+import AutoImport from 'unplugin-auto-import/vite'
+
 // https://vite.dev/config/
 export default defineConfig({
   css: {
@@ -17,6 +19,29 @@ export default defineConfig({
   plugins: [
     vue(),
     vueDevTools(), // comentar si da problemas de overlay en cypress
+    AutoImport({
+      include: [
+        /\.[tj]sx?$/, // .ts, .tsx, .js, .jsx
+        /\.vue$/,
+        /\.vue\?vue/, // .vue
+        /\.md$/, // .md
+      ],
+      imports: [
+        // presets
+        'vue',
+        'vue-router',
+        { pinia: ['defineStore', 'storeToRefs', 'acceptHMRUpdate'] },
+        // types
+        {
+          from: 'src/types/supabase',
+          imports: ['Database', 'Tables'],
+          type: true,
+        },
+      ],
+      dirs: ['src/stores/**/*.ts'],
+      dts: true,
+      viteOptimizeDeps: true,
+    }),
   ],
   resolve: {
     alias: {

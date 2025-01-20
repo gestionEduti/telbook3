@@ -1,7 +1,4 @@
 <script setup lang="ts">
-// vue imports
-import { onMounted, ref } from 'vue'
-
 // props
 const props = defineProps<{
   nivel: string
@@ -12,9 +9,7 @@ const props = defineProps<{
 import { formatearRut } from '@/lib/formato'
 
 // store
-import { useAuthStore } from '@/stores/auth'
 const authStore = useAuthStore()
-import { useErrorStore } from '@/stores/error'
 const errorStore = useErrorStore()
 
 // shadcn
@@ -38,7 +33,6 @@ const alumnos = ref<Tables<'mv_libro_matricula'>[] | null>(null)
 
 // supabase
 import { supabase } from '@/services/supabaseClient'
-import type { Tables } from '@/types/supabase'
 import Button from '@/components/ui/button/Button.vue'
 const querySelect = supabase
   .from('mv_libro_matricula')

@@ -1,10 +1,7 @@
 <script setup lang="ts">
-import { defineAsyncComponent, ref } from 'vue'
-
 import Card from './ui/card/Card.vue'
-
-import { useErrorStore } from '@/stores/error'
 import CardContent from './ui/card/CardContent.vue'
+
 const errorStore = useErrorStore()
 
 const message = ref('')

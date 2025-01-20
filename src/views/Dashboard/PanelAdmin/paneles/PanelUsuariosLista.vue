@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
-
 // shadcn
 import Table from '@/components/ui/table/Table.vue'
 import TableBody from '@/components/ui/table/TableBody.vue'
@@ -15,7 +13,6 @@ import CardDescription from '@/components/ui/card/CardDescription.vue'
 import CardHeader from '@/components/ui/card/CardHeader.vue'
 
 // store
-import { useErrorStore } from '@/stores/error'
 const errorStore = useErrorStore()
 
 // supabase

@@ -1,8 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
-import { storeToRefs } from 'pinia'
 import { supabase } from '@/services/supabaseClient'
-import { useRouter } from 'vue-router'
 const router = useRouter()
 
 // shadcn
@@ -49,9 +46,6 @@ import {
 // types
 import type { FormKitFormDataXls, FormKitFormDataPdf } from '@/types/nomina'
 // prematricula store
-import { useErrorStore } from '@/stores/error'
-import { usePrematriculaXlsStore } from '@/stores/prematriculaxls'
-import { usePrematriculaPdfStore } from '@/stores/prematriculapdf'
 const prematriculaXlsStore = usePrematriculaXlsStore()
 const prematriculaPdfStore = usePrematriculaPdfStore()
 const {

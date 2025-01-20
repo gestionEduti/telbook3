@@ -1,7 +1,4 @@
 <script setup lang="ts">
-// vue imports
-import { onMounted, ref } from 'vue'
-
 // components
 import CursoMenu from './CursoMenu.vue'
 // shadcn
@@ -9,8 +6,6 @@ import Card from '@/components/ui/card/Card.vue'
 import CardContent from '@/components/ui/card/CardContent.vue'
 
 // store
-import { useAuthStore } from '@/stores/auth'
-import { useErrorStore } from '@/stores/error'
 const errorStore = useErrorStore()
 const authStore = useAuthStore()
 
@@ -22,7 +17,6 @@ const props = defineProps<{
 
 // supabase
 import { supabase } from '@/services/supabaseClient'
-import type { Tables } from '@/types/supabase'
 const queryNiveles = supabase.from('tp_niveles').select()
 const queryCurso = supabase
   .from('tp_cursos')

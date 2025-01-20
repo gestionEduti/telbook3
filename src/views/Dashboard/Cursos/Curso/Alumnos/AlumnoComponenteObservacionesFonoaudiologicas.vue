@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-
 // shadcn
 import Button from '@/components/ui/button/Button.vue'
 import Textarea from '@/components/ui/textarea/Textarea.vue'
@@ -18,10 +16,7 @@ import { useToast } from '@/components/ui/toast/use-toast'
 const { toast } = useToast()
 
 // store
-import { storeToRefs } from 'pinia'
-import { useAuthStore } from '@/stores/auth'
 const { establecimiento, perfil } = storeToRefs(useAuthStore())
-import { useErrorStore } from '@/stores/error'
 const errorStore = useErrorStore()
 
 // data
@@ -40,7 +35,6 @@ const props = defineProps<{ alumno: Tables<'mv_libro_matricula'> }>()
 
 // supabase
 import { supabase } from '@/services/supabaseClient'
-import type { Tables } from '@/types/supabase'
 import Sheet from '@/components/ui/sheet/Sheet.vue'
 import SheetTrigger from '@/components/ui/sheet/SheetTrigger.vue'
 import SheetContent from '@/components/ui/sheet/SheetContent.vue'
@@ -55,7 +49,6 @@ import CardFooter from '@/components/ui/card/CardFooter.vue'
 import SheetFooter from '@/components/ui/sheet/SheetFooter.vue'
 
 // supabase
-import type { Database } from '@/types/supabase'
 type InsertType = Database['public']['Tables']['mv_anotaciones_fonoaudiologicas']['Insert']
 // TODO investigar mas de este tipo de tipado
 

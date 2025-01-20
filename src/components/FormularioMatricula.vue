@@ -1,10 +1,9 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
-
-// props
-const props = defineProps<{
-  matriculaParaEditar?: Tables<'mv_libro_matricula'>
-}>()
+const router = useRouter()
+const authStore = useAuthStore()
+const errorStore = useErrorStore()
+const loaderStore = useNuevaMatriculaLoaderStore()
+const props = defineProps<{ matriculaParaEditar?: Tables<'mv_libro_matricula'> }>()
 
 // shadcn
 import Button from '@/components/ui/button/Button.vue'
@@ -21,22 +20,10 @@ import { Loader } from 'lucide-vue-next'
 
 // supabase
 import { supabase } from '@/services/supabaseClient'
-import type { Tables } from '@/types/supabase'
-
-// vue router
-import { useRouter } from 'vue-router'
-const router = useRouter()
-
-// store
-import { useAuthStore } from '@/stores/auth'
-import { useNuevaMatriculaLoaderStore } from '@/stores/loaders/nuevaMatricula'
-const authStore = useAuthStore()
-const loaderStore = useNuevaMatriculaLoaderStore()
-import { useErrorStore } from '@/stores/error'
-const errorStore = useErrorStore()
 
 // formkit
 import { reset } from '@formkit/vue'
+import type { Tables } from '@/types/supabase'
 
 // data
 const loadersReady = ref(false)

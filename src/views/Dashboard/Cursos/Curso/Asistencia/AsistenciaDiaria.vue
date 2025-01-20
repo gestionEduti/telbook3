@@ -1,16 +1,11 @@
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue'
-
 const props = defineProps<{
   nivel: string
   letra: string
 }>()
 
-import { useAuthStore } from '@/stores/auth'
 const authStore = useAuthStore()
 
-import type { Tables } from '@/types/supabase'
-import { supabase } from '@/services/supabaseClient'
 import Card from '@/components/ui/card/Card.vue'
 import CardHeader from '@/components/ui/card/CardHeader.vue'
 import CardTitle from '@/components/ui/card/CardTitle.vue'
@@ -31,6 +26,8 @@ import DialogFooter from '@/components/ui/dialog/DialogFooter.vue'
 import DialogClose from '@/components/ui/dialog/DialogClose.vue'
 import Label from '@/components/ui/label/Label.vue'
 import { Pen } from 'lucide-vue-next'
+
+import { supabase } from '@/services/supabaseClient'
 
 const queryGetAlumnos = supabase
   .from('mv_libro_matricula')

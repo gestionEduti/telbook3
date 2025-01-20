@@ -1,8 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue'
-
 // router
-import { useRoute } from 'vue-router'
 const route = useRoute()
 
 // data
@@ -13,7 +10,6 @@ const navLinks = [
 ]
 
 // store
-import { useAuthStore } from '@/stores/auth'
 const { perfil } = useAuthStore()
 
 // computed

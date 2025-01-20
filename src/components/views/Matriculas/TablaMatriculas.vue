@@ -1,13 +1,9 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
-
 // utils
 import { formatearFecha, formatearRut } from '@/lib/formato'
 
 // store
-import { useAuthStore } from '@/stores/auth'
 const authStore = useAuthStore()
-import { useErrorStore } from '@/stores/error'
 const errorStore = useErrorStore()
 
 // shadcn

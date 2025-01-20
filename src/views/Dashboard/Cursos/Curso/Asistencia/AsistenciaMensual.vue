@@ -1,7 +1,4 @@
 <script setup lang="ts">
-// vue imports
-import { ref, onMounted } from 'vue'
-
 // props
 const props = defineProps<{
   nivel: string
@@ -9,9 +6,7 @@ const props = defineProps<{
 }>()
 
 // store
-import { useErrorStore } from '@/stores/error'
 const errorStore = useErrorStore()
-import { useAuthStore } from '@/stores/auth'
 const authStore = useAuthStore()
 
 // shadcn
@@ -23,7 +18,6 @@ import CardTitle from '@/components/ui/card/CardTitle.vue'
 import Separator from '@/components/ui/separator/Separator.vue'
 
 // supabase
-import type { Tables } from '@/types/supabase'
 import { supabase } from '@/services/supabaseClient'
 import InfoMensajeSinData from '@/components/InfoMensajeSinData.vue'
 const querySelect = supabase

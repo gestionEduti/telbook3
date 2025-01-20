@@ -1,9 +1,4 @@
-import { acceptHMRUpdate, defineStore } from 'pinia'
-import { ref } from 'vue'
 import { supabase } from '@/services/supabaseClient'
-import type { Tables } from '@/types/supabase'
-import { useAuthStore } from '@/stores/auth'
-import { useErrorStore } from '../error'
 
 export const useNuevaMatriculaLoaderStore = defineStore('nuevaMatriculaLoader-store', () => {
   const authStore = useAuthStore()

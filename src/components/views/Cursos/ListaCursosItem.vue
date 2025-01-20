@@ -3,9 +3,6 @@
 import Card from '@/components/ui/card/Card.vue'
 import CardContent from '@/components/ui/card/CardContent.vue'
 
-// supabase
-import type { Tables } from '@/types/supabase'
-
 // props
 const props = defineProps<{
   curso: Tables<'tp_cursos'>

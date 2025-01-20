@@ -1,7 +1,5 @@
 <script setup lang="ts">
-import { onMounted } from 'vue'
 import { supabase } from '@/services/supabaseClient'
-import { useRouter } from 'vue-router'
 const router = useRouter()
 
 onMounted(async () => {

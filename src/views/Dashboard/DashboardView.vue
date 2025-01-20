@@ -3,7 +3,6 @@ import DashboardMenu from './DashboardMenu.vue'
 import DashboardAvatar from './DashboardAvatar.vue'
 import DashboardLogo from './DashboardLogo.vue'
 
-import { useAuthStore } from '@/stores/auth'
 const authStore = useAuthStore()
 </script>
 

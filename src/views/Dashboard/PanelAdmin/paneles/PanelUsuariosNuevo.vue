@@ -1,14 +1,9 @@
 <script setup lang="ts">
-import { ref } from 'vue'
 import { reset } from '@formkit/vue'
 import Button from '@/components/ui/button/Button.vue'
 import { Loader } from 'lucide-vue-next'
 
 import { supabase } from '@/services/supabaseClient'
-import type { Database, Tables } from '@/types/supabase'
-
-import { useErrorStore } from '@/stores/error'
-const errorStore = useErrorStore()
 
 // data
 interface FormDataType {

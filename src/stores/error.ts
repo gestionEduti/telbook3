@@ -1,6 +1,3 @@
-import { acceptHMRUpdate, defineStore } from 'pinia'
-import { ref } from 'vue'
-
 import type { CustomError, ExtendedPostgresError } from '@/types/Error'
 import type { PostgrestError } from '@supabase/supabase-js'
 

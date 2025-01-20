@@ -1,7 +1,4 @@
 <script setup lang="ts">
-// supabase
-import type { Tables } from '@/types/supabase'
-
 // shadcn
 import ListaCursosItem from './ListaCursosItem.vue'
 import Separator from '@/components/ui/separator/Separator.vue'

@@ -1,9 +1,5 @@
-import { acceptHMRUpdate, defineStore } from 'pinia'
-import { ref } from 'vue'
-
 import { supabase } from '@/services/supabaseClient'
 import type { Session, User } from '@supabase/supabase-js'
-import type { Tables } from '@/types/supabase'
 
 import { useErrorStore } from './error'
 

@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { onMounted, shallowRef } from 'vue'
-
 import Card from '@/components/ui/card/Card.vue'
 import CardContent from '@/components/ui/card/CardContent.vue'
 import CardHeader from '@/components/ui/card/CardHeader.vue'

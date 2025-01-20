@@ -1,7 +1,4 @@
 <script setup lang="ts">
-// vue imports
-import { onMounted, ref } from 'vue'
-
 // componentes
 import ListaCursos from '@/components/views/Cursos/ListaCursos.vue'
 
@@ -17,14 +14,11 @@ import Separator from '@/components/ui/separator/Separator.vue'
 import { ListX } from 'lucide-vue-next'
 
 // store
-import { useAuthStore } from '@/stores/auth'
 const authStore = useAuthStore()
-import { useErrorStore } from '@/stores/error'
 const errorStore = useErrorStore()
 
 // supabase
 import { supabase } from '@/services/supabaseClient'
-import type { Tables } from '@/types/supabase'
 const queryNiveles = supabase.from('tp_niveles').select()
 const queryCursos = supabase
   .from('tp_cursos')

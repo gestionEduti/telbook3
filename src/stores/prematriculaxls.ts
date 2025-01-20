@@ -1,11 +1,7 @@
-import { acceptHMRUpdate, defineStore } from 'pinia'
-import { ref, computed } from 'vue'
 import { supabase } from '@/services/supabaseClient'
 import type { NominaAlumnoXLS } from '@/types/nomina'
 
 // store
-import { useAuthStore } from '@/stores/auth'
-import { useErrorStore } from '@/stores/error'
 const authStore = useAuthStore()
 const errorStore = useErrorStore()
 

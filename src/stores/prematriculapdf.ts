@@ -1,12 +1,8 @@
-import { acceptHMRUpdate, defineStore } from 'pinia'
-import { ref, computed } from 'vue'
 import { supabase } from '@/services/supabaseClient'
 import type { NominaAlumnoPDF } from '@/types/nomina'
 import * as pdfjsLib from 'pdfjs-dist'
 
 // store
-import { useAuthStore } from '@/stores/auth'
-import { useErrorStore } from '@/stores/error'
 const authStore = useAuthStore()
 const errorStore = useErrorStore()
 

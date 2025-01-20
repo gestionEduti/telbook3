@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { computed } from 'vue'
-
 // shadcn
 import { DropdownMenu } from '@/components/ui/dropdown-menu'
 import DropdownMenuTrigger from '@/components/ui/dropdown-menu/DropdownMenuTrigger.vue'
@@ -18,12 +16,9 @@ import DropdownMenuShortcut from '@/components/ui/dropdown-menu/DropdownMenuShor
 import { CircleHelp, Contact, FileSliders, LogOut } from 'lucide-vue-next'
 
 // vue router
-import { useRouter } from 'vue-router'
 const router = useRouter()
 
 // store
-import { storeToRefs } from 'pinia'
-import { useAuthStore } from '@/stores/auth'
 const { perfil } = storeToRefs(useAuthStore())
 
 // methods

@@ -1,8 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-
 // vue router
-import { useRouter } from 'vue-router'
 const router = useRouter()
 
 // shadcn

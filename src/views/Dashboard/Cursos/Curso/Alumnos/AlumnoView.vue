@@ -1,9 +1,5 @@
 <script setup lang="ts">
-// vue imports
-import { onMounted, ref } from 'vue'
-
 // store
-import { useErrorStore } from '@/stores/error'
 const errorStore = useErrorStore()
 
 // props
@@ -29,7 +25,6 @@ import { ArrowLeft, Map, NotebookPen, User, Users } from 'lucide-vue-next'
 
 // supabase
 import { supabase } from '@/services/supabaseClient'
-import type { Tables } from '@/types/supabase'
 import InfoMensajeSinData from '@/components/InfoMensajeSinData.vue'
 const querySelect = supabase
   .from('mv_libro_matricula')

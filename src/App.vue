@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { onErrorCaptured, onMounted } from 'vue'
-
 import AppErrorPage from '@/components/AppErrorPage.vue'
 
 // store
@@ -10,13 +8,8 @@ import { useErrorStore } from './stores/error'
 // shadcn
 import Toaster from '@/components/ui/toast/Toaster.vue'
 
-onErrorCaptured((error) => {
-  useErrorStore().setError({ error })
-})
-
-onMounted(() => {
-  useAuthStore().escucharCambios()
-})
+onErrorCaptured((error) => useErrorStore().setError({ error }))
+onMounted(() => useAuthStore().escucharCambios())
 </script>
 
 <template>

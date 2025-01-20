@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
-
 // shadcn
 import Card from '@/components/ui/card/Card.vue'
 import CardContent from '@/components/ui/card/CardContent.vue'
@@ -14,9 +12,7 @@ import TabsTrigger from '@/components/ui/tabs/TabsTrigger.vue'
 import { BookA, SquareUserRound } from 'lucide-vue-next'
 
 // store
-import { useAuthStore } from '@/stores/auth'
 const authStore = useAuthStore()
-import { useErrorStore } from '@/stores/error'
 
 // supabase
 import { supabase } from '@/services/supabaseClient'

@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
-
 // shadcn
 import Table from '@/components/ui/table/Table.vue'
 import TableBody from '@/components/ui/table/TableBody.vue'
@@ -11,12 +9,10 @@ import TableHeader from '@/components/ui/table/TableHeader.vue'
 import TableRow from '@/components/ui/table/TableRow.vue'
 
 // store
-import { useErrorStore } from '@/stores/error'
 const errorStore = useErrorStore()
 
 // supabase
 import { supabase } from '@/services/supabaseClient'
-import type { Database } from '@/types/supabase'
 const query = supabase
   .from('panel_resumen_establecimientos')
   .select()
