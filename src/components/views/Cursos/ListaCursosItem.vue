@@ -4,6 +4,7 @@ import type { Tables } from '@/types/supabase' // types de supabase
 const props = defineProps<{
   curso: Tables<'tp_cursos'>
   niveles: Tables<'tp_niveles'>[]
+  profesor: Tables<'view_profesor_curso'>
 }>()
 
 // data
@@ -26,10 +27,14 @@ const colorCurso: Record<string, string> = {
   >
     <Card :class="`${colorCurso[props.curso.sigla_nivel_curso]}`">
       <CardContent>
-        <div class="mt-6 text-center text-2xl font-bold">
-          {{ curso.letra_nivel_curso }}
+        <div class="mt-6 text-center">
+          <p class="text-2xl font-bold">{{ curso.letra_nivel_curso }}</p>
         </div>
       </CardContent>
+      <CardFooter class="h-full justify-center">
+        <span v-if="profesor" class="text-sm">{{ profesor.nombre_profesor }}</span>
+        <span v-else class="text-sm text-gray-100">-</span>
+      </CardFooter>
     </Card>
   </RouterLink>
 </template>

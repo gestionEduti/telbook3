@@ -4,12 +4,19 @@ import type { Tables } from '@/types/supabase' // types de supabase
 const props = defineProps<{
   cursos: Tables<'tp_cursos'>[]
   niveles: Tables<'tp_niveles'>[]
+  profesores: Tables<'view_profesor_curso'>[]
 }>()
 
 // methods
 const cursosFiltradosPorNivel = (nivel: Tables<'tp_niveles'>) => {
   return props.cursos.filter((curso) => {
     return curso.sigla_nivel_curso === nivel.sigla_nivel
+  })
+}
+
+const profesorDelCurso = (curso: Tables<'tp_cursos'>) => {
+  return props.profesores.find((profesor) => {
+    return profesor.nombre_curso === curso.nombre_curso
   })
 }
 </script>
@@ -29,7 +36,7 @@ const cursosFiltradosPorNivel = (nivel: Tables<'tp_niveles'>) => {
           class="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-5"
         >
           <li v-for="curso in cursosFiltradosPorNivel(nivel)" :key="curso.id">
-            <ListaCursosItem :curso :niveles="props.niveles" />
+            <ListaCursosItem :curso :niveles="props.niveles" :profesor="profesorDelCurso(curso)" />
           </li>
         </ul>
         <Separator class="my-4" />

@@ -9,6 +9,7 @@ const errorStore = useErrorStore()
 // data
 const cursos = ref<Tables<'tp_cursos'>[] | null>(null)
 const niveles = ref<Tables<'tp_niveles'>[] | null>(null)
+const profesores = ref<Tables<'view_profesor_curso'>[]>([])
 
 // methods
 const fetchCursos = async () => {
@@ -22,14 +23,24 @@ const fetchCursos = async () => {
   if (error) errorStore.setError({ error: error, customCode: status })
   else cursos.value = data
 }
+
 const fetchNiveles = async () => {
   const { data, error, status } = await supabase.from('tp_niveles').select()
   if (error) errorStore.setError({ error: error, customCode: status })
   else niveles.value = data
 }
 
+const fetchProfesores = async () => {
+  const { data, error, status } = await supabase
+    .from('view_profesor_curso')
+    .select()
+    .eq('rbd', authStore.perfil?.rbd_usuario)
+  if (error) errorStore.setError({ error: error, customCode: status })
+  else profesores.value = data
+}
+
 onMounted(async () => {
-  await Promise.all([fetchNiveles(), fetchCursos()])
+  await Promise.all([fetchNiveles(), fetchCursos(), fetchProfesores()])
 })
 </script>
 
@@ -43,7 +54,7 @@ onMounted(async () => {
           <Separator />
         </CardHeader>
         <CardContent data-test="cursos-card-content">
-          <ListaCursos v-if="cursos.length && niveles.length" :cursos :niveles />
+          <ListaCursos v-if="cursos.length && niveles.length" :cursos :niveles :profesores />
           <!-- TODO: extraer a un componente de cuando no hay resultados -->
           <div v-else class="flex flex-col items-center justify-center space-y-2 py-8">
             <ListX :size="32" class="text-gray-500" />

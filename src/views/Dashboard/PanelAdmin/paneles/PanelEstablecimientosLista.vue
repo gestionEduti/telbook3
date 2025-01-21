@@ -3,7 +3,8 @@ import type { Database } from '@/types/supabase'
 
 const errorStore = useErrorStore()
 
-type Resumen = Database['public']['Views']['panel_resumen_establecimientos']['Row'][]
+type Resumen =
+  Database['public']['Views']['view_panel_administracion_resumen_establecimientos']['Row'][]
 
 // data
 const resumen = ref<Resumen | null>(null)
@@ -11,7 +12,7 @@ const resumen = ref<Resumen | null>(null)
 // methods
 const fetch = async () => {
   const { data, error, status } = await supabase
-    .from('panel_resumen_establecimientos')
+    .from('view_panel_administracion_resumen_establecimientos')
     .select()
     .order('rbd', { ascending: true })
   if (error) errorStore.setError({ error: error, customCode: status })
