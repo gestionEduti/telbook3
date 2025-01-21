@@ -129,5 +129,3 @@ onMounted(async () => {
     </CardFooter>
   </Card>
 </template>
-
-<style></style>
