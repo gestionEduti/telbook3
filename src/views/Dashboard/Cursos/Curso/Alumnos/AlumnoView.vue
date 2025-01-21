@@ -1,5 +1,5 @@
 <script setup lang="ts">
-// components
+// componentes que se usan solo en este componente
 import FormularioObservacionesFonoaudiologicas from './AlumnoComponenteObservacionesFonoaudiologicas.vue'
 import FormularioObservacionesConvivencia from './AlumnoComponenteObservacionesConvivencia.vue'
 import InfoMensajeSinData from '@/components/InfoMensajeSinData.vue'

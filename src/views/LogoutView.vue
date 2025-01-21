@@ -10,5 +10,3 @@ onMounted(async () => {
 <template>
   <div></div>
 </template>
-
-<style></style>

@@ -68,5 +68,3 @@ import { formatearRut } from '@/lib/formato' // utilidades para formatear
     </div>
   </div>
 </template>
-
-<style></style>

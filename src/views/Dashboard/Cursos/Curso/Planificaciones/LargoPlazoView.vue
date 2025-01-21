@@ -301,5 +301,3 @@ import InfoMensajeSinData from '@/components/InfoMensajeSinData.vue'
     </CardContent>
   </Card>
 </template>
-
-<style></style>

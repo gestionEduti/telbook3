@@ -1,7 +1,4 @@
 <script setup lang="ts">
-// components
-import FormularioMatricula from '@/components/FormularioMatricula.vue'
-
 import type { Tables } from '@/types/supabase'
 
 const props = defineProps<{

@@ -1,5 +1,8 @@
 <script setup lang="ts">
-useErrorStore().setError({ error: 'Esta pagina no existe.', customCode: 404 })
+useErrorStore().setError({
+  error: 'Esta pagina no existe.',
+  customCode: 404,
+})
 </script>
 
 <template>

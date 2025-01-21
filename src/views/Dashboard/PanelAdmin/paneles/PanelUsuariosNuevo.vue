@@ -96,5 +96,3 @@ const resetForm = () => {
     </template>
   </FormKit>
 </template>
-
-<style></style>

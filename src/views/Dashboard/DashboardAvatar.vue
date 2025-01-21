@@ -59,5 +59,3 @@ const esEduti = computed(() => perfil.value?.email?.endsWith('@eduti.cl') ?? fal
     </DropdownMenuContent>
   </DropdownMenu>
 </template>
-
-<style></style>

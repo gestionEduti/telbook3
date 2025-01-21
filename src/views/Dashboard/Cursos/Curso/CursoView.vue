@@ -1,5 +1,5 @@
 <script setup lang="ts">
-// components
+// componentes que se usan solo en este componente
 import CursoMenu from './CursoMenu.vue'
 
 import type { Tables } from '@/types/supabase'

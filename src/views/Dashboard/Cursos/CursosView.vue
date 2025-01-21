@@ -1,7 +1,4 @@
 <script setup lang="ts">
-// componentes
-import ListaCursos from '@/components/views/Cursos/ListaCursos.vue'
-
 import type { Tables } from '@/types/supabase' // types de supabase
 
 import { ListX } from 'lucide-vue-next' // iconos

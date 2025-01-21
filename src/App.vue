@@ -4,10 +4,12 @@ import AppErrorPage from '@/components/AppErrorPage.vue'
 import { useAuthStore } from './stores/auth'
 import { useErrorStore } from './stores/error'
 
-// shadcn
 import Toaster from '@/components/ui/toast/Toaster.vue'
 
-onErrorCaptured((error) => useErrorStore().setError({ error }))
+onErrorCaptured((error) => {
+  useErrorStore().setError({ error })
+})
+
 onMounted(() => {
   useAuthStore().escucharCambios()
 })

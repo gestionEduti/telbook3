@@ -25,5 +25,3 @@ const { toast } = useToast()
     </div>
   </div>
 </template>
-
-<style></style>

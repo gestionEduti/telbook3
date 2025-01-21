@@ -97,5 +97,3 @@ onMounted(async () => {
     </Transition>
   </div>
 </template>
-
-<style></style>

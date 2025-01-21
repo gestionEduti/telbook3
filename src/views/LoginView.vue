@@ -13,7 +13,10 @@ interface FormData {
 }
 
 // data
-const dataFormulario = ref({ email: '', password: '' })
+const dataFormulario = ref({
+  email: '',
+  password: '',
+})
 
 // methods
 const handleForm = async (formData: FormData) => {

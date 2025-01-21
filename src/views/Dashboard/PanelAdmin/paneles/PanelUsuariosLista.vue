@@ -78,5 +78,3 @@ onMounted(async () => {
     </CardContent>
   </Card>
 </template>
-
-<style></style>

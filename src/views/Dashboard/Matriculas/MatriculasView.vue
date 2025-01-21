@@ -1,8 +1,4 @@
 <script setup lang="ts">
-// componentes
-import ResumenMatriculas from '@/components/views/Matriculas/ResumenMatriculas.vue'
-import TablaMatriculas from '@/components/views/Matriculas/TablaMatriculas.vue'
-
 import type { Tables } from '@/types/supabase' // types de supabase
 
 // jsPDF
