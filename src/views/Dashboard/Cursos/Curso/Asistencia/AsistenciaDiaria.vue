@@ -28,8 +28,8 @@ const otp = ref('') // codigo de verificacion
 const respuesta_otp = ref('') // respuesta del codigo de verificacion
 const asistenciaRealizada = ref(false) // flag para saber si la asistencia ya se ha realizado
 
-const presentes = computed(() => asistenciaData.value.filter((alumno) => alumno.estado == 2))
-const ausentes = computed(() => asistenciaData.value.filter((alumno) => alumno.estado == 1))
+const presentes = computed(() => asistenciaData.value.filter((alumno) => alumno.estado == 1))
+const ausentes = computed(() => asistenciaData.value.filter((alumno) => alumno.estado == 0))
 
 const fetchSupabase = async () => {
   const { data, error } = await supabase
@@ -48,7 +48,7 @@ const fetchSupabase = async () => {
       rut_alumno: alumno.rut_alumno,
       nombre: alumno.nombre_completo_alumno ?? '',
       comentario: '',
-      estado: 2,
+      estado: 1,
     }))
   }
 }
@@ -118,8 +118,8 @@ onMounted(async () => {
           class="grid grid-cols-12 gap-4 border-b p-4"
         >
           <Switch
-            :checked="alumno.estado === 2"
-            v-on:update:checked="alumno.estado = $event ? 2 : 1"
+            :checked="alumno.estado === 1"
+            v-on:update:checked="alumno.estado = $event ? 1 : 0"
             class="col-span-1 place-self-center"
           />
           <span class="col-span-5 self-center">{{ alumno.nombre || alumno.rut_alumno }}</span>
