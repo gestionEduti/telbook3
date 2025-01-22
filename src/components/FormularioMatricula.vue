@@ -41,6 +41,7 @@ const handleForm = async (formData: Tables<'mv_libro_matricula'>) => {
         title: 'Exito',
         description: 'El numero de matricula ya existe.',
         variant: 'destructive',
+        duration: 3000,
       })
     } else if (updateError) {
       errorStore.setError({ error: updateError })
@@ -49,6 +50,7 @@ const handleForm = async (formData: Tables<'mv_libro_matricula'>) => {
         title: 'Exito',
         description: 'Matricula actualizada exitosamente.',
         variant: 'exitoso',
+        duration: 3000,
       })
       router.push({ name: 'matriculas' })
     }
@@ -108,12 +110,14 @@ const handleForm = async (formData: Tables<'mv_libro_matricula'>) => {
         title: 'Error',
         description: 'Hubo un problema en la creación de la matricula.',
         variant: 'destructive',
+        duration: 3000,
       })
     } else {
       toast({
         title: 'Exito',
         description: 'Matricula creada exitósamente.',
         variant: 'exitoso',
+        duration: 3000,
       })
       reset('nuevoAlumnoForm')
     }

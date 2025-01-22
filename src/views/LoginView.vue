@@ -26,6 +26,7 @@ const handleForm = async (formData: FormData) => {
       title: 'Error',
       description: 'Email ó contraseña incorrectos',
       variant: 'destructive',
+      duration: 3000,
     })
     dataFormulario.value.password = ''
   }

@@ -50,6 +50,7 @@ const insertar = async () => {
       title: 'Exito',
       description: 'Observacion creada exitosamente.',
       variant: 'exitoso',
+      duration: 3000,
     })
   }
   nuevaObservacion.value = ''

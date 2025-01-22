@@ -59,6 +59,7 @@ export const useAuthStore = defineStore('auth-store', () => {
         title: 'Error',
         description: 'Tu usuario no esta creado correctamente. Contacta a soporte.',
         variant: 'destructive',
+        duration: 3000,
       })
       return
     }
@@ -75,6 +76,7 @@ export const useAuthStore = defineStore('auth-store', () => {
           title: 'Error',
           description: 'Tu usuario no esta creado correctamente. Contacta a soporte.',
           variant: 'destructive',
+          duration: 3000,
         })
         return
       }

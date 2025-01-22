@@ -83,6 +83,7 @@ const retirarAlumno = async (alumno: Tables<'mv_libro_matricula'>) => {
       title: 'Exito',
       description: 'Alummno retirado exitosamente.',
       variant: 'exitoso',
+      duration: 3000,
     })
     formularioRetirarAlumno.value = {
       fecha: new Date().toISOString().slice(0, 10),
