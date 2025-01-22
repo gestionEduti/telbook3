@@ -518,55 +518,43 @@ export type Database = {
       }
       mv_asistencia_diaria: {
         Row: {
-          anio: number
-          apellidos_alumno: string
-          dia: number
           estado: number
           fecha_creacion: string
           fecha_modificacion: string | null
           id: number
-          mes: number
           nivel_alumno: string
-          nombres_alumno: string
           observacion_asistencia: string | null
           otp_asistencia: number
           rbd: number
           respuesta_otp_asistencia: string
           rut_alumno: string
+          rut_usuario: string | null
         }
         Insert: {
-          anio: number
-          apellidos_alumno: string
-          dia: number
           estado: number
           fecha_creacion?: string
           fecha_modificacion?: string | null
           id?: number
-          mes: number
           nivel_alumno: string
-          nombres_alumno: string
           observacion_asistencia?: string | null
           otp_asistencia: number
           rbd: number
           respuesta_otp_asistencia: string
           rut_alumno: string
+          rut_usuario?: string | null
         }
         Update: {
-          anio?: number
-          apellidos_alumno?: string
-          dia?: number
           estado?: number
           fecha_creacion?: string
           fecha_modificacion?: string | null
           id?: number
-          mes?: number
           nivel_alumno?: string
-          nombres_alumno?: string
           observacion_asistencia?: string | null
           otp_asistencia?: number
           rbd?: number
           respuesta_otp_asistencia?: string
           rut_alumno?: string
+          rut_usuario?: string | null
         }
         Relationships: [
           {
@@ -2235,6 +2223,38 @@ export type Database = {
       }
     }
     Views: {
+      view_asistencias_realizadas: {
+        Row: {
+          curso: string | null
+          dia: string | null
+          hora: string | null
+          razon_social: string | null
+          rbd: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mv_asistencia_diaria_rbd_fkey"
+            columns: ["rbd"]
+            isOneToOne: false
+            referencedRelation: "tp_establecimientos"
+            referencedColumns: ["rbd"]
+          },
+          {
+            foreignKeyName: "mv_asistencia_diaria_rbd_fkey"
+            columns: ["rbd"]
+            isOneToOne: false
+            referencedRelation: "view_panel_administracion_resumen_establecimientos"
+            referencedColumns: ["rbd"]
+          },
+          {
+            foreignKeyName: "mv_asistencia_diaria_rbd_fkey"
+            columns: ["rbd"]
+            isOneToOne: false
+            referencedRelation: "view_profesor_curso"
+            referencedColumns: ["rbd"]
+          },
+        ]
+      }
       view_panel_administracion_resumen_establecimientos: {
         Row: {
           cursos: number | null
@@ -2331,6 +2351,17 @@ export type Database = {
           input_rbd: number
         }
         Returns: Json
+      }
+      prueba_tx_asistencia_diaria: {
+        Args: {
+          rbd: number
+          curso: string
+          otp: number
+          respuesta_otp: string
+          alumnos: Json
+          usuario_ingreso: string
+        }
+        Returns: undefined
       }
       registrar_o_modificar_asistencia: {
         Args: {

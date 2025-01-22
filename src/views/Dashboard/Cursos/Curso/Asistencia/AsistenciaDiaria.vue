@@ -1,23 +1,35 @@
 <script setup lang="ts">
-import { Pen } from 'lucide-vue-next' // iconos
+import { Pen, Check } from 'lucide-vue-next' // iconos
+
+const router = useRouter()
+
+import { useToast } from '@/components/ui/toast/use-toast'
+const { toast } = useToast()
 
 import type { Tables } from '@/types/supabase' // types de supabase
+interface AsistenciaDiaria {
+  rut_alumno: string
+  nombre: string
+  comentario: string
+  estado: number
+} // tipo que representa los datos de asistencia del dia
 
 const authStore = useAuthStore()
+const errorStore = useErrorStore()
 
 const props = defineProps<{
   nivel: string
   letra: string
 }>()
 
-const alumnos = ref<Tables<'mv_libro_matricula'>[] | null>(null)
-const asistenciaData = ref<{ rut: string; nombre: string; comment: string; isPresent: boolean }[]>(
-  [],
-)
-const otp = ref('')
+const alumnos = ref<Tables<'mv_libro_matricula'>[] | null>(null) // alumnos del curso
+const asistenciaData = ref<AsistenciaDiaria[]>([]) // datos de asistencia del dia
+const otp = ref('') // codigo de verificacion
+const respuesta_otp = ref('') // respuesta del codigo de verificacion
+const asistenciaRealizada = ref(false) // flag para saber si la asistencia ya se ha realizado
 
-const presentes = computed(() => asistenciaData.value.filter((alumno) => alumno.isPresent))
-const ausentes = computed(() => asistenciaData.value.filter((alumno) => !alumno.isPresent))
+const presentes = computed(() => asistenciaData.value.filter((alumno) => alumno.estado == 2))
+const ausentes = computed(() => asistenciaData.value.filter((alumno) => alumno.estado == 1))
 
 const fetchSupabase = async () => {
   const { data, error } = await supabase
@@ -28,22 +40,60 @@ const fetchSupabase = async () => {
     .order('numero_lista_nivel_alumno', { ascending: true })
   if (error) console.error(error)
   else {
-    alumnos.value = data
+    alumnos.value = data // info de los alumnos del curso
+
+    // poblar asistenciaData con los datos de los alumnos y quedan todos presentes por defecto y sin comentarios
+    // esta variable la usa el formulario de cada alumno para guardar la asistencia
     asistenciaData.value = data.map((alumno) => ({
-      rut: alumno.rut_alumno,
+      rut_alumno: alumno.rut_alumno,
       nombre: alumno.nombre_completo_alumno ?? '',
-      comment: '',
-      isPresent: true,
+      comentario: '',
+      estado: 2,
     }))
   }
 }
 
-function saveAsistencia() {
-  console.log(asistenciaData.value)
+async function saveAsistencia() {
+  const { error } = await supabase.rpc('prueba_tx_asistencia_diaria', {
+    rbd: authStore.perfil?.rbd_usuario,
+    curso: props.nivel + props.letra,
+    otp: otp.value,
+    respuesta_otp: respuesta_otp.value,
+    alumnos: asistenciaData.value,
+    usuario_ingreso: authStore.perfil?.rut_usuario,
+  })
+
+  if (error) {
+    errorStore.setError({ error, customCode: 500 })
+  } else {
+    toast({
+      title: 'Asistencia guardada correctamente',
+      description: 'La asistencia se ha guardado correctamente',
+      duration: 3000,
+    })
+    router.push({ name: 'dashboard' })
+  }
+}
+
+async function verificarAsistenciaExistente() {
+  const { data, error } = await supabase
+    .from('view_asistencias_realizadas')
+    .select('*')
+    .eq('rbd', authStore.perfil?.rbd_usuario)
+    .eq('curso', props.nivel + props.letra)
+    .eq('dia', new Date().toISOString().split('T')[0])
+
+  if (error) {
+    errorStore.setError({ error, customCode: 500 })
+  } else if (data.length > 0) {
+    asistenciaRealizada.value = true // si hay resultados, es porque ya se realizo la asistencia
+  } else {
+    asistenciaRealizada.value = false // si no hay resultados, es porque no se realizo la asistencia
+  }
 }
 
 onMounted(async () => {
-  await fetchSupabase()
+  await Promise.all([verificarAsistenciaExistente(), fetchSupabase()])
 })
 </script>
 
@@ -54,27 +104,35 @@ onMounted(async () => {
       <CardDescription>Pasa la asistencia del dia actual.</CardDescription>
       <Separator />
     </CardHeader>
+
     <CardContent>
-      <div class="grid grid-cols-12 gap-4 border-b px-4 pb-2">
-        <span class="telbook-label col-span-1 place-self-center">Presente</span>
-        <span class="telbook-label col-span-5">Nombre</span>
-        <span class="telbook-label col-span-6">Comentario</span>
+      <div v-if="!asistenciaRealizada">
+        <div class="grid grid-cols-12 gap-4 border-b px-4 pb-2">
+          <span class="telbook-label col-span-1 place-self-center">Presente</span>
+          <span class="telbook-label col-span-5">Nombre</span>
+          <span class="telbook-label col-span-6">Comentario</span>
+        </div>
+        <div
+          v-for="(alumno, index) in asistenciaData"
+          :key="index"
+          class="grid grid-cols-12 gap-4 border-b p-4"
+        >
+          <Switch
+            :checked="alumno.estado === 2"
+            v-on:update:checked="alumno.estado = $event ? 2 : 1"
+            class="col-span-1 place-self-center"
+          />
+          <span class="col-span-5 self-center">{{ alumno.nombre || alumno.rut_alumno }}</span>
+          <Input v-model="alumno.comentario" placeholder="Comentario opcional" class="col-span-6" />
+        </div>
       </div>
-      <div
-        v-for="(alumno, index) in asistenciaData"
-        :key="index"
-        class="grid grid-cols-12 gap-4 border-b p-4"
-      >
-        <Switch
-          :checked="alumno.isPresent"
-          v-on:update:checked="alumno.isPresent = $event"
-          class="col-span-1 place-self-center"
-        />
-        <span class="col-span-5 self-center">{{ alumno.nombre || alumno.rut }}</span>
-        <Input v-model="alumno.comment" placeholder="Comentario opcional" class="col-span-6" />
+      <div v-else class="flex gap-2">
+        <Check class="text-green-600" />
+        <p>La asistencia ya fue realizada para este curso el dia de hoy.</p>
       </div>
     </CardContent>
-    <CardFooter class="flex flex-col items-start">
+
+    <CardFooter v-if="!asistenciaRealizada" class="flex flex-col items-start">
       <!--  resumen presentes y ausentes -->
       <div class="mb-4 flex gap-4">
         <Card class="w-36">
