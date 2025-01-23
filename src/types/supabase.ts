@@ -2383,6 +2383,14 @@ export type Database = {
         }
         Returns: string
       }
+      resumen_asistencia_mes: {
+        Args: {
+          nivel_alumno_param: string
+          year_param: number
+          mes_param: number
+        }
+        Returns: Json
+      }
       transaccion_prematricula: {
         Args: {
           rbd: number
