@@ -70,6 +70,8 @@ async function validarOTP() {
 async function saveAsistencia() {
   // llamada a la api de mineduc
   const respuestaOTP = await validarOTP()
+  console.info(typeof respuestaOTP)
+  console.info(respuestaOTP)
 
   // guardar asistencia en supabase
   const { error } = await supabase.rpc('tx_asistencia_diaria', {
@@ -77,7 +79,7 @@ async function saveAsistencia() {
     curso: props.nivel + props.letra,
     otp: otp.value,
     rbd: authStore.perfil?.rbd_usuario,
-    respuesta_otp: JSON.stringify(respuestaOTP),
+    respuesta_otp: JSON.stringify(respuestaOTP) || 'La respuesta del OTP viene vacia.',
     usuario_ingreso: authStore.perfil?.rut_usuario,
   })
 
