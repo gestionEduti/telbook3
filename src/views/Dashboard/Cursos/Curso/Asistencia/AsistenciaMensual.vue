@@ -14,28 +14,17 @@ import type { Tables } from '@/types/supabase'
 interface AsistenciasAlumno {
   [key: string]: number
 }
-interface Alumno {
-  rut: string
-  asistencias: AsistenciasAlumno
-}
 interface AsistenciasMes {
-  [alumnoId: string]: Alumno
+  [alumnoId: string]: AsistenciasAlumno
 }
 
-const numeroAnioActual = computed(() => useDateFormat(useNow(), 'YYYY').value)
-const numeroMesActual = computed(() => useDateFormat(useNow(), 'M').value)
+const numeroAnioActual = computed(() => useDateFormat(useNow(), 'YYYY').value) // ejemplo -> 2025
+const numeroMesActual = computed(() => useDateFormat(useNow(), 'M').value) // ejemplo marzo -> 3
 const cantidadDiasMesActual = computed(() => {
   const now = useNow()
   const month = Number(mesSeleccionado.value)
   const year = Number(useDateFormat(now, 'YYYY').value)
   return new Date(year, month, 0).getDate()
-})
-const cantidadColumnasGrid = computed(() => {
-  // const columnasNombre = 5
-  // const columnasDiasMes = cantidadDiasMesActual.value
-  // const columnasResumen = 7
-  // return columnasNombre + columnasDiasMes + columnasResumen
-  return 43
 })
 
 const alumnos = ref<Tables<'mv_libro_matricula'>[] | null>(null)
@@ -74,9 +63,40 @@ async function fetchAsistenciasMes() {
  */
 function extraerAsistenciaAlumnoDia(rut: string, dia: number) {
   if (!asistenciasMes.value) return false
-  const asistencia = asistenciasMes.value[rut]['asistencias'][`dia${dia}`]
-  if (asistencia === 0) return false // ausente
-  if (asistencia === 1) return true // presente
+  const asistenciasAlumno = asistenciasMes.value[rut]
+  if (!asistenciasAlumno) return false
+  const asistenciaDia = asistenciasAlumno[dia]
+  if (asistenciaDia === 0) return false // ausente
+  if (asistenciaDia === 1) return true // presente
+}
+
+function calcularTotalesAlumno(rut: string) {
+  if (!asistenciasMes.value) return false
+  const asistenciasAlumno = asistenciasMes.value[rut]
+  if (!asistenciasAlumno) return { total: 0, presentes: 0, ausentes: 0 }
+  const totales = Object.values(asistenciasAlumno).reduce(
+    (acc, curr) => {
+      if (curr === 1) {
+        acc.presentes++
+        acc.total++
+      }
+      if (curr === 0) {
+        acc.ausentes++
+        acc.total++
+      }
+      return acc
+    },
+    { total: 0, presentes: 0, ausentes: 0, porcentajePresentes: 0, porcentajeAusentes: 0 },
+  )
+  console.log(totales)
+
+  totales.porcentajePresentes = Number(((totales.presentes / totales.total) * 100).toFixed(1))
+  totales.porcentajeAusentes = Number(((totales.ausentes / totales.total) * 100).toFixed(1))
+
+  // totales.porcentajePresentes = Number((totales.presentes / totales.total) * 1000).toFixed(1)
+  // totales.porcentajeAusentes = (totales.ausentes / totales.total) * 100
+
+  return totales
 }
 
 onMounted(async () => {
@@ -113,9 +133,7 @@ onMounted(async () => {
       </div>
 
       <!-- encabezados -->
-      <div
-        :class="`telbook-label mb-1 grid grid-cols-[repeat(${cantidadColumnasGrid},minmax(0,1fr))] gap-1`"
-      >
+      <div :class="`telbook-label mb-1 grid grid-cols-[repeat(43,minmax(0,1fr))] gap-1`">
         <p class="col-span-5">Nombre</p>
         <p v-for="dia in cantidadDiasMesActual" :key="dia" class="col-span-1 text-center">
           {{ dia }}
@@ -129,7 +147,7 @@ onMounted(async () => {
 
       <!-- alumnos -->
       <div
-        :class="`mb-1 grid grid-cols-[repeat(${cantidadColumnasGrid},minmax(0,1fr))] gap-1`"
+        :class="`mb-1 grid grid-cols-[repeat(43,minmax(0,1fr))] gap-1`"
         v-for="alumno in alumnos"
         :key="alumno.rut_alumno"
       >
@@ -144,27 +162,27 @@ onMounted(async () => {
         <p
           class="col-span-1 -col-start-8 place-content-center text-center text-xs tracking-tighter"
         >
-          31
+          {{ calcularTotalesAlumno(alumno.rut_alumno).total }}
         </p>
         <p
           class="col-span-1 -col-start-7 place-content-center text-center text-xs tracking-tighter"
         >
-          31
+          {{ calcularTotalesAlumno(alumno.rut_alumno).presentes }}
         </p>
         <p
           class="col-span-1 -col-start-6 place-content-center text-center text-xs tracking-tighter"
         >
-          31
+          {{ calcularTotalesAlumno(alumno.rut_alumno).ausentes }}
         </p>
         <p
           class="col-span-2 -col-start-5 place-content-center text-center text-xs tracking-tighter"
         >
-          100%
+          {{ calcularTotalesAlumno(alumno.rut_alumno).porcentajePresentes }}%
         </p>
         <p
           class="col-span-2 -col-start-3 place-content-center text-center text-xs tracking-tighter"
         >
-          100%
+          {{ calcularTotalesAlumno(alumno.rut_alumno).porcentajeAusentes }}%
         </p>
       </div>
     </CardContent>
