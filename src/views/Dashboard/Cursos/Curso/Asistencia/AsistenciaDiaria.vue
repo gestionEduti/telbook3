@@ -60,7 +60,6 @@ async function validarOTP() {
     const response = await fetch(url, options)
     console.info(response)
     const json = await response.json()
-    console.info(json)
     return json
   } catch (error) {
     errorStore.setError({ error: `Error en la respuesta del OTP: ${error}` })
@@ -70,8 +69,6 @@ async function validarOTP() {
 async function saveAsistencia() {
   // llamada a la api de mineduc
   const respuestaOTP = await validarOTP()
-  console.info(typeof respuestaOTP)
-  console.info(respuestaOTP)
 
   // guardar asistencia en supabase
   const { error } = await supabase.rpc('tx_asistencia_diaria', {
