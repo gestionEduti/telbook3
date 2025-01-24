@@ -56,9 +56,15 @@ async function validarOTP() {
   const fecha = fechaConTimezone()
   const url = `/mineduc/otp/verify-otp?rut=${rut}&otp=${otp.value}&DateWithTimeZone=${fecha}`
   const options = { method: 'GET', headers: { 'Content-Type': 'application/json' } }
-  const response = await fetch(url, options)
-  const json = await response.json()
-  return json
+  try {
+    const response = await fetch(url, options)
+    console.info(response)
+    const json = await response.json()
+    console.info(json)
+    return json
+  } catch (error) {
+    errorStore.setError({ error: `Error en la respuesta del OTP: ${error}` })
+  }
 }
 
 async function saveAsistencia() {
