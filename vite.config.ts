@@ -32,11 +32,13 @@ export default defineConfig({
         'vue',
         'vue-router',
         { pinia: ['defineStore', 'storeToRefs', 'acceptHMRUpdate'] },
+
         // custom
         {
           '@/services/supabaseClient': ['supabase', 'supabaseClient'],
           // add more here instead of creating another object
         },
+
         // types
         // {
         //   from: 'src/types/supabase',
@@ -66,6 +68,16 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
+    },
+  },
+
+  server: {
+    proxy: {
+      '/mineduc': {
+        target: 'https://apiede.mineduc.cl',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/mineduc/, ''),
+      },
     },
   },
 })

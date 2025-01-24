@@ -1,8 +1,7 @@
 <script setup lang="ts">
-import { Pen, Check } from 'lucide-vue-next' // iconos
-
 const router = useRouter()
-
+import { fechaConTimezone } from '@/lib/formato'
+import { Pen, Check } from 'lucide-vue-next' // iconos
 import { useToast } from '@/components/ui/toast/use-toast'
 const { toast } = useToast()
 
@@ -25,7 +24,6 @@ const props = defineProps<{
 const alumnos = ref<Tables<'mv_libro_matricula'>[] | null>(null) // alumnos del curso
 const asistenciaData = ref<AsistenciaDiaria[]>([]) // datos de asistencia del dia
 const otp = ref('') // codigo de verificacion
-const respuesta_otp = ref('') // respuesta del codigo de verificacion
 const asistenciaRealizada = ref(false) // flag para saber si la asistencia ya se ha realizado
 
 const presentes = computed(() => asistenciaData.value.filter((alumno) => alumno.estado == 1))
@@ -53,12 +51,26 @@ const fetchSupabase = async () => {
   }
 }
 
+async function validarOTP() {
+  const rut = authStore.perfil?.rut_usuario
+  const fecha = fechaConTimezone()
+  const url = `/mineduc/otp/verify-otp?rut=${rut}&otp=${otp.value}&DateWithTimeZone=${fecha}`
+  const options = { method: 'GET', headers: { 'Content-Type': 'application/json' } }
+  const response = await fetch(url, options)
+  const json = await response.json()
+  return json
+}
+
 async function saveAsistencia() {
+  // llamada a la api de mineduc
+  const respuestaOTP = await validarOTP()
+
+  // guardar asistencia en supabase
   const { error } = await supabase.rpc('prueba_tx_asistencia_diaria', {
     rbd: authStore.perfil?.rbd_usuario,
     curso: props.nivel + props.letra,
     otp: otp.value,
-    respuesta_otp: respuesta_otp.value,
+    respuesta_otp: respuestaOTP,
     alumnos: asistenciaData.value,
     usuario_ingreso: authStore.perfil?.rut_usuario,
   })
@@ -171,12 +183,12 @@ onMounted(async () => {
           <div class="grid gap-4 py-4">
             <div class="grid grid-cols-4 items-center gap-4">
               <Label for="codigo" class="text-right"> Codigo </Label>
-              <Input id="codigo" class="col-span-3" v-model="otp" />
+              <Input id="codigo" class="col-span-3" v-model="otp" maxlength="6" />
             </div>
           </div>
           <DialogFooter>
             <DialogClose>
-              <Button @click="saveAsistencia" :disabled="!otp">
+              <Button @click="saveAsistencia" :disabled="!otp || otp.length !== 6">
                 <Pen />
                 <span>Firmar asistencia</span>
               </Button>

@@ -4,6 +4,18 @@ export function formatearFecha(fecha: string): string {
   return `${day}-${month}-${year}`
 }
 
+export function fechaConTimezone() {
+  const fecha = new Date()
+  const pad = (num: number) => String(num).padStart(2, '0') // Helper function to pad numbers
+  const offset = -fecha.getTimezoneOffset() // Get the timezone offset in minutes
+  const offsetHours = pad(Math.floor(Math.abs(offset) / 60))
+  const offsetMinutes = pad(Math.abs(offset) % 60)
+  const sign = offset >= 0 ? '+' : '-'
+  const formattedOffset = `${sign}${offsetHours}:${offsetMinutes}` // Format the offset
+  const formattedDate = `${fecha.getFullYear()}-${pad(fecha.getMonth() + 1)}-${pad(fecha.getDate())}T${pad(fecha.getHours())}:${pad(fecha.getMinutes())}:${pad(fecha.getSeconds())}${formattedOffset}`
+  return formattedDate
+}
+
 export function formatearRut(rut: string | null) {
   if (!rut) return ''
   return rut.replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.')
