@@ -72,7 +72,7 @@ async function saveAsistencia() {
   const respuestaOTP = await validarOTP()
 
   // guardar asistencia en supabase
-  const { error } = await supabase.rpc('prueba_tx_asistencia_diaria', {
+  const { error } = await supabase.rpc('tx_asistencia_diaria', {
     alumnos: asistenciaData.value,
     curso: props.nivel + props.letra,
     otp: otp.value,

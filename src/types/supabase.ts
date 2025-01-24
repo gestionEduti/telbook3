@@ -2352,17 +2352,6 @@ export type Database = {
         }
         Returns: Json
       }
-      prueba_tx_asistencia_diaria: {
-        Args: {
-          rbd: number
-          curso: string
-          otp: number
-          respuesta_otp: string
-          alumnos: Json
-          usuario_ingreso: string
-        }
-        Returns: undefined
-      }
       registrar_o_modificar_asistencia: {
         Args: {
           p_id_asistencia?: number
@@ -2415,6 +2404,17 @@ export type Database = {
       transaccion_prematricula_upsert: {
         Args: {
           rut: string
+        }
+        Returns: undefined
+      }
+      tx_asistencia_diaria: {
+        Args: {
+          rbd: number
+          curso: string
+          otp: number
+          respuesta_otp: string
+          alumnos: Json
+          usuario_ingreso: string
         }
         Returns: undefined
       }
