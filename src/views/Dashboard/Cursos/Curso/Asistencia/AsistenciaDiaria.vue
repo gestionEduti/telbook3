@@ -70,7 +70,7 @@ async function saveAsistencia() {
     rbd: authStore.perfil?.rbd_usuario,
     curso: props.nivel + props.letra,
     otp: otp.value,
-    respuesta_otp: respuestaOTP,
+    respuesta_otp: JSON.stringify(respuestaOTP),
     alumnos: asistenciaData.value,
     usuario_ingreso: authStore.perfil?.rut_usuario,
   })
