@@ -73,11 +73,11 @@ async function saveAsistencia() {
 
   // guardar asistencia en supabase
   const { error } = await supabase.rpc('prueba_tx_asistencia_diaria', {
-    rbd: authStore.perfil?.rbd_usuario,
+    alumnos: asistenciaData.value,
     curso: props.nivel + props.letra,
     otp: otp.value,
+    rbd: authStore.perfil?.rbd_usuario,
     respuesta_otp: JSON.stringify(respuestaOTP),
-    alumnos: asistenciaData.value,
     usuario_ingreso: authStore.perfil?.rut_usuario,
   })
 
