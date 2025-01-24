@@ -28,6 +28,7 @@ declare module 'vue' {
     AppErrorProdSection: typeof import('./src/components/AppErrorProdSection.vue')['default']
     AsistenciaDiaria: typeof import('./src/views/Dashboard/Cursos/Curso/Asistencia/AsistenciaDiaria.vue')['default']
     AsistenciaMensual: typeof import('./src/views/Dashboard/Cursos/Curso/Asistencia/AsistenciaMensual.vue')['default']
+    AsistenciaMensualItem: typeof import('./src/components/views/Cursos/Asistencia/AsistenciaMensualItem.vue')['default']
     AspectRatio: typeof import('./src/components/ui/aspect-ratio/AspectRatio.vue')['default']
     Avatar: typeof import('./src/components/ui/avatar/Avatar.vue')['default']
     AvatarFallback: typeof import('./src/components/ui/avatar/AvatarFallback.vue')['default']

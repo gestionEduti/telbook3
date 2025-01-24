@@ -56,9 +56,10 @@ async function validarOTP() {
   const fecha = fechaConTimezone()
   const baseUrl =
     process.env.NODE_ENV === 'production'
-      ? process.env.VITE_MINEDUC_URL_PROD
-      : process.env.VITE_MINEDUC_URL_DEV
+      ? import.meta.env.VITE_MINEDUC_URL_PROD
+      : import.meta.env.VITE_MINEDUC_URL_DEV
   const url = `${baseUrl}/otp/verify-otp?rut=${rut}&otp=${otp.value}&DateWithTimeZone=${fecha}`
+  console.log(`url: ${url}`)
   const options = { method: 'GET', headers: { 'Content-Type': 'application/json' } }
   try {
     const response = await fetch(url, options)
