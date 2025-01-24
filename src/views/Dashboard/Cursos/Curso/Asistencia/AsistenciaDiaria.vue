@@ -54,7 +54,11 @@ const fetchSupabase = async () => {
 async function validarOTP() {
   const rut = authStore.perfil?.rut_usuario
   const fecha = fechaConTimezone()
-  const url = `https://apiede.mineduc.cl/otp/verify-otp?rut=${rut}&otp=${otp.value}&DateWithTimeZone=${fecha}`
+  const baseUrl =
+    process.env.NODE_ENV === 'production'
+      ? process.env.VITE_MINEDUC_URL_PROD
+      : process.env.VITE_MINEDUC_URL_DEV
+  const url = `${baseUrl}/otp/verify-otp?rut=${rut}&otp=${otp.value}&DateWithTimeZone=${fecha}`
   const options = { method: 'GET', headers: { 'Content-Type': 'application/json' } }
   try {
     const response = await fetch(url, options)
