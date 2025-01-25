@@ -33,7 +33,7 @@ const colorCurso: Record<string, string> = {
       </CardContent>
       <CardFooter class="h-full justify-center">
         <span v-if="profesor" class="text-sm">{{ profesor.nombre_profesor }}</span>
-        <span v-else class="text-sm text-gray-100">-</span>
+        <span v-else class="text-sm tracking-tighter text-gray-500">sin profesor asignado</span>
       </CardFooter>
     </Card>
   </RouterLink>
