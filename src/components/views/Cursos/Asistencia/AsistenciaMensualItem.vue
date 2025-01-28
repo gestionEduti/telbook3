@@ -3,7 +3,7 @@ import type { Tables } from '@/types/supabase'
 
 const props = defineProps<{
   alumno: Tables<'mv_libro_matricula'>
-  asistencias: { [key: string]: number }
+  asistencias?: { [key: string]: number }
   dias: number
 }>()
 
@@ -21,6 +21,7 @@ const resumen = ref<Resumen | null>(null)
  * extrae la asistencia de un dia especifico de un alumno especifico desde el state
  */
 function extraerAsistenciaAlumnoDia(rut: string, dia: number) {
+  if (props.asistencias === undefined) return undefined
   const asistenciaDia = props.asistencias[dia]
   if (asistenciaDia === 0) return false // ausente
   if (asistenciaDia === 1) return true // presente
@@ -58,8 +59,8 @@ function calcularTotalesAlumno() {
     { total: 0, presentes: 0, ausentes: 0, porcentajePresentes: 0, porcentajeAusentes: 0 },
   )
 
-  totales.porcentajePresentes = Number(((totales.presentes / totales.total) * 100).toFixed(1))
-  totales.porcentajeAusentes = Number(((totales.ausentes / totales.total) * 100).toFixed(1))
+  totales.porcentajePresentes = Number(((totales.presentes / totales.total) * 100).toFixed(0))
+  totales.porcentajeAusentes = Number(((totales.ausentes / totales.total) * 100).toFixed(0))
 
   return totales
 }

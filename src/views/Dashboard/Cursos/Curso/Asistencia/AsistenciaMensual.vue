@@ -90,6 +90,14 @@ onMounted(async () => {
                 <SelectItem value="2">Febrero</SelectItem>
                 <SelectItem value="3">Marzo</SelectItem>
                 <SelectItem value="4">Abril</SelectItem>
+                <SelectItem value="5">Mayo</SelectItem>
+                <SelectItem value="6">Junio</SelectItem>
+                <SelectItem value="7">Julio</SelectItem>
+                <SelectItem value="8">Agosto</SelectItem>
+                <SelectItem value="9">Septiembre</SelectItem>
+                <SelectItem value="10">Octubre</SelectItem>
+                <SelectItem value="11">Noviembre</SelectItem>
+                <SelectItem value="12">Diciembre</SelectItem>
               </SelectGroup>
             </SelectContent>
           </Select>
