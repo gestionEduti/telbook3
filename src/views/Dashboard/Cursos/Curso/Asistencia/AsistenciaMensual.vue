@@ -4,19 +4,15 @@ const props = defineProps<{
   letra: string
 }>()
 
-const errorStore = useErrorStore()
-const authStore = useAuthStore()
+const asistenciaMensualStore = useAsistenciaMensualStore()
+const { alumnos, asistencias } = storeToRefs(useAsistenciaMensualStore())
 
 import { useDateFormat, useNow } from '@vueuse/core'
 
 // types
-import type { Tables } from '@/types/supabase'
-interface AsistenciasMes {
-  [alumnoId: string]: {
-    [key: string]: number
-  }
-}
+import { useAsistenciaMensualStore } from '@/stores/asistencia-mensual'
 
+const nombreCurso = computed(() => props.nivel + props.letra)
 const numeroAnioActual = computed(() => useDateFormat(useNow(), 'YYYY').value) // ejemplo -> 2025
 const numeroMesActual = computed(() => useDateFormat(useNow(), 'M').value) // ejemplo marzo -> 3
 const cantidadDiasMesActual = computed(() => {
@@ -26,40 +22,17 @@ const cantidadDiasMesActual = computed(() => {
   return new Date(year, month, 0).getDate()
 })
 
-const alumnos = ref<Tables<'mv_libro_matricula'>[] | null>(null)
-const asistenciasMes = ref<AsistenciasMes | null>(null)
 const mesSeleccionado = ref(numeroMesActual.value)
 
-/**
- * trae los alumnos del curso
- */
-async function fetchAlumnosCurso() {
-  const { data, error, status } = await supabase
-    .from('mv_libro_matricula')
-    .select()
-    .eq('rbd_establecimiento', authStore.perfil!.rbd_usuario)
-    .ilike('nivel_alumno', props.nivel + props.letra)
-    .order('apellidos_alumno', { ascending: true })
-  if (error) errorStore.setError({ error: error, customCode: status })
-  else alumnos.value = data
-}
-
-/**
- * trae desde supabase la asistencia de cada alumno del curso, para el mes actual
- */
-async function fetchAsistenciasMes(mes: string) {
-  asistenciasMes.value = null // al cambiar de mes, seteo como null para que la transicion se gatille
-  const { data, error } = await supabase.rpc('resumen_asistencia_mes', {
-    nivel_alumno_param: props.nivel + props.letra,
-    year_param: Number(numeroAnioActual.value), // TODO traer desde la DB el año de operacion actual
-    mes_param: Number(mes),
-  })
-  if (error) errorStore.setError({ error })
-  else asistenciasMes.value = data as AsistenciasMes
-}
-
 onMounted(async () => {
-  await Promise.all([fetchAsistenciasMes(numeroMesActual.value), fetchAlumnosCurso()])
+  await Promise.all([
+    asistenciaMensualStore.fetchAlumnosCurso(nombreCurso.value),
+    asistenciaMensualStore.fetchAsistenciasMes(
+      numeroAnioActual.value,
+      numeroMesActual.value,
+      nombreCurso.value,
+    ),
+  ])
 })
 </script>
 
@@ -78,7 +51,13 @@ onMounted(async () => {
           <Label>Mes seleccionado</Label>
           <Select
             v-model="mesSeleccionado"
-            @update:model-value="fetchAsistenciasMes(mesSeleccionado)"
+            @update:model-value="
+              asistenciaMensualStore.fetchAsistenciasMes(
+                numeroAnioActual,
+                mesSeleccionado,
+                nombreCurso,
+              )
+            "
           >
             <SelectTrigger class="w-64">
               <SelectValue placeholder="Selecciona un mes" />
@@ -104,7 +83,7 @@ onMounted(async () => {
         </div>
 
         <Transition name="fade" mode="out-in">
-          <div v-if="asistenciasMes">
+          <div v-if="asistencias">
             <!-- encabezados -->
             <div :class="`telbook-label mb-1 grid grid-cols-[repeat(43,minmax(0,1fr))] gap-1`">
               <p class="col-span-5">Nombre</p>
@@ -123,14 +102,14 @@ onMounted(async () => {
               v-for="alumno in alumnos"
               :key="alumno.rut_alumno"
               :alumno="alumno"
-              :asistencias="asistenciasMes[alumno.rut_alumno]"
+              :asistencias="asistencias[alumno.rut_alumno]"
               :dias="cantidadDiasMesActual || 31"
             />
 
             <!-- resumenes por dia -->
             <AsistenciaMensualResumenAlumnos
               :alumnos
-              :asistencias="asistenciasMes"
+              :asistencias="asistencias"
               :dias="cantidadDiasMesActual || 31"
             />
           </div>
