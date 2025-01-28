@@ -48,6 +48,7 @@ async function fetchAlumnosCurso() {
  * trae desde supabase la asistencia de cada alumno del curso, para el mes actual
  */
 async function fetchAsistenciasMes(mes: number) {
+  asistenciasMes.value = null // al cambiar de mes, seteo como null para que la transicion se gatille
   const { data, error } = await supabase.rpc('resumen_asistencia_mes', {
     nivel_alumno_param: props.nivel + props.letra,
     year_param: numeroAnioActual.value, // TODO traer desde la DB el año de operacion actual
@@ -117,6 +118,13 @@ onMounted(async () => {
               :asistencias="asistenciasMes[alumno.rut_alumno]"
               :dias="cantidadDiasMesActual || 31"
             />
+
+            <!-- resumenes por dia -->
+            <AsistenciaMensualResumenAlumnos
+              :alumnos
+              :asistencias="asistenciasMes"
+              :dias="cantidadDiasMesActual || 31"
+            />
           </div>
 
           <InfoMensajeSinData v-else icono="vacio" mensaje="No hay asistencias este mes" />
@@ -124,7 +132,11 @@ onMounted(async () => {
       </CardContent>
 
       <CardContent v-else>
-        <InfoMensajeSinData icono="vacio" mensaje="No hay alumnos en el curso" />
+        <InfoMensajeSinData
+          icono="vacio"
+          mensaje="No hay alumnos en el curso"
+          :dias="cantidadDiasMesActual || 31"
+        />
       </CardContent>
     </Card>
   </Transition>
