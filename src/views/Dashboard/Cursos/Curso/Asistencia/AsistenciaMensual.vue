@@ -47,12 +47,12 @@ async function fetchAlumnosCurso() {
 /**
  * trae desde supabase la asistencia de cada alumno del curso, para el mes actual
  */
-async function fetchAsistenciasMes(mes: number) {
+async function fetchAsistenciasMes(mes: string) {
   asistenciasMes.value = null // al cambiar de mes, seteo como null para que la transicion se gatille
   const { data, error } = await supabase.rpc('resumen_asistencia_mes', {
     nivel_alumno_param: props.nivel + props.letra,
-    year_param: numeroAnioActual.value, // TODO traer desde la DB el año de operacion actual
-    mes_param: mes,
+    year_param: Number(numeroAnioActual.value), // TODO traer desde la DB el año de operacion actual
+    mes_param: Number(mes),
   })
   if (error) errorStore.setError({ error })
   else asistenciasMes.value = data as AsistenciasMes
