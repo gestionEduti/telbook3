@@ -7,10 +7,6 @@ const authStore = useAuthStore()
 const errorStore = useErrorStore()
 
 export const useAsistenciaMensualStore = defineStore('asistencia-mensual', () => {
-  const alumnos = ref<Tables<'mv_libro_matricula'>[] | null>(null)
-  const asistencias = ref<AsistenciasMes | null>(null)
-  const mesSeleccionado = ref('1')
-
   const numeroYearActual = computed(() => useDateFormat(useNow(), 'YYYY').value) // ejemplo -> 2025
   const numeroMesActual = computed(() => useDateFormat(useNow(), 'M').value) // ejemplo marzo -> 3
   const cantidadDiasMesActual = computed(() => {
@@ -19,6 +15,10 @@ export const useAsistenciaMensualStore = defineStore('asistencia-mensual', () =>
     const year = Number(useDateFormat(now, 'YYYY').value)
     return new Date(year, month, 0).getDate()
   })
+
+  const alumnos = ref<Tables<'mv_libro_matricula'>[] | null>(null)
+  const asistencias = ref<AsistenciasMes | null>(null)
+  const mesSeleccionado = ref(numeroMesActual.value)
 
   /**
    * trae los alumnos del curso
@@ -37,12 +37,12 @@ export const useAsistenciaMensualStore = defineStore('asistencia-mensual', () =>
   /**
    * trae desde supabase la asistencia de cada alumno del curso, para el mes actual
    */
-  async function fetchAsistenciasMes(year: string, month: string, curso: string) {
+  async function fetchAsistenciasMes(curso: string) {
     asistencias.value = null // al cambiar de mes, seteo como null para que la transicion se gatille
     const { data, error } = await supabase.rpc('resumen_asistencia_mes', {
       nivel_alumno_param: curso,
-      year_param: Number(year), // TODO traer desde la DB el año de operacion actual
-      mes_param: Number(month),
+      year_param: Number(numeroYearActual.value), // TODO traer desde la DB el año de operacion actual
+      mes_param: Number(mesSeleccionado.value),
     })
     if (error) {
       errorStore.setError({ error })
@@ -56,8 +56,6 @@ export const useAsistenciaMensualStore = defineStore('asistencia-mensual', () =>
     asistencias,
     mesSeleccionado,
 
-    numeroYearActual,
-    numeroMesActual,
     cantidadDiasMesActual,
 
     fetchAlumnosCurso,

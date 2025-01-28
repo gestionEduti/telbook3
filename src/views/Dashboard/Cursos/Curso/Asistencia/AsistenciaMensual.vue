@@ -7,20 +7,12 @@ const props = defineProps<{
 const nombreCurso = computed(() => props.nivel + props.letra)
 
 const { fetchAlumnosCurso, fetchAsistenciasMes } = useAsistenciaMensualStore()
-const {
-  alumnos,
-  asistencias,
-  mesSeleccionado,
-  numeroYearActual,
-  numeroMesActual,
-  cantidadDiasMesActual,
-} = storeToRefs(useAsistenciaMensualStore())
+const { alumnos, asistencias, mesSeleccionado, cantidadDiasMesActual } = storeToRefs(
+  useAsistenciaMensualStore(),
+)
 
 onMounted(async () => {
-  await Promise.all([
-    fetchAlumnosCurso(nombreCurso.value),
-    fetchAsistenciasMes(numeroYearActual.value, numeroMesActual.value, nombreCurso.value),
-  ])
+  await Promise.all([fetchAlumnosCurso(nombreCurso.value), fetchAsistenciasMes(nombreCurso.value)])
 })
 </script>
 
@@ -37,12 +29,7 @@ onMounted(async () => {
         <!-- selector mes -->
         <div class="mb-6 flex flex-col items-end space-y-2">
           <Label>Mes seleccionado</Label>
-          <Select
-            v-model="mesSeleccionado"
-            @update:model-value="
-              fetchAsistenciasMes(numeroYearActual, mesSeleccionado, nombreCurso)
-            "
-          >
+          <Select v-model="mesSeleccionado" @update:model-value="fetchAsistenciasMes(nombreCurso)">
             <SelectTrigger class="w-64">
               <SelectValue placeholder="Selecciona un mes" />
             </SelectTrigger>
