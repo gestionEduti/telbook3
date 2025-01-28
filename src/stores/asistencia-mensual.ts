@@ -1,12 +1,24 @@
 import type { Tables } from '@/types/supabase'
 import type { AsistenciasMes } from '@/types/asistenciamensual'
 
+import { useDateFormat, useNow } from '@vueuse/core'
+
 const authStore = useAuthStore()
 const errorStore = useErrorStore()
 
 export const useAsistenciaMensualStore = defineStore('asistencia-mensual', () => {
   const alumnos = ref<Tables<'mv_libro_matricula'>[] | null>(null)
   const asistencias = ref<AsistenciasMes | null>(null)
+  const mesSeleccionado = ref('1')
+
+  const numeroYearActual = computed(() => useDateFormat(useNow(), 'YYYY').value) // ejemplo -> 2025
+  const numeroMesActual = computed(() => useDateFormat(useNow(), 'M').value) // ejemplo marzo -> 3
+  const cantidadDiasMesActual = computed(() => {
+    const now = useNow()
+    const month = Number(mesSeleccionado.value)
+    const year = Number(useDateFormat(now, 'YYYY').value)
+    return new Date(year, month, 0).getDate()
+  })
 
   /**
    * trae los alumnos del curso
@@ -42,6 +54,12 @@ export const useAsistenciaMensualStore = defineStore('asistencia-mensual', () =>
   return {
     alumnos,
     asistencias,
+    mesSeleccionado,
+
+    numeroYearActual,
+    numeroMesActual,
+    cantidadDiasMesActual,
+
     fetchAlumnosCurso,
     fetchAsistenciasMes,
   }

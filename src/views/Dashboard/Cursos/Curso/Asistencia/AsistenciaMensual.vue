@@ -4,34 +4,22 @@ const props = defineProps<{
   letra: string
 }>()
 
-const asistenciaMensualStore = useAsistenciaMensualStore()
-const { alumnos, asistencias } = storeToRefs(useAsistenciaMensualStore())
-
-import { useDateFormat, useNow } from '@vueuse/core'
-
-// types
-import { useAsistenciaMensualStore } from '@/stores/asistencia-mensual'
-
 const nombreCurso = computed(() => props.nivel + props.letra)
-const numeroAnioActual = computed(() => useDateFormat(useNow(), 'YYYY').value) // ejemplo -> 2025
-const numeroMesActual = computed(() => useDateFormat(useNow(), 'M').value) // ejemplo marzo -> 3
-const cantidadDiasMesActual = computed(() => {
-  const now = useNow()
-  const month = Number(mesSeleccionado.value)
-  const year = Number(useDateFormat(now, 'YYYY').value)
-  return new Date(year, month, 0).getDate()
-})
 
-const mesSeleccionado = ref(numeroMesActual.value)
+const { fetchAlumnosCurso, fetchAsistenciasMes } = useAsistenciaMensualStore()
+const {
+  alumnos,
+  asistencias,
+  mesSeleccionado,
+  numeroYearActual,
+  numeroMesActual,
+  cantidadDiasMesActual,
+} = storeToRefs(useAsistenciaMensualStore())
 
 onMounted(async () => {
   await Promise.all([
-    asistenciaMensualStore.fetchAlumnosCurso(nombreCurso.value),
-    asistenciaMensualStore.fetchAsistenciasMes(
-      numeroAnioActual.value,
-      numeroMesActual.value,
-      nombreCurso.value,
-    ),
+    fetchAlumnosCurso(nombreCurso.value),
+    fetchAsistenciasMes(numeroYearActual.value, numeroMesActual.value, nombreCurso.value),
   ])
 })
 </script>
@@ -52,11 +40,7 @@ onMounted(async () => {
           <Select
             v-model="mesSeleccionado"
             @update:model-value="
-              asistenciaMensualStore.fetchAsistenciasMes(
-                numeroAnioActual,
-                mesSeleccionado,
-                nombreCurso,
-              )
+              fetchAsistenciasMes(numeroYearActual, mesSeleccionado, nombreCurso)
             "
           >
             <SelectTrigger class="w-64">

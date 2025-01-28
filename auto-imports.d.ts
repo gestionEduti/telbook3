@@ -58,6 +58,7 @@ declare global {
   const toValue: typeof import('vue')['toValue']
   const triggerRef: typeof import('vue')['triggerRef']
   const unref: typeof import('vue')['unref']
+  const useAsistenciaMensualStore: typeof import('./src/stores/asistencia-mensual')['useAsistenciaMensualStore']
   const useAttrs: typeof import('vue')['useAttrs']
   const useAuthStore: typeof import('./src/stores/auth')['useAuthStore']
   const useCounterStore: typeof import('./src/stores/counter')['useCounterStore']
