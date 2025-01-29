@@ -10,6 +10,6 @@
  */
 export interface AsistenciasMes {
   [rut: string]: {
-    [dia: string]: number
+    [dia: string]: number | null
   }
 }

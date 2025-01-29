@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const { asistencias, cantidadDiasMesActual } = storeToRefs(useAsistenciaMensualStore())
+const { asistencias, cantidadDiasMesActual, modoEdicion } = storeToRefs(useAsistenciaMensualStore())
 
 interface Resumen {
   [dia: string]: {
@@ -48,6 +48,11 @@ function reducirAsistencia() {
   return reduccion
 }
 
+watch(
+  () => modoEdicion.value,
+  () => (resumen.value = reducirAsistencia()),
+)
+
 onMounted(() => {
   // calcula una vez los totales y los guarda en la variable resumen para usarla en el template
   resumen.value = reducirAsistencia()
@@ -58,7 +63,7 @@ onMounted(() => {
   <div v-if="resumen" class="pt-2">
     <!-- presente -->
     <div :class="`mb-1 grid grid-cols-[repeat(43,minmax(0,1fr))] gap-1`">
-      <p class="telbook-label col-span-5">Presente</p>
+      <p class="telbook-label col-span-5 text-right">Presente</p>
       <p
         v-for="dia in cantidadDiasMesActual"
         :key="dia"
@@ -70,7 +75,7 @@ onMounted(() => {
 
     <!-- ausente -->
     <div :class="`mb-1 grid grid-cols-[repeat(43,minmax(0,1fr))] gap-1`">
-      <p class="telbook-label col-span-5">Ausente</p>
+      <p class="telbook-label col-span-5 text-right">Ausente</p>
       <p
         v-for="dia in cantidadDiasMesActual"
         :key="dia"
@@ -82,7 +87,7 @@ onMounted(() => {
 
     <!-- total -->
     <div :class="`mb-1 grid grid-cols-[repeat(43,minmax(0,1fr))] gap-1`">
-      <p class="telbook-label col-span-5">Total</p>
+      <p class="telbook-label col-span-5 text-right">Total</p>
       <p
         v-for="dia in cantidadDiasMesActual"
         :key="dia"

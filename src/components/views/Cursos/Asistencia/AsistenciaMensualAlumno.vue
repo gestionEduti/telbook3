@@ -5,7 +5,10 @@ const props = defineProps<{
   alumno: Tables<'mv_libro_matricula'>
 }>()
 
-const { asistencias, cantidadDiasMesActual } = storeToRefs(useAsistenciaMensualStore())
+const authStore = useAuthStore()
+const { asistencias, cantidadDiasMesActual, cursoActual, modoEdicion } = storeToRefs(
+  useAsistenciaMensualStore(),
+)
 
 interface Resumen {
   total: number
@@ -16,18 +19,6 @@ interface Resumen {
 }
 
 const resumen = ref<Resumen | null>(null)
-
-/**
- * extrae la asistencia de un dia especifico de un alumno especifico desde el state
- */
-function extraerAsistenciaAlumnoDia(rut: string, dia: number) {
-  if (asistencias.value === undefined || asistencias.value === null) return null
-  const asistenciasRut = asistencias.value[rut]
-  if (!asistenciasRut) return null
-  const asistenciaDia = asistenciasRut[dia]
-  if (asistenciaDia === null) return null
-  return asistenciaDia
-}
 
 /**
  * reduce las asistencias del mes y devuelve un objeto con
@@ -72,6 +63,11 @@ function calcularTotalesAlumno() {
   return totales
 }
 
+watch(
+  () => modoEdicion.value,
+  () => (resumen.value = calcularTotalesAlumno()),
+)
+
 onMounted(() => {
   // calcula una vez los totales y los guarda en la variable resumen para usarla en el template
   resumen.value = calcularTotalesAlumno()
@@ -80,11 +76,14 @@ onMounted(() => {
 
 <template>
   <div v-if="resumen" :class="`mb-1 grid grid-cols-[repeat(43,minmax(0,1fr))] gap-1`">
-    <p class="col-span-5 truncate pr-2">{{ alumno.nombre_completo_alumno }}</p>
-    <AsistenciaMensualItemButton
+    <p class="col-span-5 truncate pr-2 text-right">{{ alumno.nombre_completo_alumno }}</p>
+    <AsistenciaMensualAlumnoBoton
       v-for="dia in cantidadDiasMesActual"
       :key="dia"
-      :asistenciaRecibida="extraerAsistenciaAlumnoDia(props.alumno.rut_alumno, dia)"
+      :rut="props.alumno.rut_alumno"
+      :rbd="authStore.perfil!.rbd_usuario"
+      :curso="cursoActual"
+      :dia
     />
 
     <!-- resumenes por alumno -->
