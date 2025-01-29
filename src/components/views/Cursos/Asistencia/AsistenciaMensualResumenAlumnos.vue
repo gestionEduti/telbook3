@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const props = defineProps(['asistencias', 'alumnos', 'dias'])
+const { asistencias, cantidadDiasMesActual } = storeToRefs(useAsistenciaMensualStore())
 
 interface Resumen {
   [dia: string]: {
@@ -12,18 +12,14 @@ interface Resumen {
 
 const resumen = ref<Resumen | null>(null)
 
-function reducirAsistencia(asistencias: {
-  [alumnoId: string]: {
-    [key: string]: number | null
-  }
-}) {
+function reducirAsistencia() {
   // se inicia un objeto vacio
   const reduccion: Resumen = {}
 
   // se itera en las asistencias (cada una es un rut)
-  for (const rut in asistencias) {
+  for (const rut in asistencias.value) {
     // se almacenas las asistencias de un rut
-    const asistenciasRut = asistencias[rut]
+    const asistenciasRut = asistencias.value[rut]
 
     // se itera por cada dia del mes en el rut
     for (const dia in asistenciasRut) {
@@ -54,7 +50,7 @@ function reducirAsistencia(asistencias: {
 
 onMounted(() => {
   // calcula una vez los totales y los guarda en la variable resumen para usarla en el template
-  resumen.value = reducirAsistencia(props.asistencias)
+  resumen.value = reducirAsistencia()
 })
 </script>
 
@@ -63,7 +59,11 @@ onMounted(() => {
     <!-- presente -->
     <div :class="`mb-1 grid grid-cols-[repeat(43,minmax(0,1fr))] gap-1`">
       <p class="telbook-label col-span-5">Presente</p>
-      <p v-for="dia in dias" :key="dia" class="col-span-1 text-center text-xs tracking-tighter">
+      <p
+        v-for="dia in cantidadDiasMesActual"
+        :key="dia"
+        class="col-span-1 text-center text-xs tracking-tighter"
+      >
         {{ resumen[dia].presentes }}
       </p>
     </div>
@@ -71,7 +71,11 @@ onMounted(() => {
     <!-- ausente -->
     <div :class="`mb-1 grid grid-cols-[repeat(43,minmax(0,1fr))] gap-1`">
       <p class="telbook-label col-span-5">Ausente</p>
-      <p v-for="dia in dias" :key="dia" class="col-span-1 text-center text-xs tracking-tighter">
+      <p
+        v-for="dia in cantidadDiasMesActual"
+        :key="dia"
+        class="col-span-1 text-center text-xs tracking-tighter"
+      >
         {{ resumen[dia].ausentes }}
       </p>
     </div>
@@ -79,7 +83,11 @@ onMounted(() => {
     <!-- total -->
     <div :class="`mb-1 grid grid-cols-[repeat(43,minmax(0,1fr))] gap-1`">
       <p class="telbook-label col-span-5">Total</p>
-      <p v-for="dia in dias" :key="dia" class="col-span-1 text-center text-xs tracking-tighter">
+      <p
+        v-for="dia in cantidadDiasMesActual"
+        :key="dia"
+        class="col-span-1 text-center text-xs tracking-tighter"
+      >
         {{ resumen[dia].total }}
       </p>
     </div>

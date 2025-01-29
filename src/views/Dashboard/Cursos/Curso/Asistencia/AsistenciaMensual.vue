@@ -6,30 +6,33 @@ const props = defineProps<{
 
 const nombreCurso = computed(() => props.nivel + props.letra)
 
-const { fetchAlumnosCurso, fetchAsistenciasMes } = useAsistenciaMensualStore()
-const { alumnos, asistencias, mesSeleccionado, cantidadDiasMesActual } = storeToRefs(
-  useAsistenciaMensualStore(),
-)
+const store = useAsistenciaMensualStore()
 
 onMounted(async () => {
-  await Promise.all([fetchAlumnosCurso(nombreCurso.value), fetchAsistenciasMes(nombreCurso.value)])
+  await Promise.all([
+    store.fetchAlumnosCurso(nombreCurso.value),
+    store.fetchAsistenciasMes(nombreCurso.value),
+  ])
 })
 </script>
 
 <template>
   <Transition name="fade" mode="out-in">
-    <Card v-if="alumnos">
+    <Card v-if="store.alumnos && store.asistencias">
       <CardHeader>
         <CardTitle>Asistencia mensual</CardTitle>
         <CardDescription>Descripcion asistencia mensual.</CardDescription>
         <Separator />
       </CardHeader>
-      <!-- <CardContent v-if="asistenciasMes && alumnos"> -->
-      <CardContent v-if="alumnos.length">
+
+      <CardContent v-if="store.alumnos.length">
         <!-- selector mes -->
         <div class="mb-6 flex flex-col items-end space-y-2">
           <Label>Mes seleccionado</Label>
-          <Select v-model="mesSeleccionado" @update:model-value="fetchAsistenciasMes(nombreCurso)">
+          <Select
+            v-model="store.mesSeleccionado"
+            @update:model-value="store.fetchAsistenciasMes(nombreCurso)"
+          >
             <SelectTrigger class="w-64">
               <SelectValue placeholder="Selecciona un mes" />
             </SelectTrigger>
@@ -53,12 +56,17 @@ onMounted(async () => {
           </Select>
         </div>
 
+        <!-- asistencias -->
         <Transition name="fade" mode="out-in">
-          <div v-if="asistencias">
+          <div v-if="store.asistencias">
             <!-- encabezados -->
             <div :class="`telbook-label mb-1 grid grid-cols-[repeat(43,minmax(0,1fr))] gap-1`">
               <p class="col-span-5">Nombre</p>
-              <p v-for="dia in cantidadDiasMesActual" :key="dia" class="col-span-1 text-center">
+              <p
+                v-for="dia in store.cantidadDiasMesActual"
+                :key="dia"
+                class="col-span-1 text-center"
+              >
                 {{ dia }}
               </p>
               <p class="col-span-1 -col-start-8 text-center">T</p>
@@ -70,19 +78,12 @@ onMounted(async () => {
 
             <!-- alumnos -->
             <AsistenciaMensualItem
-              v-for="alumno in alumnos"
+              v-for="alumno in store.alumnos"
               :key="alumno.rut_alumno"
-              :alumno="alumno"
-              :asistencias="asistencias[alumno.rut_alumno]"
-              :dias="cantidadDiasMesActual || 31"
+              :alumno
             />
 
-            <!-- resumenes por dia -->
-            <AsistenciaMensualResumenAlumnos
-              :alumnos
-              :asistencias="asistencias"
-              :dias="cantidadDiasMesActual || 31"
-            />
+            <AsistenciaMensualResumenAlumnos />
           </div>
 
           <InfoMensajeSinData v-else icono="vacio" mensaje="No hay asistencias este mes" />
@@ -93,7 +94,7 @@ onMounted(async () => {
         <InfoMensajeSinData
           icono="vacio"
           mensaje="No hay alumnos en el curso"
-          :dias="cantidadDiasMesActual || 31"
+          :dias="store.cantidadDiasMesActual || 31"
         />
       </CardContent>
     </Card>

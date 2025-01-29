@@ -3,9 +3,9 @@ import type { Tables } from '@/types/supabase'
 
 const props = defineProps<{
   alumno: Tables<'mv_libro_matricula'>
-  asistencias?: { [key: string]: number }
-  dias: number
 }>()
+
+const { asistencias, cantidadDiasMesActual } = storeToRefs(useAsistenciaMensualStore())
 
 interface Resumen {
   total: number
@@ -21,21 +21,28 @@ const resumen = ref<Resumen | null>(null)
  * extrae la asistencia de un dia especifico de un alumno especifico desde el state
  */
 function extraerAsistenciaAlumnoDia(rut: string, dia: number) {
-  if (props.asistencias === undefined) return undefined
-  const asistenciaDia = props.asistencias[dia]
-  if (asistenciaDia === 0) return false // ausente
-  if (asistenciaDia === 1) return true // presente
+  if (asistencias.value === undefined || asistencias.value === null) return null
+  const asistenciasRut = asistencias.value[rut]
+  if (!asistenciasRut) return null
+  const asistenciaDia = asistenciasRut[dia]
+  if (asistenciaDia === null) return null
+  return asistenciaDia
 }
 
 /**
  * reduce las asistencias del mes y devuelve un objeto con
  */
 function calcularTotalesAlumno() {
-  if (!props.asistencias) {
+  if (!asistencias.value) {
     return { total: 0, presentes: 0, ausentes: 0, porcentajePresentes: 0, porcentajeAusentes: 0 }
   }
 
-  const totales = Object.values(props.asistencias).reduce(
+  const asistenciasAlumno = asistencias.value[props.alumno.rut_alumno]
+  if (!asistenciasAlumno) {
+    return { total: 0, presentes: 0, ausentes: 0, porcentajePresentes: 0, porcentajeAusentes: 0 }
+  }
+
+  const totales = Object.values(asistenciasAlumno).reduce(
     (
       acumulado: {
         total: number
@@ -74,23 +81,10 @@ onMounted(() => {
 <template>
   <div v-if="resumen" :class="`mb-1 grid grid-cols-[repeat(43,minmax(0,1fr))] gap-1`">
     <p class="col-span-5 truncate pr-2">{{ alumno.nombre_completo_alumno }}</p>
-    <!-- <input
-      v-for="dia in dias"
+    <AsistenciaMensualItemButton
+      v-for="dia in cantidadDiasMesActual"
       :key="dia"
-      type="checkbox"
-      class="col-span-1"
-      :checked="extraerAsistenciaAlumnoDia(alumno.rut_alumno, dia)"
-    /> -->
-    <div
-      v-for="dia in dias"
-      :key="dia"
-      :class="
-        extraerAsistenciaAlumnoDia(alumno.rut_alumno, dia) === true
-          ? 'bg-emerald-400'
-          : extraerAsistenciaAlumnoDia(alumno.rut_alumno, dia) === undefined
-            ? 'bg-gray-300'
-            : 'bg-red-400'
-      "
+      :asistenciaRecibida="extraerAsistenciaAlumnoDia(props.alumno.rut_alumno, dia)"
     />
 
     <!-- resumenes por alumno -->
