@@ -684,7 +684,7 @@ export type Database = {
       mv_libro_matricula: {
         Row: {
           anio_libro: number | null
-          apellidos_alumno: string | null
+          apellidos_alumno: string
           apoderado_tutor_alumno: string | null
           causa_retiro_alumno: string | null
           codigo_estado_alumno: number
@@ -703,13 +703,13 @@ export type Database = {
           nivel_educacional_madre: string | null
           nivel_educacional_padre: string | null
           nombre_apoderado_alumno: string | null
-          nombre_completo_alumno: string | null
-          nombres_alumno: string | null
+          nombre_completo_alumno: string
+          nombres_alumno: string
           numero_lista_nivel_alumno: number
           numero_matricula_alumno: number
           parentezco_con_alumno: string | null
           problema_aprendizaje_alumno: string | null
-          procedencia_alumno: string | null
+          procedencia_alumno: string
           pueblo_originario_alumno: string | null
           rbd_establecimiento: number
           region_alumno: string | null
@@ -723,7 +723,7 @@ export type Database = {
         }
         Insert: {
           anio_libro?: number | null
-          apellidos_alumno?: string | null
+          apellidos_alumno: string
           apoderado_tutor_alumno?: string | null
           causa_retiro_alumno?: string | null
           codigo_estado_alumno: number
@@ -742,13 +742,13 @@ export type Database = {
           nivel_educacional_madre?: string | null
           nivel_educacional_padre?: string | null
           nombre_apoderado_alumno?: string | null
-          nombre_completo_alumno?: string | null
-          nombres_alumno?: string | null
+          nombre_completo_alumno: string
+          nombres_alumno: string
           numero_lista_nivel_alumno: number
           numero_matricula_alumno: number
           parentezco_con_alumno?: string | null
           problema_aprendizaje_alumno?: string | null
-          procedencia_alumno?: string | null
+          procedencia_alumno: string
           pueblo_originario_alumno?: string | null
           rbd_establecimiento: number
           region_alumno?: string | null
@@ -762,7 +762,7 @@ export type Database = {
         }
         Update: {
           anio_libro?: number | null
-          apellidos_alumno?: string | null
+          apellidos_alumno?: string
           apoderado_tutor_alumno?: string | null
           causa_retiro_alumno?: string | null
           codigo_estado_alumno?: number
@@ -781,13 +781,13 @@ export type Database = {
           nivel_educacional_madre?: string | null
           nivel_educacional_padre?: string | null
           nombre_apoderado_alumno?: string | null
-          nombre_completo_alumno?: string | null
-          nombres_alumno?: string | null
+          nombre_completo_alumno?: string
+          nombres_alumno?: string
           numero_lista_nivel_alumno?: number
           numero_matricula_alumno?: number
           parentezco_con_alumno?: string | null
           problema_aprendizaje_alumno?: string | null
-          procedencia_alumno?: string | null
+          procedencia_alumno?: string
           pueblo_originario_alumno?: string | null
           rbd_establecimiento?: number
           region_alumno?: string | null
@@ -2274,6 +2274,12 @@ export type Database = {
       }
     }
     Functions: {
+      actualizar_asistencia_mes: {
+        Args: {
+          asistencias: Json
+        }
+        Returns: Json
+      }
       actualizar_estado_alumno: {
         Args: {
           p_rut: string

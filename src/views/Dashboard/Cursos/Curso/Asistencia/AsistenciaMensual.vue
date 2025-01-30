@@ -37,6 +37,7 @@ onMounted(async () => {
           <div>
             <Label>Mes seleccionado</Label>
             <Select
+              :disabled="store.modoEdicion"
               v-model="store.mesSeleccionado"
               @update:model-value="store.fetchAsistenciasMes(nombreCurso)"
             >

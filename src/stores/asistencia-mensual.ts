@@ -59,7 +59,6 @@ export const useAsistenciaMensualStore = defineStore('asistencia-mensual', () =>
   }
 
   function actualizarEstadoAsistencia(rut: string, dia: number, nuevoValor: number) {
-    // console.log(`actualizando a ${nuevoValor} para el dia ${dia}, rut ${rut}, `)
     if (asistencias.value && asistencias.value[rut]) {
       asistencias.value[rut][dia] = nuevoValor
     } else {
@@ -74,14 +73,31 @@ export const useAsistenciaMensualStore = defineStore('asistencia-mensual', () =>
     }
   }
 
-  function guardarModificacionesAsistencia() {
-    modoEdicion.value = false
-    toast({
-      title: 'Exito',
-      description: 'La asistencia fue actualizada exitosamente.',
-      variant: 'exitoso',
-      duration: 3000,
+  async function guardarModificacionesAsistencia() {
+    const asistenciaFormateada = {
+      year: 2025, // TODO tomar año desde la configuracion de telbook
+      month: mesSeleccionado.value,
+      rbd: authStore.perfil!.rbd_usuario,
+      curso: cursoActual.value,
+      alumnos: asistencias.value,
+      rut_modificador: authStore.perfil!.rut_usuario,
+    }
+    const { data, error } = await supabase.rpc('actualizar_asistencia_mes', {
+      asistencias: asistenciaFormateada,
     })
+
+    if (error) {
+      errorStore.setError({ error })
+    } else {
+      toast({
+        title: 'Exito',
+        description: `Se actualizaron ${data} asistencias exitosamente.`,
+        variant: 'exitoso',
+        duration: 3000,
+      })
+    }
+
+    modoEdicion.value = false
   }
 
   return {
