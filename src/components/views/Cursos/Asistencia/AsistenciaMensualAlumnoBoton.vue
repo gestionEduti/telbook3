@@ -10,7 +10,9 @@ const colorClass = computed(() => {
   if (asistencia.value === null) return 'bg-gray-300'
   else if (asistencia.value === 1) return 'bg-emerald-400'
   else if (asistencia.value === 0) return 'bg-red-400'
+  else if (asistencia.value === -1) return 'bg-gray-400'
 })
+
 const cursorClass = computed(() => {
   return modoEdicion.value ? 'cursor-pointer' : 'cursor-default'
 })
@@ -32,13 +34,22 @@ function extraerAsistenciaAlumnoDia() {
   }
 }
 
+/**
+ * Cambia el estado de la asistencia del alumno/dia especifico al hacer click en el recuadro
+ */
 function handleClick() {
   if (!modoEdicion.value) return
   if (asistencia.value === null) {
+    // si no hay asistencia (gris), pasa a presente (verde)
     store.actualizarEstadoAsistencia(props.rut, props.dia, 1)
   } else if (asistencia.value === 1) {
+    // si es presente (verde), pasa a ausente (rojo)
     store.actualizarEstadoAsistencia(props.rut, props.dia, 0)
   } else if (asistencia.value === 0) {
+    // si es ausente (rojo), pasa a remove (gris oscuro)
+    store.actualizarEstadoAsistencia(props.rut, props.dia, -1)
+  } else if (asistencia.value === -1) {
+    // si esta para remover (gris oscuro), pasa a presente
     store.actualizarEstadoAsistencia(props.rut, props.dia, 1)
   }
   extraerAsistenciaAlumnoDia()

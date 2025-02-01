@@ -525,10 +525,13 @@ export type Database = {
           nivel_alumno: string
           observacion_asistencia: string | null
           otp_asistencia: number
+          otp_modifica_asistencia: number | null
           rbd: number
           respuesta_otp_asistencia: string
+          respuesta_otp_modifica_asistencia: string | null
           rut_alumno: string
           rut_usuario: string | null
+          rut_usuario_modifica_asistencia: string | null
         }
         Insert: {
           estado: number
@@ -538,10 +541,13 @@ export type Database = {
           nivel_alumno: string
           observacion_asistencia?: string | null
           otp_asistencia: number
+          otp_modifica_asistencia?: number | null
           rbd: number
           respuesta_otp_asistencia: string
+          respuesta_otp_modifica_asistencia?: string | null
           rut_alumno: string
           rut_usuario?: string | null
+          rut_usuario_modifica_asistencia?: string | null
         }
         Update: {
           estado?: number
@@ -551,10 +557,13 @@ export type Database = {
           nivel_alumno?: string
           observacion_asistencia?: string | null
           otp_asistencia?: number
+          otp_modifica_asistencia?: number | null
           rbd?: number
           respuesta_otp_asistencia?: string
+          respuesta_otp_modifica_asistencia?: string | null
           rut_alumno?: string
           rut_usuario?: string | null
+          rut_usuario_modifica_asistencia?: string | null
         }
         Relationships: [
           {
@@ -2278,7 +2287,7 @@ export type Database = {
         Args: {
           asistencias: Json
         }
-        Returns: Json
+        Returns: number
       }
       actualizar_estado_alumno: {
         Args: {

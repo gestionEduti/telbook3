@@ -52,13 +52,13 @@ const fetchSupabase = async () => {
 }
 
 async function validarOTP() {
+  // TODO extraer funcion a utils porque se usa en al menos 2 partes
   const rut = authStore.perfil?.rut_usuario
   const fecha = fechaConTimezone()
   const url = `/mineduc/otp/verify-otp?rut=${rut}&otp=${otp.value}&DateWithTimeZone=${fecha}`
   const options = { method: 'GET', headers: { 'Content-Type': 'application/json' } }
   try {
     const response = await fetch(url, options)
-    console.info(response)
     const json = await response.json()
     return json
   } catch (error) {
@@ -74,10 +74,10 @@ async function saveAsistencia() {
   const { error } = await supabase.rpc('tx_asistencia_diaria', {
     alumnos: asistenciaData.value,
     curso: props.nivel + props.letra,
-    otp: otp.value,
-    rbd: authStore.perfil?.rbd_usuario,
+    otp: Number(otp.value),
+    rbd: authStore.perfil!.rbd_usuario, // TODO ver como asegurar que viene el perfil
     respuesta_otp: JSON.stringify(respuestaOTP) || 'La respuesta del OTP viene vacia.',
-    usuario_ingreso: authStore.perfil?.rut_usuario,
+    usuario_ingreso: authStore.perfil!.rut_usuario, // TODO ver como asegurar que viene el perfil
   })
 
   if (error) {

@@ -1,5 +1,6 @@
 import type { Tables } from '@/types/supabase'
 import type { AsistenciasMes } from '@/types/asistenciamensual'
+import { fechaConTimezone } from '@/lib/formato'
 
 import { useDateFormat, useNow } from '@vueuse/core'
 
@@ -73,7 +74,10 @@ export const useAsistenciaMensualStore = defineStore('asistencia-mensual', () =>
     }
   }
 
-  async function guardarModificacionesAsistencia() {
+  async function guardarModificacionesAsistencia(otp: string) {
+    // validar otp en mineduc
+    const respuestaOTP = await validarOTP(otp)
+
     const asistenciaFormateada = {
       year: 2025, // TODO tomar año desde la configuracion de telbook
       month: mesSeleccionado.value,
@@ -81,7 +85,11 @@ export const useAsistenciaMensualStore = defineStore('asistencia-mensual', () =>
       curso: cursoActual.value,
       alumnos: asistencias.value,
       rut_modificador: authStore.perfil!.rut_usuario,
+      modificacion_otp: otp,
+      modificacion_respuesta_otp: respuestaOTP,
+      modificacion_rut_usuario: authStore.perfil!.rut_usuario, // TODO asegurar que el perfil este lleno
     }
+
     const { data, error } = await supabase.rpc('actualizar_asistencia_mes', {
       asistencias: asistenciaFormateada,
     })
@@ -97,7 +105,28 @@ export const useAsistenciaMensualStore = defineStore('asistencia-mensual', () =>
       })
     }
 
+    await fetchAsistenciasMes(cursoActual.value)
     modoEdicion.value = false
+  }
+
+  async function cancelarEdicionAsistencia() {
+    modoEdicion.value = false
+    await fetchAsistenciasMes(cursoActual.value)
+  }
+
+  async function validarOTP(otp: number) {
+    // TODO extraer funcion a utils porque se usa en al menos 2 partes
+    const rut = authStore.perfil?.rut_usuario
+    const fecha = fechaConTimezone()
+    const url = `/mineduc/otp/verify-otp?rut=${rut}&otp=${otp}&DateWithTimeZone=${fecha}`
+    const options = { method: 'GET', headers: { 'Content-Type': 'application/json' } }
+    try {
+      const response = await fetch(url, options)
+      const json = await response.json()
+      return json
+    } catch (error) {
+      errorStore.setError({ error: `Error en la respuesta del OTP: ${error}` })
+    }
   }
 
   return {
@@ -113,5 +142,6 @@ export const useAsistenciaMensualStore = defineStore('asistencia-mensual', () =>
     fetchAsistenciasMes,
     actualizarEstadoAsistencia,
     guardarModificacionesAsistencia,
+    cancelarEdicionAsistencia,
   }
 })

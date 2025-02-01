@@ -1,16 +1,40 @@
 <script setup lang="ts">
-import { Pencil, Save } from 'lucide-vue-next'
+import { Pencil, Save, LoaderCircle } from 'lucide-vue-next'
 
 const props = defineProps<{
   nivel: string
   letra: string
 }>()
 
-const loading = ref(true)
+const loading = ref(true) // trayendo alumnos y asistencias de supabase
+const saving = ref(false) // guardando edicion asistencia
+const otp = ref('')
 
 const nombreCurso = computed(() => props.nivel + props.letra)
 
 const store = useAsistenciaMensualStore()
+
+/**
+ * accion cuando se presiona el boton editar
+ */
+async function handleComenzarEdicion() {
+  store.modoEdicion = true
+  saving.value = false
+}
+
+/**
+ * accion cuando se confirma ó cancela el dialogo con el otp
+ * @param accion
+ */
+async function handleDialogo(accion: 'guardar' | 'cancelar') {
+  if (accion === 'guardar') {
+    store.guardarModificacionesAsistencia(otp.value)
+    otp.value = ''
+  } else {
+    store.cancelarEdicionAsistencia()
+    otp.value = ''
+  }
+}
 
 onMounted(async () => {
   loading.value = true
@@ -35,13 +59,12 @@ onMounted(async () => {
         <!-- selector mes -->
         <div class="mb-6 flex items-end justify-between gap-0">
           <div>
-            <Label>Mes seleccionado</Label>
             <Select
               :disabled="store.modoEdicion"
               v-model="store.mesSeleccionado"
               @update:model-value="store.fetchAsistenciasMes(nombreCurso)"
             >
-              <SelectTrigger class="w-64">
+              <SelectTrigger class="w-48 border-gray-400">
                 <SelectValue placeholder="Selecciona un mes" />
               </SelectTrigger>
               <SelectContent>
@@ -67,7 +90,7 @@ onMounted(async () => {
           <Transition name="fade" mode="out-in">
             <div v-if="store.asistencias">
               <!-- boton para comenzar a editar -->
-              <Button v-if="!store.modoEdicion" @click="store.modoEdicion = true" class="w-24">
+              <Button v-if="!store.modoEdicion" @click="handleComenzarEdicion" class="w-24">
                 <Pencil />
                 <span>editar</span>
               </Button>
@@ -75,21 +98,35 @@ onMounted(async () => {
               <!-- boton de guardar -->
               <AlertDialog v-else>
                 <AlertDialogTrigger>
-                  <Button class="w-42 bg-red-500 hover:bg-red-700">
-                    <Save />
-                    <span>Guardar cambios</span>
+                  <Button
+                    class="w-42 bg-red-500 hover:bg-red-700"
+                    :disabled="saving"
+                    @click="saving = true"
+                  >
+                    <Save v-if="!saving" />
+                    <LoaderCircle v-else class="animate-spin" />
+                    <span v-if="!saving">Guardar cambios</span>
+                    <span v-else>Guardando cambios</span>
                   </Button>
                 </AlertDialogTrigger>
                 <AlertDialogContent>
                   <AlertDialogHeader>
                     <AlertDialogTitle>Confirma los cambios?</AlertDialogTitle>
                     <AlertDialogDescription>
-                      Esta acción no se puede deshacer.
+                      Debes ingresar el codigo de verificacion para poder firmar la edición.
                     </AlertDialogDescription>
                   </AlertDialogHeader>
+                  <div class="grid gap-4 py-4">
+                    <div class="grid grid-cols-4 items-center gap-4">
+                      <Label for="codigo" class="text-right"> Codigo </Label>
+                      <Input id="codigo" class="col-span-3" v-model="otp" maxlength="6" />
+                    </div>
+                  </div>
                   <AlertDialogFooter>
-                    <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                    <AlertDialogAction @click="store.guardarModificacionesAsistencia">
+                    <AlertDialogCancel @click="handleDialogo('cancelar')">
+                      Cancelar
+                    </AlertDialogCancel>
+                    <AlertDialogAction @click="handleDialogo('guardar')">
                       Confirmar
                     </AlertDialogAction>
                   </AlertDialogFooter>
@@ -104,7 +141,7 @@ onMounted(async () => {
           <div v-if="!loading">
             <Transition name="fade" mode="out-in">
               <div v-if="store.asistencias">
-                <!-- encabezados -->
+                <!-- encabezados superiores -->
                 <div :class="`telbook-label mb-1 grid grid-cols-[repeat(43,minmax(0,1fr))] gap-1`">
                   <p class="col-span-5 pr-2 text-right">Nombre</p>
                   <p
@@ -128,7 +165,7 @@ onMounted(async () => {
                   :alumno
                 />
 
-                <!-- encabezados -->
+                <!-- encabezados inferiores -->
                 <div :class="`telbook-label mb-1 grid grid-cols-[repeat(43,minmax(0,1fr))] gap-1`">
                   <p class="col-span-5 pr-2 text-right"></p>
                   <p
