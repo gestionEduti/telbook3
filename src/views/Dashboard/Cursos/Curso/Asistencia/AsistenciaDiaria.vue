@@ -87,6 +87,7 @@ async function saveAsistencia() {
       title: 'Asistencia guardada correctamente',
       description: 'La asistencia se ha guardado correctamente',
       duration: 3000,
+      variant: 'exitoso',
     })
     router.push({ name: 'dashboard' })
   }
@@ -96,7 +97,7 @@ async function verificarAsistenciaExistente() {
   const { data, error } = await supabase
     .from('view_asistencias_realizadas')
     .select('*')
-    .eq('rbd', authStore.perfil?.rbd_usuario)
+    .eq('rbd', authStore.perfil!.rbd_usuario) // TODO asegurar que el perfil exista
     .eq('curso', props.nivel + props.letra)
     .eq('dia', new Date().toISOString().split('T')[0])
 
