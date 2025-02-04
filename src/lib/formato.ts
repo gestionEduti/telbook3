@@ -1,9 +1,18 @@
+/**
+ * formatea una fecha tipo YYYY-MM-DD a DD-MM-YYYY
+ * @param fecha
+ * @returns
+ */
 export function formatearFecha(fecha: string): string {
   if (!fecha) return ''
   const [year, month, day] = fecha.split('-')
   return `${day}-${month}-${year}`
 }
 
+/**
+ *
+ * @returns
+ */
 export function fechaConTimezone() {
   const fecha = new Date()
   const pad = (num: number) => String(num).padStart(2, '0') // Helper function to pad numbers
@@ -19,6 +28,12 @@ export function fechaConTimezone() {
 export function formatearRut(rut: string | null) {
   if (!rut) return ''
   return rut.replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.')
+}
+
+export function formatearTimestamptzADDMMYYYY(fecha: string) {
+  const date = new Date(fecha)
+  const formattedDate = date.toLocaleDateString('es-CL')
+  return formattedDate.replace(/\//g, '-')
 }
 
 export function formatearFechaNacimiento(fecha: string | null) {

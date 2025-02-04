@@ -1290,17 +1290,12 @@ export type Database = {
       }
       mv_pla_largo_plazo: {
         Row: {
-          anio: number
-          anio_creacion: number
           descripcion_planificacion: string
-          dia: number
-          dia_creacion: number
           estado_planificacion: number
-          fecha_creacion: string | null
+          fecha_creacion: string
           fecha_modificacion: string | null
+          fecha_planificacion: string
           id_planificacion: number
-          mes: number
-          mes_creacion: number
           nivel_planificacion: string
           otp_crea_planificacion: number
           rbd: number
@@ -1308,17 +1303,12 @@ export type Database = {
           rut_crea_planificacion: string
         }
         Insert: {
-          anio: number
-          anio_creacion: number
           descripcion_planificacion: string
-          dia: number
-          dia_creacion: number
           estado_planificacion: number
-          fecha_creacion?: string | null
+          fecha_creacion?: string
           fecha_modificacion?: string | null
+          fecha_planificacion: string
           id_planificacion?: number
-          mes: number
-          mes_creacion: number
           nivel_planificacion: string
           otp_crea_planificacion: number
           rbd: number
@@ -1326,17 +1316,12 @@ export type Database = {
           rut_crea_planificacion: string
         }
         Update: {
-          anio?: number
-          anio_creacion?: number
           descripcion_planificacion?: string
-          dia?: number
-          dia_creacion?: number
           estado_planificacion?: number
-          fecha_creacion?: string | null
+          fecha_creacion?: string
           fecha_modificacion?: string | null
+          fecha_planificacion?: string
           id_planificacion?: number
-          mes?: number
-          mes_creacion?: number
           nivel_planificacion?: string
           otp_crea_planificacion?: number
           rbd?: number
@@ -2236,7 +2221,6 @@ export type Database = {
         Row: {
           curso: string | null
           dia: string | null
-          hora: string | null
           razon_social: string | null
           rbd: number | null
         }
