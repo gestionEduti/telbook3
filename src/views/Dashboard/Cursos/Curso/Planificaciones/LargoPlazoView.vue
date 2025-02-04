@@ -119,9 +119,9 @@ onMounted(async () => {
               <!-- calendario -->
               <FormKit
                 type="date"
-                label="Fecha nacimiento"
-                name="fecha_nacimiento_alumno"
+                label="Fecha"
                 validation="required"
+                validation-visibility="dirty"
                 v-model="fechaNuevaPlanificacion"
               />
 
@@ -141,7 +141,12 @@ onMounted(async () => {
                 <DialogClose>
                   <Button
                     @click="guardarPlanificacion"
-                    :disabled="!otp || otp.length !== 6 || !nuevaPlanificacion.length"
+                    :disabled="
+                      !otp ||
+                      otp.length !== 6 ||
+                      !nuevaPlanificacion.length ||
+                      !fechaNuevaPlanificacion
+                    "
                   >
                     <Pen />
                     <span>Crear planificacion</span>
