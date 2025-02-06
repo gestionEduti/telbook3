@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { OctagonX, Trash2, CalendarPlus2, Pen, Plus } from 'lucide-vue-next'
+import { OctagonX, Goal, Trash2, CalendarPlus2, Pen, Plus } from 'lucide-vue-next'
 
 const props = defineProps<{
   nivel: string
@@ -12,12 +12,26 @@ const errorStore = useErrorStore()
 const authStore = useAuthStore()
 
 // planificaciones
-const queryResumenPlanificaciones = supabase.rpc('resumen_pla_med_curso', {
-  colegio: authStore.perfil!.rbd_usuario,
-  curso: nombreCurso.value,
-})
-type ResumenPlanificaciones = QueryData<typeof queryResumenPlanificaciones>
-const resumenPlanificaciones = ref<ResumenPlanificaciones | null>(null)
+const loadingPlanificaciones = ref(true)
+interface ResumenPlanificaciones {
+  id: number
+  proyecto_eje: string
+  objetivos_generales: string
+  estrategias: string
+  cierre_proyecto: string
+  cantidad_semanas: number
+  fecha: string
+  estado: number
+  oas: [
+    {
+      id_base_curricular: number
+      descripcion_ambito: string
+      descripcion_nucleo: string
+      descripcion_oa: string
+    },
+  ]
+}
+const resumenPlanificaciones = ref<ResumenPlanificaciones[] | null>(null)
 
 const dataFormulario = ref({
   semanas: '1',
@@ -102,9 +116,13 @@ const optionsOas = computed(() => {
  * trae las planificaciones+oas del curso desde una funcion de supabase
  */
 async function fetchPlanificaciones() {
-  const { data, error } = await queryResumenPlanificaciones
+  const { data, error } = await supabase.rpc('resumen_pla_med_curso', {
+    colegio: authStore.perfil!.rbd_usuario,
+    curso: nombreCurso.value,
+  })
   if (error) errorStore.setError({ error, customCode: 500 })
-  else resumenPlanificaciones.value = data
+  else resumenPlanificaciones.value = data as unknown as ResumenPlanificaciones[]
+  loadingPlanificaciones.value = false
 }
 
 /**
@@ -408,115 +426,118 @@ onMounted(async () => {
       <Separator />
     </CardHeader>
 
-    <CardContent>
-      <!-- si no hay planificaciones -->
-      <InfoMensajeSinData
-        v-if="!resumenPlanificaciones || !resumenPlanificaciones.length"
-        icono="vacio"
-        mensaje="No hay planificaciones"
-      />
+    <Transition name="fade" mode="out-in">
+      <CardContent v-if="!loadingPlanificaciones">
+        <!-- si no hay planificaciones -->
+        <InfoMensajeSinData
+          v-if="!resumenPlanificaciones || !resumenPlanificaciones.length"
+          icono="vacio"
+          mensaje="No hay planificaciones"
+        />
 
-      <Table v-else>
-        <TableBody>
-          <TableRow
-            v-for="planificacion in resumenPlanificaciones"
-            :key="planificacion.id"
-            class="group flex min-h-20 items-center"
-          >
-            <TableCell class="w-full">
-              <Card :class="planificacion.estado === 1 ? 'border-green-500' : 'bg-gray-100'">
-                <CardHeader>
-                  <CardTitle> Proyecto eje: {{ planificacion.proyecto_eje }} </CardTitle>
-                  <CardDescription>
-                    <p>{{ planificacion.fecha }}</p>
-                    <p>{{ planificacion.cantidad_semanas }} semanas</p>
-                  </CardDescription>
-                  <div class="flex">
-                    <Badge
-                      :class="planificacion.estado === 1 ? 'bg-green-600' : 'bg-gray-700'"
-                      class="flex"
-                    >
-                      {{ planificacion.estado === 1 ? 'proyecto en curso' : 'proyecto finalizado' }}
-                    </Badge>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <div class="flex flex-col gap-4">
-                    <p class="flex flex-col">
-                      <span class="font-bold">Objetivos generales: </span>
-                      <span>{{ planificacion.objetivos_generales }}</span>
-                    </p>
-                    <p class="flex flex-col">
-                      <span class="font-bold">Estrategias para alcanzar el proyecto: </span>
-                      <span>{{ planificacion.estrategias }}</span>
-                    </p>
-                    <p class="flex flex-col">
-                      <span class="font-bold">Cierre del proyecto: </span>
-                      <span>{{ planificacion.cierre_proyecto }}</span>
-                    </p>
-                    <div class="border p-4">
-                      <p class="flex flex-col">
-                        <span class="font-bold">Objetivos de aprendizaje: </span>
-                      </p>
+        <Table v-else>
+          <TableBody>
+            <TableRow
+              v-for="planificacion in resumenPlanificaciones"
+              :key="planificacion.id"
+              class="group flex min-h-20 items-center"
+            >
+              <TableCell class="w-full">
+                <Card :class="planificacion.estado === 1 ? 'border-green-500' : 'bg-gray-100'">
+                  <CardHeader>
+                    <CardTitle> Proyecto eje: {{ planificacion.proyecto_eje }} </CardTitle>
 
-                      <Accordion type="single" collapsible>
-                        <AccordionItem
-                          v-for="(oa, index) in planificacion.oas"
-                          :key="oa.id_base_curricular"
-                          :value="String(oa.id_base_curricular)"
-                        >
-                          <AccordionTrigger>
-                            <p>
-                              <span>
-                                <Badge class="mr-4 h-6 w-6 items-center justify-center">
-                                  {{ index + 1 }}
-                                </Badge>
-                              </span>
-                              <span>{{ oa.descripcion_ambito }}</span>
-                              <span> - </span>
-                              <span>{{ oa.descripcion_nucleo }}</span>
-                            </p>
-                          </AccordionTrigger>
-                          <AccordionContent>
-                            <p>{{ oa.descripcion_oa }}</p>
-                          </AccordionContent>
-                        </AccordionItem>
-                      </Accordion>
+                    <CardDescription>
+                      <p>{{ planificacion.fecha }}</p>
+                      <p>{{ planificacion.cantidad_semanas }} semanas</p>
+                    </CardDescription>
+
+                    <div class="flex">
+                      <Badge
+                        :class="planificacion.estado === 1 ? 'bg-green-600' : 'bg-gray-700'"
+                        class="flex"
+                      >
+                        {{
+                          planificacion.estado === 1 ? 'proyecto en curso' : 'proyecto finalizado'
+                        }}
+                      </Badge>
                     </div>
-                  </div>
-                </CardContent>
-                <CardFooter class="flex justify-end">
-                  <Dialog v-if="planificacion.estado === 1">
-                    <DialogTrigger as-child>
-                      <Button variant="destructive">
-                        <OctagonX />
-                        <span>Finalizar planificación</span>
-                      </Button>
-                    </DialogTrigger>
+                  </CardHeader>
 
-                    <DialogContent class="sm:max-w-[425px]">
-                      <DialogHeader>
-                        <DialogTitle>Confirmar</DialogTitle>
-                        <DialogDescription>Esta acción no se puede deshacer.</DialogDescription>
-                      </DialogHeader>
+                  <CardContent>
+                    <div class="flex flex-col gap-4">
+                      <p class="flex flex-col">
+                        <span class="font-bold">Objetivos generales: </span>
+                        <span>{{ planificacion.objetivos_generales }}</span>
+                      </p>
+                      <p class="flex flex-col">
+                        <span class="font-bold">Estrategias para alcanzar el proyecto: </span>
+                        <span>{{ planificacion.estrategias }}</span>
+                      </p>
+                      <p class="flex flex-col">
+                        <span class="font-bold">Cierre del proyecto: </span>
+                        <span>{{ planificacion.cierre_proyecto }}</span>
+                      </p>
+                      <div class="border p-4">
+                        <p class="flex flex-col">
+                          <span class="font-bold">Objetivos de aprendizaje: </span>
+                        </p>
 
-                      <!-- boton de guardar -->
-                      <DialogFooter>
-                        <DialogClose>
-                          <Button @click.stop="finalizarPlanificacion(planificacion.id)">
-                            <OctagonX />
-                            <span>Finalizar planificación</span>
-                          </Button>
-                        </DialogClose>
-                      </DialogFooter>
-                    </DialogContent>
-                  </Dialog>
-                </CardFooter>
-              </Card>
-            </TableCell>
-          </TableRow>
-        </TableBody>
-      </Table>
-    </CardContent>
+                        <Accordion type="single" collapsible>
+                          <AccordionItem
+                            v-for="oa in planificacion.oas"
+                            :key="oa.id_base_curricular"
+                            :value="String(oa.id_base_curricular)"
+                          >
+                            <AccordionTrigger>
+                              <p class="flex items-center gap-2">
+                                <Goal class="mr-2 inline" />
+                                <span>{{ oa.descripcion_ambito }}</span>
+                                <span> - </span>
+                                <span>{{ oa.descripcion_nucleo }}</span>
+                              </p>
+                            </AccordionTrigger>
+                            <AccordionContent>
+                              <p>{{ oa.descripcion_oa }}</p>
+                            </AccordionContent>
+                          </AccordionItem>
+                        </Accordion>
+                      </div>
+                    </div>
+                  </CardContent>
+                  <CardFooter class="flex justify-end">
+                    <Dialog v-if="planificacion.estado === 1">
+                      <DialogTrigger as-child>
+                        <Button variant="destructive">
+                          <OctagonX />
+                          <span>Finalizar planificación</span>
+                        </Button>
+                      </DialogTrigger>
+
+                      <DialogContent class="sm:max-w-[425px]">
+                        <DialogHeader>
+                          <DialogTitle>Confirmar</DialogTitle>
+                          <DialogDescription>Esta acción no se puede deshacer.</DialogDescription>
+                        </DialogHeader>
+
+                        <!-- boton de guardar -->
+                        <DialogFooter>
+                          <DialogClose>
+                            <Button @click.stop="finalizarPlanificacion(planificacion.id)">
+                              <OctagonX />
+                              <span>Finalizar planificación</span>
+                            </Button>
+                          </DialogClose>
+                        </DialogFooter>
+                      </DialogContent>
+                    </Dialog>
+                  </CardFooter>
+                </Card>
+              </TableCell>
+            </TableRow>
+          </TableBody>
+        </Table>
+      </CardContent>
+    </Transition>
   </Card>
 </template>

@@ -17,6 +17,7 @@ const nombreCurso = computed(() => props.nivel + props.letra)
 const proyectoEje = ref<Tables<'mv_pla_mediano_plazo'> | null>(null)
 
 // planificaciones corto plazo
+const loadingPlanificaciones = ref(true)
 const queryResumenPlanificaciones = supabase.rpc('resumen_pla_corto_curso', {
   colegio: authStore.perfil!.rbd_usuario,
   curso: nombreCurso.value,
@@ -121,6 +122,7 @@ async function fetchPlanificaciones() {
   const { data, error } = await queryResumenPlanificaciones
   if (error) errorStore.setError({ error, customCode: 500 })
   else resumenPlanificaciones.value = data
+  loadingPlanificaciones.value = false
 }
 
 /**
@@ -402,93 +404,97 @@ onMounted(async () => {
       <CardDescription>Descripcion planificacion corto plazo.</CardDescription>
       <Separator />
     </CardHeader>
-    <CardContent>
-      <!-- si no hay un proyecto mediano plazo activo -->
-      <InfoMensajeSinData
-        v-if="!proyectoEje"
-        icono="mantencion"
-        mensaje="No hay un proyecto eje activo."
-      />
 
-      <div v-else class="flex flex-col gap-4">
-        <Card class="border-green-500">
-          <CardHeader>
-            <CardDescription>Proyecto Eje en curso:</CardDescription>
-            <CardTitle>{{ proyectoEje.proyecto_eje }}</CardTitle>
-          </CardHeader>
-        </Card>
+    <Transition name="fade" mode="out-in">
+      <CardContent v-if="!loadingPlanificaciones">
+        <!-- si no hay un proyecto mediano plazo activo -->
+        <InfoMensajeSinData
+          v-if="!proyectoEje"
+          icono="mantencion"
+          mensaje="No hay un proyecto eje activo."
+        />
 
-        <div>
-          <!-- si no hay planificaciones -->
-          <InfoMensajeSinData
-            v-if="!resumenPlanificaciones"
-            icono="mantencion"
-            mensaje="Aún no hay planificaciones a corto plazo."
-          />
+        <div v-else class="flex flex-col gap-4">
+          <Card class="border-green-500">
+            <CardHeader>
+              <CardDescription>Proyecto Eje en curso:</CardDescription>
+              <CardTitle>{{ proyectoEje.proyecto_eje }}</CardTitle>
+            </CardHeader>
+          </Card>
 
-          <Table v-else>
-            <TableBody>
-              <TableRow
-                v-for="planificacion in resumenPlanificaciones"
-                :key="planificacion.id"
-                class="group flex min-h-20 items-center"
-              >
-                <TableCell class="w-full">
-                  <Card>
-                    <CardHeader>
-                      <CardDescription>
-                        <p>{{ planificacion.fecha }}</p>
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <div class="flex flex-col gap-4">
-                        <p class="flex flex-col">
-                          <span class="font-bold">Recursos: </span>
-                          <span>{{ planificacion.recursos }}</span>
-                        </p>
-                        <p class="flex flex-col">
-                          <span class="font-bold">Instrumentos: </span>
-                          <span>{{ planificacion.instrumentos }}</span>
-                        </p>
-                        <p class="flex flex-col">
-                          <span class="font-bold">Inicio, desarrollo, y cierre: </span>
-                          <span>{{ planificacion.inicioDesarrolloCierre }}</span>
-                        </p>
+          <div>
+            <!-- si no hay planificaciones -->
+            <InfoMensajeSinData
+              v-if="!resumenPlanificaciones"
+              icono="mantencion"
+              mensaje="Aún no hay planificaciones a corto plazo."
+            />
 
-                        <div class="border p-4">
+            <Table v-else>
+              <TableBody>
+                <TableRow
+                  v-for="planificacion in resumenPlanificaciones"
+                  :key="planificacion.id"
+                  class="group flex min-h-20 items-center"
+                >
+                  <TableCell class="w-full">
+                    <Card>
+                      <CardHeader>
+                        <CardDescription>
+                          <p>{{ planificacion.fecha }}</p>
+                        </CardDescription>
+                      </CardHeader>
+
+                      <CardContent>
+                        <div class="flex flex-col gap-4">
                           <p class="flex flex-col">
-                            <span class="font-bold">Objetivos de aprendizaje: </span>
+                            <span class="font-bold">Recursos: </span>
+                            <span>{{ planificacion.recursos }}</span>
+                          </p>
+                          <p class="flex flex-col">
+                            <span class="font-bold">Instrumentos: </span>
+                            <span>{{ planificacion.instrumentos }}</span>
+                          </p>
+                          <p class="flex flex-col">
+                            <span class="font-bold">Inicio, desarrollo, y cierre: </span>
+                            <span>{{ planificacion.inicioDesarrolloCierre }}</span>
                           </p>
 
-                          <Accordion type="single" collapsible>
-                            <AccordionItem
-                              v-for="oa in planificacion.oas"
-                              :key="oa.id_base_curricular"
-                              :value="String(oa.id_base_curricular)"
-                            >
-                              <AccordionTrigger>
-                                <p class="flex items-center gap-2">
-                                  <Goal class="mr-2 inline" />
-                                  <span>{{ oa.descripcion_ambito }}</span>
-                                  <span> - </span>
-                                  <span>{{ oa.descripcion_nucleo }}</span>
-                                </p>
-                              </AccordionTrigger>
-                              <AccordionContent>
-                                <p>{{ oa.descripcion_oa }}</p>
-                              </AccordionContent>
-                            </AccordionItem>
-                          </Accordion>
+                          <div class="border p-4">
+                            <p class="flex flex-col">
+                              <span class="font-bold">Objetivos de aprendizaje: </span>
+                            </p>
+
+                            <Accordion type="single" collapsible>
+                              <AccordionItem
+                                v-for="oa in planificacion.oas"
+                                :key="oa.codigo_oa"
+                                :value="String(oa.codigo_oa)"
+                              >
+                                <AccordionTrigger>
+                                  <p class="flex items-center gap-2">
+                                    <Goal class="mr-2 inline" />
+                                    <span>{{ oa.descripcion_ambito }}</span>
+                                    <span> - </span>
+                                    <span>{{ oa.descripcion_nucleo }}</span>
+                                  </p>
+                                </AccordionTrigger>
+                                <AccordionContent>
+                                  <p>{{ oa.descripcion_oa }}</p>
+                                </AccordionContent>
+                              </AccordionItem>
+                            </Accordion>
+                          </div>
                         </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
+                      </CardContent>
+                    </Card>
+                  </TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+          </div>
         </div>
-      </div>
-    </CardContent>
+      </CardContent>
+    </Transition>
   </Card>
 </template>
