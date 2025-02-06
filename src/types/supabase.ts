@@ -591,39 +591,27 @@ export type Database = {
       }
       mv_inter_pla_corto_plazo: {
         Row: {
-          anio: number
-          codigo_ambito: number
-          codigo_nucleo: number
           codigo_oa: number
-          dia: number
+          fecha_creacion: string
           fecha_modificacion: string | null
           id: number
           id_planificacion: number
-          mes: number
           rut_usuario: string
         }
         Insert: {
-          anio: number
-          codigo_ambito: number
-          codigo_nucleo: number
           codigo_oa: number
-          dia: number
+          fecha_creacion?: string
           fecha_modificacion?: string | null
           id?: number
           id_planificacion: number
-          mes: number
           rut_usuario: string
         }
         Update: {
-          anio?: number
-          codigo_ambito?: number
-          codigo_nucleo?: number
           codigo_oa?: number
-          dia?: number
+          fecha_creacion?: string
           fecha_modificacion?: string | null
           id?: number
           id_planificacion?: number
-          mes?: number
           rut_usuario?: string
         }
         Relationships: [
@@ -1207,43 +1195,37 @@ export type Database = {
       }
       mv_pla_corto_plazo: {
         Row: {
-          anio: number
-          dia: number
           estado_planificacion: number
+          fecha_inicio: string
           fecha_modificacion: string | null
           id_planificacion: number
           id_planificacion_mediano_plazo: number
           inicio_desarrollo_cierre: string
           instrumentos_evaluacion: string
-          mes: number
           nivel_planificacion: string
           rbd: number
           recursos: string
         }
         Insert: {
-          anio: number
-          dia: number
           estado_planificacion: number
+          fecha_inicio?: string
           fecha_modificacion?: string | null
           id_planificacion?: number
           id_planificacion_mediano_plazo: number
           inicio_desarrollo_cierre: string
           instrumentos_evaluacion: string
-          mes: number
           nivel_planificacion: string
           rbd: number
           recursos: string
         }
         Update: {
-          anio?: number
-          dia?: number
           estado_planificacion?: number
+          fecha_inicio?: string
           fecha_modificacion?: string | null
           id_planificacion?: number
           id_planificacion_mediano_plazo?: number
           inicio_desarrollo_cierre?: string
           instrumentos_evaluacion?: string
-          mes?: number
           nivel_planificacion?: string
           rbd?: number
           recursos?: string
@@ -2361,6 +2343,13 @@ export type Database = {
         }
         Returns: Json
       }
+      resumen_pla_corto_curso: {
+        Args: {
+          colegio: number
+          curso: string
+        }
+        Returns: Json
+      }
       resumen_pla_med_curso: {
         Args: {
           colegio: number
@@ -2405,6 +2394,12 @@ export type Database = {
           usuario_ingreso: string
         }
         Returns: undefined
+      }
+      tx_crear_plan_corto: {
+        Args: {
+          planificacion: Json
+        }
+        Returns: boolean
       }
       tx_crear_plan_mediano: {
         Args: {

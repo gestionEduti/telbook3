@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import type { Tables } from '@/types/supabase'
 import { OctagonX, Trash2, CalendarPlus2, Pen, Plus } from 'lucide-vue-next'
 
 const props = defineProps<{
@@ -425,11 +424,11 @@ onMounted(async () => {
             class="group flex min-h-20 items-center"
           >
             <TableCell class="w-full">
-              <Card :class="planificacion.estado === 1 ? 'border-green-500' : ''">
+              <Card :class="planificacion.estado === 1 ? 'border-green-500' : 'bg-gray-100'">
                 <CardHeader>
                   <CardTitle> Proyecto eje: {{ planificacion.proyecto_eje }} </CardTitle>
                   <CardDescription>
-                    <p>{{ planificacion.fecha_inicio }}</p>
+                    <p>{{ planificacion.fecha }}</p>
                     <p>{{ planificacion.cantidad_semanas }} semanas</p>
                   </CardDescription>
                   <div class="flex">
@@ -469,9 +468,9 @@ onMounted(async () => {
                           <AccordionTrigger>
                             <p>
                               <span>
-                                <Badge class="mr-4 h-6 w-6 items-center justify-center">{{
-                                  index + 1
-                                }}</Badge>
+                                <Badge class="mr-4 h-6 w-6 items-center justify-center">
+                                  {{ index + 1 }}
+                                </Badge>
                               </span>
                               <span>{{ oa.descripcion_ambito }}</span>
                               <span> - </span>
