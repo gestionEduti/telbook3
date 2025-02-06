@@ -17,6 +17,21 @@ const props = defineProps<{
 
 const nombreCurso = computed(() => props.nivel + props.letra)
 
+const meses = [
+  { numero: '01', nombre: 'Enero' },
+  { numero: '02', nombre: 'Febrero' },
+  { numero: '03', nombre: 'Marzo' },
+  { numero: '04', nombre: 'Abril' },
+  { numero: '05', nombre: 'Mayo' },
+  { numero: '06', nombre: 'Junio' },
+  { numero: '07', nombre: 'Julio' },
+  { numero: '08', nombre: 'Agosto' },
+  { numero: '09', nombre: 'Septiembre' },
+  { numero: '10', nombre: 'Octubre' },
+  { numero: '11', nombre: 'Noviembre' },
+  { numero: '12', nombre: 'Diciembre' },
+]
+
 const planificaciones = ref<Tables<'mv_pla_largo_plazo'>[] | null>(null)
 const nuevaPlanificacion = ref<string>('')
 const fechaNuevaPlanificacion = ref('')
@@ -82,6 +97,13 @@ async function eliminarPlanificacion(id: number) {
 
 async function guardarPlanificacion() {
   await insertPlanificacion()
+  await fetchPlanificaciones()
+}
+
+function planificacionesMes(mes: string) {
+  return planificaciones.value?.filter(
+    (planificacion) => planificacion.fecha_planificacion.split('-')[1] === mes,
+  )
 }
 
 onMounted(async () => {
@@ -172,51 +194,63 @@ onMounted(async () => {
       />
 
       <!-- si hay planificaciones -->
-      <Table v-else>
-        <TableBody>
-          <TableRow
-            v-for="planificacion in planificaciones"
-            :key="planificacion.id_planificacion"
-            class="group flex min-h-20 items-center"
-          >
-            <TableCell class="w-28 border-r text-center capitalize">
-              {{ formatearTimestamptzADDMMYYYY(planificacion.fecha_planificacion) }}
-            </TableCell>
-            <TableCell class="flex-1">
-              <p class="capitalize">
-                {{ planificacion.descripcion_planificacion.toLocaleLowerCase() }}
-              </p>
-            </TableCell>
-            <TableCell class="w-40">
-              <Dialog>
-                <DialogTrigger as-child>
-                  <Button variant="destructive" class="hidden w-32 group-hover:flex">
-                    <Trash2 />
-                    <span>Eliminar</span>
-                  </Button>
-                </DialogTrigger>
+      <template v-else>
+        <div v-for="mes in meses" :key="mes.numero">
+          <div v-if="planificacionesMes(mes.numero)?.length" class="mb-4">
+            <!-- nombre mes -->
+            <p class="telbook-label">{{ mes.nombre }}</p>
 
-                <DialogContent class="sm:max-w-[425px]">
-                  <DialogHeader>
-                    <DialogTitle>Confirmar eliminacion</DialogTitle>
-                    <DialogDescription>Esta acción no se puede deshacer.</DialogDescription>
-                  </DialogHeader>
+            <!-- planificaciones del mes -->
+            <Table>
+              <TableBody>
+                <TableRow
+                  v-for="planificacion in planificacionesMes(mes.numero)"
+                  :key="planificacion.id_planificacion"
+                  class="group flex min-h-20 items-center"
+                >
+                  <TableCell class="w-32 border-r text-center capitalize">
+                    {{ formatearTimestamptzADDMMYYYY(planificacion.fecha_planificacion) }}
+                  </TableCell>
+                  <TableCell class="flex-1">
+                    <p class="capitalize">
+                      {{ planificacion.descripcion_planificacion.toLocaleLowerCase() }}
+                    </p>
+                  </TableCell>
+                  <TableCell class="w-40">
+                    <Dialog>
+                      <DialogTrigger as-child>
+                        <Button variant="destructive" class="hidden w-32 group-hover:flex">
+                          <Trash2 />
+                          <span>Eliminar</span>
+                        </Button>
+                      </DialogTrigger>
 
-                  <!-- boton de guardar -->
-                  <DialogFooter>
-                    <DialogClose>
-                      <Button @click.stop="eliminarPlanificacion(planificacion.id_planificacion)">
-                        <Trash2 />
-                        <span>Eliminar planificación</span>
-                      </Button>
-                    </DialogClose>
-                  </DialogFooter>
-                </DialogContent>
-              </Dialog>
-            </TableCell>
-          </TableRow>
-        </TableBody>
-      </Table>
+                      <DialogContent class="sm:max-w-[425px]">
+                        <DialogHeader>
+                          <DialogTitle>Confirmar eliminacion</DialogTitle>
+                          <DialogDescription>Esta acción no se puede deshacer.</DialogDescription>
+                        </DialogHeader>
+
+                        <!-- boton de guardar -->
+                        <DialogFooter>
+                          <DialogClose>
+                            <Button
+                              @click.stop="eliminarPlanificacion(planificacion.id_planificacion)"
+                            >
+                              <Trash2 />
+                              <span>Eliminar planificación</span>
+                            </Button>
+                          </DialogClose>
+                        </DialogFooter>
+                      </DialogContent>
+                    </Dialog>
+                  </TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+          </div class="mb-4">
+        </div>
+      </template>
     </CardContent>
   </Card>
 </template>
