@@ -638,40 +638,31 @@ export type Database = {
       }
       mv_inter_pla_mediano_plazo: {
         Row: {
-          anio: number
-          codigo_desempeno: number
-          codigo_nucleo: number
-          codigo_oa: number
-          dia: number
+          codigo_desempeno: number | null
+          codigo_nucleo: number | null
+          codigo_oa: number | null
           fecha_asociacion: string | null
           id: number
           id_base_curricular: number
           id_planificacion: number
-          mes: number
         }
         Insert: {
-          anio: number
-          codigo_desempeno: number
-          codigo_nucleo: number
-          codigo_oa: number
-          dia: number
+          codigo_desempeno?: number | null
+          codigo_nucleo?: number | null
+          codigo_oa?: number | null
           fecha_asociacion?: string | null
           id?: number
           id_base_curricular: number
           id_planificacion: number
-          mes: number
         }
         Update: {
-          anio?: number
-          codigo_desempeno?: number
-          codigo_nucleo?: number
-          codigo_oa?: number
-          dia?: number
+          codigo_desempeno?: number | null
+          codigo_nucleo?: number | null
+          codigo_oa?: number | null
           fecha_asociacion?: string | null
           id?: number
           id_base_curricular?: number
           id_planificacion?: number
-          mes?: number
         }
         Relationships: [
           {
@@ -1332,10 +1323,8 @@ export type Database = {
       }
       mv_pla_mediano_plazo: {
         Row: {
-          anio: number
           cantidad_semanas: number
           cierre_proyecto: string
-          dia: number
           estado_planificacion: number
           estrategias: string
           fecha_creacion: string | null
@@ -1343,17 +1332,14 @@ export type Database = {
           fecha_inicio: string
           fecha_modificacion: string | null
           id_planificacion: number
-          mes: number
           nivel_planificacion: string
           objetivos_generales: string
           proyecto_eje: string
           rbd: number
         }
         Insert: {
-          anio: number
           cantidad_semanas: number
           cierre_proyecto: string
-          dia: number
           estado_planificacion: number
           estrategias: string
           fecha_creacion?: string | null
@@ -1361,17 +1347,14 @@ export type Database = {
           fecha_inicio: string
           fecha_modificacion?: string | null
           id_planificacion?: number
-          mes: number
           nivel_planificacion: string
           objetivos_generales: string
           proyecto_eje: string
           rbd: number
         }
         Update: {
-          anio?: number
           cantidad_semanas?: number
           cierre_proyecto?: string
-          dia?: number
           estado_planificacion?: number
           estrategias?: string
           fecha_creacion?: string | null
@@ -1379,7 +1362,6 @@ export type Database = {
           fecha_inicio?: string
           fecha_modificacion?: string | null
           id_planificacion?: number
-          mes?: number
           nivel_planificacion?: string
           objetivos_generales?: string
           proyecto_eje?: string
@@ -2379,6 +2361,13 @@ export type Database = {
         }
         Returns: Json
       }
+      resumen_pla_med_curso: {
+        Args: {
+          colegio: number
+          curso: string
+        }
+        Returns: Json
+      }
       transaccion_prematricula: {
         Args: {
           rbd: number
@@ -2416,6 +2405,12 @@ export type Database = {
           usuario_ingreso: string
         }
         Returns: undefined
+      }
+      tx_crear_plan_mediano: {
+        Args: {
+          planificacion: Json
+        }
+        Returns: boolean
       }
     }
     Enums: {

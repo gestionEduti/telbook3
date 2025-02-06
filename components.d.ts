@@ -7,6 +7,10 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    Accordion: typeof import('./src/components/ui/accordion/Accordion.vue')['default']
+    AccordionContent: typeof import('./src/components/ui/accordion/AccordionContent.vue')['default']
+    AccordionItem: typeof import('./src/components/ui/accordion/AccordionItem.vue')['default']
+    AccordionTrigger: typeof import('./src/components/ui/accordion/AccordionTrigger.vue')['default']
     Alert: typeof import('./src/components/ui/alert/Alert.vue')['default']
     AlertDescription: typeof import('./src/components/ui/alert/AlertDescription.vue')['default']
     AlertDialog: typeof import('./src/components/ui/alert-dialog/AlertDialog.vue')['default']
@@ -89,6 +93,9 @@ declare module 'vue' {
     EditarMatricula: typeof import('./src/views/Dashboard/Matriculas/EditarMatricula.vue')['default']
     FormularioMatricula: typeof import('./src/components/FormularioMatricula.vue')['default']
     HomeView: typeof import('./src/views/HomeView.vue')['default']
+    HoverCard: typeof import('./src/components/ui/hover-card/HoverCard.vue')['default']
+    HoverCardContent: typeof import('./src/components/ui/hover-card/HoverCardContent.vue')['default']
+    HoverCardTrigger: typeof import('./src/components/ui/hover-card/HoverCardTrigger.vue')['default']
     InfoMensajeSinData: typeof import('./src/components/InfoMensajeSinData.vue')['default']
     Input: typeof import('./src/components/ui/input/Input.vue')['default']
     Label: typeof import('./src/components/ui/label/Label.vue')['default']
