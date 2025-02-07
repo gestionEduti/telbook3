@@ -97,7 +97,8 @@ const optionsOas = computed(() => {
       b.descripcion_ambito === selectedAmbito.value &&
       b.descripcion_nucleo === selectedNucleo.value,
   )
-  return filteredOas
+  const ordenados = filteredOas.sort((a, b) => a.id - b.id)
+  return ordenados
 })
 
 /**
@@ -203,7 +204,7 @@ onMounted(async () => {
 
           <Dialog>
             <DialogTrigger as-child>
-              <Button>
+              <Button :disabled="!proyectoEje">
                 <CalendarPlus2 />
                 <span> Crear planificacion </span>
               </Button>

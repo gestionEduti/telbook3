@@ -109,7 +109,8 @@ const optionsOas = computed(() => {
       b.descripcion_ambito === selectedAmbito.value &&
       b.descripcion_nucleo === selectedNucleo.value,
   )
-  return filteredOas
+  const ordenados = filteredOas.sort((a, b) => a.id - b.id)
+  return ordenados
 })
 
 /**
@@ -254,15 +255,15 @@ onMounted(async () => {
                 <p v-if="!oasAgregados.length" class="mb-3 text-sm tracking-tight text-gray-600">
                   * Esta planificacion aun no tiene OAS
                 </p>
-                <ul v-else class="mb-3 grid grid-cols-5 gap-2">
+                <ul v-else class="mb-3 grid grid-cols-1 gap-2">
                   <li v-for="oa in oasAgregados" :key="oa.id">
                     <HoverCard>
                       <HoverCardTrigger>
                         <div class="flex cursor-help items-center text-xs">
                           <span
-                            class="w-12 rounded-bl rounded-tl bg-gray-800 p-2 text-center font-bold text-white"
+                            class="truncate rounded-bl rounded-tl bg-gray-800 p-2 text-center font-bold text-white"
                           >
-                            {{ oa.id }}
+                            {{ oa.descripcion_oa }}
                           </span>
                           <button
                             @click="quitarOa(oa.id)"
