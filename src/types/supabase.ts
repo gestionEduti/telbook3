@@ -669,6 +669,47 @@ export type Database = {
           },
         ]
       }
+      mv_leccionario: {
+        Row: {
+          comentario: string | null
+          created_at: string
+          evaluacion: string
+          id: number
+          id_planificacion: number
+          otp: number
+          respuesta_otp: string
+          rut_usuario: string
+        }
+        Insert: {
+          comentario?: string | null
+          created_at?: string
+          evaluacion: string
+          id?: number
+          id_planificacion: number
+          otp: number
+          respuesta_otp: string
+          rut_usuario: string
+        }
+        Update: {
+          comentario?: string | null
+          created_at?: string
+          evaluacion?: string
+          id?: number
+          id_planificacion?: number
+          otp?: number
+          respuesta_otp?: string
+          rut_usuario?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mv_leccionario_id_planificacion_fkey"
+            columns: ["id_planificacion"]
+            isOneToOne: false
+            referencedRelation: "mv_pla_corto_plazo"
+            referencedColumns: ["id_planificacion"]
+          },
+        ]
+      }
       mv_libro_matricula: {
         Row: {
           anio_libro: number | null

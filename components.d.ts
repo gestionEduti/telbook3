@@ -100,6 +100,7 @@ declare module 'vue' {
     Input: typeof import('./src/components/ui/input/Input.vue')['default']
     Label: typeof import('./src/components/ui/label/Label.vue')['default']
     LargoPlazoView: typeof import('./src/views/Dashboard/Cursos/Curso/Planificaciones/LargoPlazoView.vue')['default']
+    LeccionarioItem: typeof import('./src/components/views/Cursos/Leccionario/LeccionarioItem.vue')['default']
     LeccionarioView: typeof import('./src/views/Dashboard/Cursos/Curso/Planificaciones/LeccionarioView.vue')['default']
     ListaCursos: typeof import('./src/components/views/Cursos/ListaCursos.vue')['default']
     ListaCursosItem: typeof import('./src/components/views/Cursos/ListaCursosItem.vue')['default']
