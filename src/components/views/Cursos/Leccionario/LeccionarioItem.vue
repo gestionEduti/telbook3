@@ -27,8 +27,11 @@ const authStore = useAuthStore()
 const mineducStore = useMineducStore()
 
 const loading = ref(true)
-const evaluacionInicial = ref<string>('')
-const evaluacionCombobox = ref<string>('')
+const evaluacionInicial = ref<string>('') // evaluacion cuando carga el componente
+const evaluacionComentario = ref<string>('')
+
+// formulario
+const evaluacionCombobox = ref<string>('') // evaluacion seleccionada
 const otp = ref('') // codigo de verificacion
 const comentario = ref('')
 
@@ -45,7 +48,10 @@ async function fetchEvaluacion() {
     .eq('id_planificacion', props.planificacion.id)
     .maybeSingle()
   if (error) errorStore.setError({ error, customCode: 500 })
-  else evaluacionInicial.value = data?.evaluacion || ''
+  else {
+    evaluacionInicial.value = data?.evaluacion || ''
+    evaluacionComentario.value = data?.comentario || ''
+  }
 }
 
 async function guardarEvaluacion() {
@@ -137,8 +143,11 @@ onMounted(async () => {
                     <div class="flex items-center gap-4">
                       <ThumbsUp v-if="evaluacionInicial === 'positiva'" />
                       <ThumbsDown v-else />
-                      <span>Evaluación {{ evaluacionInicial }}</span>
+                      <span class="text-lg capitalize">{{ evaluacionInicial }}</span>
                     </div>
+                    <p class="mt-4" v-if="evaluacionComentario !== ''">
+                      {{ evaluacionComentario }}
+                    </p>
                   </div>
 
                   <div v-else>
