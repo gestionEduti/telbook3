@@ -88,10 +88,9 @@ const fetchObsevacionesFonoaudiologicas = async () => {
         </AlertDialogTrigger>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Confirma la observacion?</AlertDialogTitle>
+            <AlertDialogTitle>¿Confirma la observacion?</AlertDialogTitle>
             <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete your account and remove
-              your data from our servers.
+              ¿Desea guardar?
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
