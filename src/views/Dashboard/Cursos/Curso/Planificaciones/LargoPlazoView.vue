@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Trash2, CalendarPlus2, Download, Pen } from 'lucide-vue-next'
-import { formatearTimestamptzADDMMYYYY } from '@/lib/formato'
+import { formatearFecha, formatearTimestamptzADDMMYYYY } from '@/lib/formato'
 import { useToast } from '@/components/ui/toast/use-toast'
 const { toast } = useToast()
 
@@ -46,8 +46,13 @@ async function fetchPlanificaciones() {
     .gte('fecha_creacion', `${2025}-01-01`)
     .lt('fecha_creacion', `${2025 + 1}-01-01`)
     .order('fecha_planificacion')
+
+
   if (error) errorStore.setError({ error, customCode: 500 })
-  else planificaciones.value = data
+  else {
+    planificaciones.value = data
+
+  }
 }
 
 async function insertPlanificacion() {
@@ -209,7 +214,8 @@ onMounted(async () => {
                   class="group flex min-h-20 items-center"
                 >
                   <TableCell class="w-32 border-r text-center capitalize">
-                    {{ formatearTimestamptzADDMMYYYY(planificacion.fecha_planificacion) }}
+<!--                    {{ formatearTimestamptzADDMMYYYY(planificacion.fecha_planificacion) }}-->
+                    {{formatearFecha(planificacion.fecha_planificacion)}}
                   </TableCell>
                   <TableCell class="flex-1">
                     <p class="capitalize">
