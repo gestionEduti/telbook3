@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import { Goal, Trash2, CalendarPlus2, Plus, Download, Pen } from 'lucide-vue-next'
-
+import { useToast } from '@/components/ui/toast/use-toast'
+const { toast } = useToast()
 const errorStore = useErrorStore()
 const authStore = useAuthStore()
 
 import type { Tables } from '@/types/supabase'
+import { fechaConTimezone, formatearFecha, obtenerFechaActualComoYYYMMDD } from '@/lib/formato'
 
 const props = defineProps<{
   nivel: string
@@ -67,6 +69,8 @@ const formularioValido = computed(() => {
     oasAgregados.value.length > 0
   )
 })
+
+const diaActual = obtenerFechaActualComoYYYMMDD()
 
 /**
  * genera un array con los ambitos para usar en el select
@@ -159,6 +163,26 @@ function quitarOa(id: number) {
 }
 
 /**
+ * eliminar una planificacion del dia actual
+ * @param id
+ */
+async function eliminarPlanificacionDelDia(id: number) {
+  const { error } = await supabase.from('mv_pla_corto_plazo').delete().eq('id_planificacion', id)
+
+  if (error) {
+    errorStore.setError({ error })
+  } else {
+    toast({
+      title: 'Planificación eliminada',
+      description: 'La planificación se ha eliminado correctamente',
+      duration: 3000,
+      variant: 'destructive',
+    })
+    resumenPlanificaciones.value = resumenPlanificaciones.value!.filter((p) => p.id !== id)
+  }
+}
+
+/**
  * guarda la planificacion en supabase
  */
 async function guardarPlanificacion() {
@@ -234,7 +258,7 @@ onMounted(async () => {
                     * Esta planificacion aun no tiene OAS
                   </p>
                   <ul v-else class="mb-3 grid grid-cols-1 gap-2">
-                    <li v-for="oa in oasAgregados" :key="oa.id">
+                    <!-- <li v-for="oa in oasAgregados" :key="oa.id">
                       <HoverCard>
                         <HoverCardTrigger>
                           <div class="flex cursor-help items-center text-xs">
@@ -270,7 +294,120 @@ onMounted(async () => {
                           </Card>
                         </HoverCardContent>
                       </HoverCard>
-                    </li>
+                    </li> -->
+                    <Accordion type="single" collapsible>
+                      <AccordionItem
+                        value="COMUNICACION INTEGRAL"
+                        v-if="
+                          oasAgregados.find(
+                            (oa) => oa.descripcion_ambito === 'COMUNICACION INTEGRAL',
+                          )
+                        "
+                      >
+                        <AccordionTrigger>
+                          <p>
+                            <span>
+                              <Badge>
+                                {{
+                                  oasAgregados.filter(
+                                    (o) => o.descripcion_ambito === 'COMUNICACION INTEGRAL',
+                                  ).length
+                                }}
+                              </Badge>
+                            </span>
+                            Comunicación integral
+                          </p>
+                        </AccordionTrigger>
+                        <AccordionContent>
+                          <p
+                            class="mb-2"
+                            v-for="(oa, index) in oasAgregados.filter(
+                              (o) => o.descripcion_ambito === 'COMUNICACION INTEGRAL',
+                            )"
+                            :key="oa.id"
+                          >
+                            <span class="font-medium">{{ index + 1 }}. </span>
+                            {{ oa.descripcion_oa.toLocaleLowerCase() }}
+                          </p>
+                        </AccordionContent>
+                      </AccordionItem>
+
+                      <AccordionItem
+                        value="DESARROLLO PERSONAL Y SOCIAL"
+                        v-if="
+                          oasAgregados.find(
+                            (oa) => oa.descripcion_ambito === 'DESARROLLO PERSONAL Y SOCIAL',
+                          )
+                        "
+                      >
+                        <AccordionTrigger>
+                          <p>
+                            <span>
+                              <Badge>
+                                {{
+                                  oasAgregados.filter(
+                                    (o) => o.descripcion_ambito === 'DESARROLLO PERSONAL Y SOCIAL',
+                                  ).length
+                                }}
+                              </Badge>
+                            </span>
+                            Desarrollo personal y social
+                          </p>
+                        </AccordionTrigger>
+                        <AccordionContent>
+                          <p
+                            class="mb-2"
+                            v-for="(oa, index) in oasAgregados.filter(
+                              (o) => o.descripcion_ambito === 'DESARROLLO PERSONAL Y SOCIAL',
+                            )"
+                            :key="oa.id"
+                          >
+                            <span class="font-medium">{{ index + 1 }}. </span>
+                            {{ oa.descripcion_oa.toLocaleLowerCase() }}
+                          </p>
+                        </AccordionContent>
+                      </AccordionItem>
+
+                      <AccordionItem
+                        value="INTERACCION Y COMPRENSION DEL ENTORNO"
+                        v-if="
+                          oasAgregados.find(
+                            (oa) =>
+                              oa.descripcion_ambito === 'INTERACCION Y COMPRENSION DEL ENTORNO',
+                          )
+                        "
+                      >
+                        <AccordionTrigger>
+                          <p>
+                            <span>
+                              <Badge>
+                                {{
+                                  oasAgregados.filter(
+                                    (o) =>
+                                      o.descripcion_ambito ===
+                                      'INTERACCION Y COMPRENSION DEL ENTORNO',
+                                  ).length
+                                }}
+                              </Badge>
+                            </span>
+                            Interacción y comprensión del entorno
+                          </p>
+                        </AccordionTrigger>
+                        <AccordionContent>
+                          <p
+                            class="mb-2"
+                            v-for="(oa, index) in oasAgregados.filter(
+                              (o) =>
+                                o.descripcion_ambito === 'INTERACCION Y COMPRENSION DEL ENTORNO',
+                            )"
+                            :key="oa.id"
+                          >
+                            <span class="font-medium">{{ index + 1 }}. </span>
+                            {{ oa.descripcion_oa.toLocaleLowerCase() }}
+                          </p>
+                        </AccordionContent>
+                      </AccordionItem>
+                    </Accordion>
                   </ul>
 
                   <Dialog>
@@ -428,6 +565,7 @@ onMounted(async () => {
               mensaje="Aún no hay planificaciones a corto plazo."
             />
 
+            <!-- si hay -->
             <Table v-else>
               <TableBody>
                 <TableRow
@@ -439,7 +577,39 @@ onMounted(async () => {
                     <Card>
                       <CardHeader>
                         <CardDescription>
-                          <p>{{ planificacion.fecha }}</p>
+                          <div class="flex items-start justify-between">
+                            <p>{{ planificacion.fecha }}</p>
+
+                            <Dialog v-if="planificacion.fecha === diaActual">
+                              <DialogTrigger as-child>
+                                <Button variant="destructive">
+                                  <Trash2 />
+                                  <span>Eliminar</span>
+                                </Button>
+                              </DialogTrigger>
+
+                              <DialogContent class="sm:max-w-[425px]">
+                                <DialogHeader>
+                                  <DialogTitle>Confirmar eliminacion</DialogTitle>
+                                  <DialogDescription
+                                    >Esta acción no se puede deshacer.</DialogDescription
+                                  >
+                                </DialogHeader>
+
+                                <!-- boton de guardar -->
+                                <DialogFooter>
+                                  <DialogClose>
+                                    <Button
+                                      @click.stop="eliminarPlanificacionDelDia(planificacion.id)"
+                                    >
+                                      <Trash2 />
+                                      <span>Eliminar planificación</span>
+                                    </Button>
+                                  </DialogClose>
+                                </DialogFooter>
+                              </DialogContent>
+                            </Dialog>
+                          </div>
                         </CardDescription>
                       </CardHeader>
 
