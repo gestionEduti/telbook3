@@ -100,8 +100,15 @@ async function eliminarPlanificacion(id: number) {
   }
 }
 
+function resetearFormulario(){
+  fechaNuevaPlanificacion.value = ''
+  nuevaPlanificacion.value = ''
+  otp.value = ''
+}
+
 async function guardarPlanificacion() {
   await insertPlanificacion()
+  resetearFormulario()
   await fetchPlanificaciones()
 }
 
