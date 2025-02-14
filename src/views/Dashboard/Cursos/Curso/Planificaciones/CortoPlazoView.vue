@@ -149,8 +149,8 @@ function agregarOa() {
   if (oa && !oasAgregados.value.some((item) => item.id === oa.id)) {
     oasAgregados.value.push(oa)
   }
-  selectedAmbito.value = ''
-  selectedNucleo.value = ''
+  // selectedAmbito.value = ''
+  // selectedNucleo.value = ''
   selectedOa.value = ''
 }
 
@@ -234,7 +234,7 @@ onMounted(async () => {
               </Button>
             </DialogTrigger>
 
-            <DialogContent class="sm:max-w-[425px]">
+            <DialogScrollContent class="sm:max-w-[425px]">
               <DialogHeader>
                 <DialogTitle>Nueva planificacion</DialogTitle>
                 <DialogDescription> </DialogDescription>
@@ -321,12 +321,17 @@ onMounted(async () => {
                         <AccordionContent>
                           <p
                             class="mb-2"
-                            v-for="(oa, index) in oasAgregados.filter(
+                            v-for="oa in oasAgregados.filter(
                               (o) => o.descripcion_ambito === 'COMUNICACION INTEGRAL',
                             )"
                             :key="oa.id"
                           >
-                            <span class="font-medium">{{ index + 1 }}. </span>
+                            <button
+                              @click="quitarOa(oa.id)"
+                              class="bg-red-700 px-2 py-2 text-white"
+                            >
+                              <Trash2 :size="16" />
+                            </button>
                             {{ oa.descripcion_oa.toLocaleLowerCase() }}
                           </p>
                         </AccordionContent>
@@ -357,12 +362,17 @@ onMounted(async () => {
                         <AccordionContent>
                           <p
                             class="mb-2"
-                            v-for="(oa, index) in oasAgregados.filter(
+                            v-for="oa in oasAgregados.filter(
                               (o) => o.descripcion_ambito === 'DESARROLLO PERSONAL Y SOCIAL',
                             )"
                             :key="oa.id"
                           >
-                            <span class="font-medium">{{ index + 1 }}. </span>
+                            <button
+                              @click="quitarOa(oa.id)"
+                              class="bg-red-700 px-2 py-2 text-white"
+                            >
+                              <Trash2 :size="16" />
+                            </button>
                             {{ oa.descripcion_oa.toLocaleLowerCase() }}
                           </p>
                         </AccordionContent>
@@ -396,13 +406,18 @@ onMounted(async () => {
                         <AccordionContent>
                           <p
                             class="mb-2"
-                            v-for="(oa, index) in oasAgregados.filter(
+                            v-for="oa in oasAgregados.filter(
                               (o) =>
                                 o.descripcion_ambito === 'INTERACCION Y COMPRENSION DEL ENTORNO',
                             )"
                             :key="oa.id"
                           >
-                            <span class="font-medium">{{ index + 1 }}. </span>
+                            <button
+                              @click="quitarOa(oa.id)"
+                              class="bg-red-700 px-2 py-2 text-white"
+                            >
+                              <Trash2 :size="16" />
+                            </button>
                             {{ oa.descripcion_oa.toLocaleLowerCase() }}
                           </p>
                         </AccordionContent>
@@ -532,7 +547,7 @@ onMounted(async () => {
                   </Button>
                 </DialogClose>
               </DialogFooter>
-            </DialogContent>
+            </DialogScrollContent>
           </Dialog>
         </div>
       </CardTitle>
