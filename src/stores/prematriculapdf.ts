@@ -42,16 +42,27 @@ export const usePrematriculaPdfStore = defineStore('prematriculapdf', () => {
       // Obtener el texto manteniendo el orden y posición
       const textItems = textContent.items.map((item) => ({
         text: item.str as string,
-        y: item.transform[5] as number, // Posición vertical
+        x: item.transform[4] as number,
+        y: item.transform[5] as number,
       }))
 
-      // Agrupar elementos por línea basado en su posición vertical
-      const lineThreshold = 5 // Umbral para considerar elementos en la misma línea
-      const lines = []
-      let currentLine = []
-      let lastY = null
+      // Determinar el tipo de PDF basado en el contenido
+      const esFormatoMinisterio = textItems.some(
+        (item) =>
+          item.text.includes('Ministerio de') ||
+          item.text.includes('Lista De Estudiantes Pre-Matriculados'),
+      )
 
-      textItems.forEach((item) => {
+      // Agrupar elementos por línea basado en su posición vertical
+      const lineThreshold = 5
+      const lines: string[] = []
+      let currentLine: string[] = []
+      let lastY: number | null = null
+
+      // Ajustar el índice de inicio según el formato
+      const startIndex = esFormatoMinisterio ? 6 : 0
+
+      textItems.slice(startIndex).forEach((item) => {
         if (lastY === null || Math.abs(item.y - lastY) < lineThreshold) {
           currentLine.push(item.text)
         } else {
@@ -67,8 +78,11 @@ export const usePrematriculaPdfStore = defineStore('prematriculapdf', () => {
         lines.push(currentLine.join(' '))
       }
 
-      // Extraer y procesar el curso
-      const lineaNivel = lines.find((line) => line.trim().startsWith('Alumnos Nivel'))
+      // Extraer y procesar el curso (ahora funciona con ambos formatos)
+      const lineaNivel = lines.find(
+        (line) =>
+          line.trim().startsWith('Alumnos Nivel') || line.includes('Educación Especial Trastornos'),
+      )
 
       const regex = /(Nivel de Transición \d+|Nivel Medio Mayor).*?-(\b[A-Z]\b)/
       const match = lineaNivel?.match(regex)
@@ -119,6 +133,7 @@ export const usePrematriculaPdfStore = defineStore('prematriculapdf', () => {
         error: 'Error al procesar el PDF. Por favor, intente con otro archivo.',
       })
       alert('Error al procesar el PDF. Por favor, intente con otro archivo.')
+      return null
     }
   }
 

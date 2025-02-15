@@ -2414,6 +2414,7 @@ export type Database = {
           v_rut_alumno: string
           v_nombre_completo: string
           v_nivel: string
+          v_letra: string
           v_fecha_incorporacion: string
         }
         Returns: string
