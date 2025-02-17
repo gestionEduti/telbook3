@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { KeyRound } from 'lucide-vue-next'
 const { usuario, perfil, establecimiento } = useAuthStore()
 
 import { formatearRut } from '@/lib/formato' // utilidades para formatear
@@ -35,6 +36,12 @@ import { formatearRut } from '@/lib/formato' // utilidades para formatear
             <p class="mb-3">
               {{ String(perfil.rbd_usuario).toLocaleLowerCase() }}
             </p>
+            <RouterLink to="/reset-password" class="btn btn-primary">
+              <Button class="mt-8">
+                <KeyRound />
+                <span>Reiniciar mi contraseña</span>
+              </Button>
+            </RouterLink>
           </CardContent>
         </Card>
       </Transition>

@@ -138,6 +138,7 @@ declare module 'vue' {
     PanelEstablecimientosLista: typeof import('./src/views/Dashboard/PanelAdmin/paneles/PanelEstablecimientosLista.vue')['default']
     PanelUsuariosLista: typeof import('./src/views/Dashboard/PanelAdmin/paneles/PanelUsuariosLista.vue')['default']
     PanelUsuariosNuevo: typeof import('./src/views/Dashboard/PanelAdmin/paneles/PanelUsuariosNuevo.vue')['default']
+    PasswordReset: typeof import('./src/views/PasswordReset.vue')['default']
     PerfilView: typeof import('./src/views/Dashboard/Perfil/PerfilView.vue')['default']
     PersonalizadaView: typeof import('./src/views/Dashboard/Cursos/Curso/Evaluaciones/PersonalizadaView.vue')['default']
     Popover: typeof import('./src/components/ui/popover/Popover.vue')['default']

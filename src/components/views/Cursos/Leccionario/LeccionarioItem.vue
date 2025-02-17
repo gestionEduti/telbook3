@@ -216,7 +216,7 @@ onMounted(async () => {
                               @click="guardarEvaluacion"
                             >
                               <Save />
-                              <span>Guardar evaluación</span>
+                              <span>Guardar</span>
                             </Button>
                           </DialogClose>
                         </DialogFooter>
