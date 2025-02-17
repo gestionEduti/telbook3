@@ -4,7 +4,7 @@ import type { Tables } from '@/types/supabase'
 const authStore = useAuthStore()
 const errorStore = useErrorStore()
 
-const emits = defineEmits(['contenidosSeleccionados'])
+const emit = defineEmits(['contenidosSeleccionados'])
 
 // nombre del curso
 const route = useRoute()
@@ -36,7 +36,7 @@ function agregarQuitarContenidoSeleccionado(id: number) {
   } else {
     contenidosSeleccionados.value.push(id)
   }
-  emits('contenidosSeleccionados', contenidosSeleccionados.value)
+  emit('contenidosSeleccionados', contenidosSeleccionados.value)
 }
 </script>
 

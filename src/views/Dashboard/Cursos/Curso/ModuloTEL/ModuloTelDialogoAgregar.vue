@@ -69,9 +69,9 @@ const modalidades = ref(['online', 'presencial'])
         <div class="flex flex-col gap-2">
           <Label for="codigo" class="text-left"> Alumnos </Label>
           <div class="flex items-center gap-4">
-            <DialogoAgregarAlumnos @alumnosSeleccionados="formData.alumnos = $event">
+            <ModuloTelDialogoAgregarAlumnos @alumnosSeleccionados="formData.alumnos = $event">
               <Button>Agregar / Quitar alumnos</Button>
-            </DialogoAgregarAlumnos>
+            </ModuloTelDialogoAgregarAlumnos>
             <p class="text-sm">{{ formData.alumnos.length }} seleccionado(s)</p>
           </div>
         </div>
@@ -80,9 +80,11 @@ const modalidades = ref(['online', 'presencial'])
         <div class="flex flex-col gap-2">
           <Label for="codigo" class="text-left"> Niveles fonoaudiologios / Contenidos </Label>
           <div class="flex items-center gap-4">
-            <DialogoAgregarContenidos @contenidosSeleccionados="formData.contenidos = $event">
+            <ModuloTelDialogoAgregarContenidos
+              @contenidosSeleccionados="formData.contenidos = $event"
+            >
               <Button>Agregar / Quitar contenidos</Button>
-            </DialogoAgregarContenidos>
+            </ModuloTelDialogoAgregarContenidos>
             <p class="text-sm">{{ formData.contenidos.length }} seleccionado(s)</p>
           </div>
         </div>

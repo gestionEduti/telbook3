@@ -33,12 +33,12 @@ fetchRegistros()
 
         <!-- botones -->
         <div class="space-x-2">
-          <DialogoAgregar>
+          <ModuloTelDialogoAgregar>
             <Button>
               <Plus />
               <span>Agregar registro fonoaudiologico</span>
             </Button>
-          </DialogoAgregar>
+          </ModuloTelDialogoAgregar>
         </div>
       </CardTitle>
       <CardDescription>Descripcion modulo tel.</CardDescription>

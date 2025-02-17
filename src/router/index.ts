@@ -70,28 +70,32 @@ const routes = [
             path: '/dashboard/cursos/:nivel/:letra/planificaciones/corto',
             name: 'planificacionesCortoPlazo',
             component: () =>
-              import('../views/Dashboard/Cursos/Curso/Planificaciones/CortoPlazoView.vue'),
+              import('../views/Dashboard/Cursos/Curso/Planificaciones/Corto/CortoPlazoView.vue'),
             props: true,
           },
           {
             path: '/dashboard/cursos/:nivel/:letra/planificaciones/mediano',
             name: 'planificacionesMedianoPlazo',
             component: () =>
-              import('../views/Dashboard/Cursos/Curso/Planificaciones/MedianoPlazoView.vue'),
+              import(
+                '../views/Dashboard/Cursos/Curso/Planificaciones/Mediano/MedianoPlazoView.vue'
+              ),
             props: true,
           },
           {
             path: '/dashboard/cursos/:nivel/:letra/planificaciones/largo',
             name: 'planificacionesLargoPlazo',
             component: () =>
-              import('../views/Dashboard/Cursos/Curso/Planificaciones/LargoPlazoView.vue'),
+              import('../views/Dashboard/Cursos/Curso/Planificaciones/Largo/LargoPlazoView.vue'),
             props: true,
           },
           {
             path: '/dashboard/cursos/:nivel/:letra/planificaciones/leccionario',
             name: 'leccionario',
             component: () =>
-              import('../views/Dashboard/Cursos/Curso/Planificaciones/LeccionarioView.vue'),
+              import(
+                '../views/Dashboard/Cursos/Curso/Planificaciones/Leccionario/LeccionarioView.vue'
+              ),
             props: true,
           },
           {
