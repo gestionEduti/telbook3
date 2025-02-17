@@ -1,8 +1,7 @@
 <script setup lang="ts">
-import { Info, Trash2, ToggleRight } from 'lucide-vue-next'
+import { Info, MousePointerClick } from 'lucide-vue-next'
 
 const errorStore = useErrorStore()
-const authStore = useAuthStore()
 
 const emit = defineEmits(['oasSeleccionados'])
 
@@ -94,8 +93,8 @@ const optionsOas = computed(() => {
   <Dialog>
     <DialogTrigger>
       <Button>
-        <ToggleRight />
-        <span>Agregar / Quitar OAS</span>
+        <MousePointerClick />
+        <span>Seleccionar OAS</span>
       </Button>
     </DialogTrigger>
 

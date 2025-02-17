@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { Goal, Trash2, CalendarPlus2, Plus, Download, Pen } from 'lucide-vue-next'
+import { Goal, Save, Trash2, Plus, Download } from 'lucide-vue-next'
 import { useToast } from '@/components/ui/toast/use-toast'
 const { toast } = useToast()
 const errorStore = useErrorStore()
 const authStore = useAuthStore()
 
 import type { Tables } from '@/types/supabase'
-import { fechaConTimezone, formatearFecha, obtenerFechaActualComoYYYMMDD } from '@/lib/formato'
+import { obtenerFechaActualComoYYYMMDD } from '@/lib/formato'
 
 const props = defineProps<{
   nivel: string
@@ -229,7 +229,7 @@ onMounted(async () => {
           <Dialog>
             <DialogTrigger as-child>
               <Button :disabled="!proyectoEje">
-                <CalendarPlus2 />
+                <Plus />
                 <span> Crear planificacion </span>
               </Button>
             </DialogTrigger>
@@ -542,8 +542,8 @@ onMounted(async () => {
               <DialogFooter>
                 <DialogClose>
                   <Button @click="guardarPlanificacion" :disabled="!formularioValido">
-                    <Pen />
-                    <span>Crear planificacion</span>
+                    <Save />
+                    <span>Guardar</span>
                   </Button>
                 </DialogClose>
               </DialogFooter>

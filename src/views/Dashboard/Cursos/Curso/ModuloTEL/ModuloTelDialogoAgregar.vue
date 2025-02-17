@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Pen } from 'lucide-vue-next'
+import { Save, MousePointerClick } from 'lucide-vue-next'
 
 const formData = ref({
   modalidad: '',
@@ -70,7 +70,10 @@ const modalidades = ref(['online', 'presencial'])
           <Label for="codigo" class="text-left"> Alumnos </Label>
           <div class="flex items-center gap-4">
             <ModuloTelDialogoAgregarAlumnos @alumnosSeleccionados="formData.alumnos = $event">
-              <Button>Agregar / Quitar alumnos</Button>
+              <Button>
+                <MousePointerClick />
+                <span>Seleccionar alumnos</span>
+              </Button>
             </ModuloTelDialogoAgregarAlumnos>
             <p class="text-sm">{{ formData.alumnos.length }} seleccionado(s)</p>
           </div>
@@ -83,7 +86,10 @@ const modalidades = ref(['online', 'presencial'])
             <ModuloTelDialogoAgregarContenidos
               @contenidosSeleccionados="formData.contenidos = $event"
             >
-              <Button>Agregar / Quitar contenidos</Button>
+              <Button>
+                <MousePointerClick />
+                <span>Seleccionar contenidos</span>
+              </Button>
             </ModuloTelDialogoAgregarContenidos>
             <p class="text-sm">{{ formData.contenidos.length }} seleccionado(s)</p>
           </div>
@@ -103,13 +109,13 @@ const modalidades = ref(['online', 'presencial'])
 
         <DialogFooter>
           <Button v-if="formularioInvalido" :disabled="formularioInvalido">
-            <Pen />
-            <span>Crear</span>
+            <Save />
+            <span>Guardar</span>
           </Button>
           <DialogClose v-else>
             <Button>
-              <Pen />
-              <span>Crear</span>
+              <Save />
+              <span>Guardar</span>
             </Button>
           </DialogClose>
         </DialogFooter>

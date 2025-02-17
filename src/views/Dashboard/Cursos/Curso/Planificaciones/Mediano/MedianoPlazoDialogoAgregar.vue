@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { CalendarPlus2, Pen } from 'lucide-vue-next'
+import { Plus, Save } from 'lucide-vue-next'
 
 const errorStore = useErrorStore()
 const authStore = useAuthStore()
@@ -56,7 +56,7 @@ async function guardarPlanificacion() {
     <DialogTrigger as-child>
       <!-- habilitado -->
       <Button v-if="!props.buttonDisabled">
-        <CalendarPlus2 />
+        <Plus />
         <span> Crear planificacion </span>
       </Button>
 
@@ -65,7 +65,7 @@ async function guardarPlanificacion() {
         <Tooltip :delay-duration="0">
           <TooltipTrigger class="cursor-not-allowed">
             <Button disabled>
-              <CalendarPlus2 />
+              <Plus />
               <span> Crear planificacion </span>
             </Button>
           </TooltipTrigger>
@@ -105,7 +105,7 @@ async function guardarPlanificacion() {
 
         <!-- oas agregados -->
         <div class="mb-4 flex flex-col gap-2">
-          <Label for="codigo" class="text-left"> Alumnos </Label>
+          <Label for="codigo" class="text-left"> OAS </Label>
           <div class="flex items-center gap-4">
             <MedianoPlazoDialogoAgregarOas @oasSeleccionados="dataFormulario.oas = $event" />
             <p class="text-sm">{{ dataFormulario.oas.length }} seleccionado(s)</p>
@@ -152,8 +152,8 @@ async function guardarPlanificacion() {
       <DialogFooter>
         <DialogClose>
           <Button @click="guardarPlanificacion" :disabled="!formularioValido">
-            <Pen />
-            <span>Crear planificacion</span>
+            <Save />
+            <span>Guardar</span>
           </Button>
         </DialogClose>
       </DialogFooter>

@@ -2,15 +2,12 @@
 import type { Tables } from '@/types/supabase'
 import { Plus } from 'lucide-vue-next'
 
-const authStore = useAuthStore()
 const errorStore = useErrorStore()
 
-const props = defineProps<{
+defineProps<{
   nivel: string
   letra: string
 }>()
-
-const nombreCurso = computed(() => props.nivel + props.letra)
 
 // registros fonoaudiologicos
 const registrosFonoaudiologicos = ref<Tables<'mv_tel_alumnos'>[] | null>(null)
