@@ -669,6 +669,78 @@ export type Database = {
           },
         ]
       }
+      mv_inter_tel_alumnos: {
+        Row: {
+          created_at: string
+          id: number
+          id_alumno: number
+          id_registro_tel: number
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          id_alumno: number
+          id_registro_tel: number
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          id_alumno?: number
+          id_registro_tel?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mv_inter_tel_alumnos_id_alumno_fkey"
+            columns: ["id_alumno"]
+            isOneToOne: false
+            referencedRelation: "mv_libro_matricula"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mv_inter_tel_alumnos_id_registro_tel_fkey"
+            columns: ["id_registro_tel"]
+            isOneToOne: false
+            referencedRelation: "mv_tel_alumnos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mv_inter_tel_contenidos: {
+        Row: {
+          created_at: string
+          id: number
+          id_contenido: number
+          id_registro_tel: number
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          id_contenido: number
+          id_registro_tel: number
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          id_contenido?: number
+          id_registro_tel?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mv_inter_tel_contenidos_id_contenido_fkey"
+            columns: ["id_contenido"]
+            isOneToOne: false
+            referencedRelation: "tel_bases_fonoaudiologicas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mv_inter_tel_contenidos_id_registro_tel_fkey"
+            columns: ["id_registro_tel"]
+            isOneToOne: false
+            referencedRelation: "mv_tel_alumnos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       mv_leccionario: {
         Row: {
           comentario: string | null
@@ -1472,72 +1544,78 @@ export type Database = {
       }
       mv_tel_alumnos: {
         Row: {
-          anio: number
-          apellidos_alumno: string
-          contenido_fonoaudiologico: string
           created_at: string
-          dia: number
           fecha_evaluacion: string
           id: number
-          mes: number
-          modalidad_evaluacion: number
-          nivel_fonoaudiologico: string
-          nombres_alumno: string
-          observaciones_actualizacion: string
+          modalidad_evaluacion: string
+          nivel: string
+          observaciones_actualizacion: string | null
           observaciones_fonoaudiologicas: string
-          otp_observaciones: number
-          otp_usuario_actualizacion: number
-          rut_alumno: string
+          otp: number
+          otp_respuesta: string | null
+          otp_usuario_actualizacion: number | null
+          rbd: number
           rut_usuario: string
-          rut_usuario_actualizacion: string
+          rut_usuario_actualizacion: string | null
         }
         Insert: {
-          anio: number
-          apellidos_alumno: string
-          contenido_fonoaudiologico: string
           created_at?: string
-          dia: number
           fecha_evaluacion: string
           id?: number
-          mes: number
-          modalidad_evaluacion: number
-          nivel_fonoaudiologico: string
-          nombres_alumno: string
-          observaciones_actualizacion: string
+          modalidad_evaluacion: string
+          nivel: string
+          observaciones_actualizacion?: string | null
           observaciones_fonoaudiologicas: string
-          otp_observaciones: number
-          otp_usuario_actualizacion: number
-          rut_alumno: string
+          otp: number
+          otp_respuesta?: string | null
+          otp_usuario_actualizacion?: number | null
+          rbd: number
           rut_usuario: string
-          rut_usuario_actualizacion: string
+          rut_usuario_actualizacion?: string | null
         }
         Update: {
-          anio?: number
-          apellidos_alumno?: string
-          contenido_fonoaudiologico?: string
           created_at?: string
-          dia?: number
           fecha_evaluacion?: string
           id?: number
-          mes?: number
-          modalidad_evaluacion?: number
-          nivel_fonoaudiologico?: string
-          nombres_alumno?: string
-          observaciones_actualizacion?: string
+          modalidad_evaluacion?: string
+          nivel?: string
+          observaciones_actualizacion?: string | null
           observaciones_fonoaudiologicas?: string
-          otp_observaciones?: number
-          otp_usuario_actualizacion?: number
-          rut_alumno?: string
+          otp?: number
+          otp_respuesta?: string | null
+          otp_usuario_actualizacion?: number | null
+          rbd?: number
           rut_usuario?: string
-          rut_usuario_actualizacion?: string
+          rut_usuario_actualizacion?: string | null
         }
         Relationships: [
           {
-            foreignKeyName: "fk_mv_usuario_codigo_modalidad"
+            foreignKeyName: "mv_tel_alumnos_modalidad_evaluacion_fkey"
             columns: ["modalidad_evaluacion"]
             isOneToOne: false
             referencedRelation: "tel_modalidad"
-            referencedColumns: ["codigo_modalidad"]
+            referencedColumns: ["descripcion_modalidad"]
+          },
+          {
+            foreignKeyName: "mv_tel_alumnos_rbd_fkey"
+            columns: ["rbd"]
+            isOneToOne: false
+            referencedRelation: "tp_establecimientos"
+            referencedColumns: ["rbd"]
+          },
+          {
+            foreignKeyName: "mv_tel_alumnos_rbd_fkey"
+            columns: ["rbd"]
+            isOneToOne: false
+            referencedRelation: "view_panel_administracion_resumen_establecimientos"
+            referencedColumns: ["rbd"]
+          },
+          {
+            foreignKeyName: "mv_tel_alumnos_rbd_fkey"
+            columns: ["rbd"]
+            isOneToOne: false
+            referencedRelation: "view_profesor_curso"
+            referencedColumns: ["rbd"]
           },
         ]
       }
@@ -2289,6 +2367,13 @@ export type Database = {
         }
         Returns: string
       }
+      change_user_password: {
+        Args: {
+          user_id: string
+          new_password: string
+        }
+        Returns: undefined
+      }
       gestionar_pla_corto_plazo: {
         Args: {
           p_id_planificacion?: number
@@ -2384,6 +2469,13 @@ export type Database = {
         }
         Returns: Json
       }
+      resumen_modulo_tel: {
+        Args: {
+          colegio: number
+          curso: string
+        }
+        Returns: Json
+      }
       resumen_pla_corto_curso: {
         Args: {
           colegio: number
@@ -2445,6 +2537,12 @@ export type Database = {
       tx_crear_plan_mediano: {
         Args: {
           planificacion: Json
+        }
+        Returns: boolean
+      }
+      tx_crear_registro_tel: {
+        Args: {
+          registro: Json
         }
         Returns: boolean
       }

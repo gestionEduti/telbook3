@@ -1,6 +1,17 @@
 <script setup lang="ts">
 import { Save, MousePointerClick } from 'lucide-vue-next'
 
+const errorStore = useErrorStore()
+const authStore = useAuthStore()
+const mineducStore = useMineducStore()
+
+// nombre del curso
+const route = useRoute()
+const { nivel, letra } = route.params
+const nombreCurso = computed(() => String(nivel) + String(letra))
+
+const emit = defineEmits(['registroCreado'])
+
 const formData = ref({
   modalidad: '',
   fecha: '',
@@ -20,7 +31,36 @@ const formularioInvalido = computed(
     formData.value.fecha === '',
 )
 
-const modalidades = ref(['online', 'presencial'])
+const modalidades = ref(['ONLINE', 'PRESENCIAL'])
+
+async function guardarRegistro() {
+  // llamada a la api de mineduc
+  const respuestaOTP = await mineducStore.validarOTP(formData.value.otp)
+
+  const { error } = await supabase.rpc('tx_crear_registro_tel', {
+    registro: {
+      rbd: authStore.perfil!.rbd_usuario,
+      curso: nombreCurso.value,
+      rut: authStore.perfil!.rut_usuario,
+      ...formData.value,
+      otpRespuesta: respuestaOTP,
+    },
+  })
+
+  if (error) {
+    errorStore.setError({ error, customCode: 500 })
+  } else {
+    emit('registroCreado')
+  }
+
+  // limpiar formulario
+  formData.value.modalidad = ''
+  formData.value.fecha = ''
+  formData.value.alumnos = []
+  formData.value.contenidos = []
+  formData.value.observaciones = ''
+  formData.value.otp = ''
+}
 </script>
 
 <template>
@@ -113,7 +153,7 @@ const modalidades = ref(['online', 'presencial'])
             <span>Guardar</span>
           </Button>
           <DialogClose v-else>
-            <Button>
+            <Button @click="guardarRegistro">
               <Save />
               <span>Guardar</span>
             </Button>
