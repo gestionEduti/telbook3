@@ -2,6 +2,20 @@ import { createRouter, createWebHistory } from 'vue-router'
 
 const routes = [
   {
+  path: '/reset-password',
+  name: 'ResetPassword',
+  component: () => import('@/views/ResetPassword.vue'),
+  meta: {
+    requiresAuth: false,
+    isPublic: true
+  }
+},
+{
+  path: '/actualizar-password',
+  name: 'UpdatePassword',
+  component: () => import('@/views/UpdatePassword.vue')
+},
+{
     path: '/',
     name: 'home',
     // component: () => import('../views/Home.vue'),
@@ -17,11 +31,11 @@ const routes = [
     name: 'logout',
     component: () => import('../views/LogoutView.vue'),
   },
-  {
-    path: '/reset-password',
-    name: 'reset-password',
-    component: () => import('../views/PasswordReset.vue'),
-  },
+  // {
+  //   path: '/reset-password',
+  //   name: 'reset-password',
+  //   component: () => import('../views/PasswordReset.vue'),
+  // },
   {
     path: '/dashboard',
     name: 'dashboard',
@@ -179,7 +193,10 @@ router.beforeEach(async (to, from) => {
   await authStore.obtenerSesion()
 
   const paginaConAutenticacion = ['/login'].includes(to.path)
-  if (!authStore.usuario && !paginaConAutenticacion) {
+  const paginasPublicas = ['/reset-password', '/login'].includes(to.path)
+
+  if (!authStore.usuario && !paginaConAutenticacion && !paginasPublicas
+) {
     return { name: 'login' }
   }
   if (authStore.usuario && paginaConAutenticacion) {

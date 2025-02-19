@@ -6,6 +6,11 @@ const { toast } = useToast()
 
 import { Loader } from 'lucide-vue-next' // iconos
 
+import {RouterLink} from 'vue-router' //link
+
+import { ref } from 'vue'
+
+
 // TS interface
 interface FormData {
   email: string
@@ -108,5 +113,15 @@ const handleForm = async (formData: FormData) => {
         </FormKit>
       </div>
     </div>
+  <div class="mt-4 text-center">
+    <RouterLink
+      :to="{ name: 'ResetPassword' }"
+      class="text-sm text-indigo-600 hover:text-indigo-500 hover:underline"
+    >
+      ¿Olvidaste tu contraseña?
+    </RouterLink>
   </div>
+  </div>
+
+
 </template>
