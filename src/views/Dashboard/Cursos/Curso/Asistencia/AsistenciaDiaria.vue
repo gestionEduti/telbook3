@@ -51,7 +51,7 @@ const fetchSupabase = async () => {
   }
 }
 
-//
+// JPS computed que guarda solo los perfiles permitidos para Registrar Asistencia
 const puedeRegistrarAsistencia = computed(() => {
   const perfilesPermitidos = [1, 2, 3, 4, 6]
   return perfilesPermitidos.includes(authStore.perfil?.codigo_perfil_usuario ?? -1)
