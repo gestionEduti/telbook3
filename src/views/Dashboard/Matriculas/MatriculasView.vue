@@ -8,7 +8,8 @@ import autoTable from 'jspdf-autotable'
 // xlsx
 import * as XLSX from 'xlsx'
 
-import { Download, UserPlus, FileText, ListX, ChevronDown, FileSpreadsheet } from 'lucide-vue-next' // iconos
+import { Download, UserPlus, FileText, ListX, ChevronDown, FileSpreadsheet } from 'lucide-vue-next'
+import { formatearFecha } from '@/lib/formato' // iconos
 
 const authStore = useAuthStore()
 const errorStore = useErrorStore()
@@ -85,19 +86,19 @@ function exportarCompleto() {
     Año: alumno.anio_libro,
     RBD: alumno.rbd_establecimiento,
     'Rut Alumno': alumno.rut_alumno,
-    'Apeliidos Alumno': alumno.apellidos_alumno,
+    'Apellidos Alumno': alumno.apellidos_alumno,
     'Nombres Alumno': alumno.nombres_alumno,
-    'Fecha de Nacimiento': alumno.fecha_nacimiento_alumno,
+    'Fecha de Nacimiento': formatearFecha(alumno.fecha_nacimiento_alumno),
     'Sexo Alumno': alumno.sexo_alumno,
     'Número Matricula': alumno.numero_matricula_alumno,
     'Nivel Alumno': alumno.nivel_alumno,
     Jornada: alumno.jornada_alumno,
     'Numero de Lista': alumno.numero_lista_nivel_alumno,
     Procedencia: alumno.procedencia_alumno,
-    'Fecha Incorporación': alumno.fecha_incorporacion_alumno,
+    'Fecha Incorporación': formatearFecha(alumno.fecha_incorporacion_alumno),
     'Código Alumno': alumno.codigo_estado_alumno,
     Estado: alumno.estado_alumno,
-    'Fecha Retiro': alumno.fecha_retiro_escuela,
+    'Fecha Retiro': formatearFecha(alumno.fecha_retiro_escuela),
     'Causa Retiro': alumno.causa_retiro_alumno,
     Domicilio: alumno.domicilio_alumno,
     Comuna: alumno.comuna_alumno,
