@@ -51,6 +51,12 @@ const fetchSupabase = async () => {
   }
 }
 
+//
+const puedeRegistrarAsistencia = computed(() => {
+  const perfilesPermitidos = [1, 2, 3, 4, 6]
+  return perfilesPermitidos.includes(authStore.perfil?.codigo_perfil_usuario ?? -1)
+})
+
 async function validarOTP() {
   // TODO extraer funcion a utils porque se usa en al menos 2 partes
   const rut = authStore.perfil?.rut_usuario
@@ -172,9 +178,13 @@ onMounted(async () => {
       </div>
 
       <!-- boton para firmar asistencia -->
+      <!-- JPS se agrega validación segun perfil para firmar asistencia -->
       <Dialog>
         <DialogTrigger as-child>
-          <Button>
+          <Button :disabled="!puedeRegistrarAsistencia"
+                  aria-label="Su perfil no permite registrar asistencia"
+                  class="w-auto"
+          >
             <Pen />
             <span>Firmar asistencia</span>
           </Button>
