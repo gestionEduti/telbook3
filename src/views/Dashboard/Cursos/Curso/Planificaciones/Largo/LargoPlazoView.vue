@@ -91,9 +91,6 @@ async function insertPlanificacion() {
     await fetchPlanificaciones()
   }
 }
-  const hayPlanificaciones = computed(() => {
-  return planificaciones.value !== null && planificaciones.value.length > 0
-})
 
 async function eliminarPlanificacion(id: number) {
   const { error } = await supabase.from('mv_pla_largo_plazo').delete().eq('id_planificacion', id)
@@ -137,17 +134,39 @@ onMounted(async () => {
  * Exporta el planificaciones de Largo plazo en formato PDF
  */
 
-async function exportarPLP() {
-  const doc = new jsPDF()
+  const hayPlanificaciones = computed(() => {
+  return planificaciones.value !== null && planificaciones.value.length > 0
+})
 
-  //Agregar titulo y otros datos
-  doc.setFontSize(16)
-  doc.text(`Planificaciones de Largo Plazo - ${nombreCurso.value}`, 14, 20)
-  doc.setFontSize(11)
-  doc.text(`Establecimiento: ${authStore.establecimiento?.razon_social}`, 14, 25)
-  doc.text(`RBD: ${authStore.establecimiento?.rbd}`, 14, 32)
-  doc.text(`Fecha: ${new Date().toLocaleDateString()}`, 14, 39)
-  //doc.text(`Total de registros: ${alumnos.value?.length}`, 14, 46)
+async function exportarPLP() {
+  const doc = new jsPDF({
+    orientation: 'landscape',
+    unit: 'mm',
+    format: 'a4'
+  })
+
+  // Configuración de fuentes y colores
+  doc.setFont('helvetica')
+
+  // Agregar encabezado con información del establecimiento
+  doc.setFontSize(20)
+  doc.setTextColor(44, 62, 80) // Color azul oscuro
+  doc.text('Planificaciones de Largo Plazo', doc.internal.pageSize.width / 2, 15, { align: 'center' })
+
+  // Subtítulo con información del curso
+  doc.setFontSize(14)
+  doc.setTextColor(52, 73, 94)
+  doc.text(`Curso: ${nombreCurso.value} - Año Escolar: 2025`, doc.internal.pageSize.width / 2, 25, { align: 'center' })
+
+  // Fecha de generación del reporte
+  doc.setFontSize(10)
+  doc.setTextColor(127, 140, 141)
+  doc.text(
+    `Generado el: ${new Date().toLocaleDateString('es-CL')}`,
+    doc.internal.pageSize.width - 15,
+    10,
+    { align: 'right' }
+  )
 
  // Preparar datos para la tabla
   const datos = planificaciones.value?.map(p => [
@@ -155,17 +174,54 @@ async function exportarPLP() {
     p.descripcion_planificacion
   ]) || []
 
-  // Agregar tabla
   autoTable(doc, {
     head: [['Fecha', 'Descripción']],
     body: datos,
-    startY: 45,
-    margin: { top: 25 }
+    startY: 35,
+    theme: 'grid',
+    styles: {
+      fontSize: 11,
+      cellPadding: 5,
+      lineColor: [189, 195, 199],
+      lineWidth: 0.1,
+    },
+    headStyles: {
+      fillColor: [41, 128, 185],
+      textColor: 255,
+      fontSize: 12,
+      fontStyle: 'bold',
+      halign: 'center'
+    },
+    alternateRowStyles: {
+      fillColor: [241, 245, 249]
+    },
+    columnStyles: {
+      0: { cellWidth: 30 }, // Ancho de la columna fecha
+      1: { cellWidth: 'auto' } // La descripción tomará el espacio restante
+    },
+    margin: { top: 35, right: 15, bottom: 15, left: 15 }
   })
 
-  // Guardar el documento
-  doc.save('Reporte_Planificaciones_Largo_Plazo.pdf')
+  // Agregar pie de página
+  const pageCount = doc.internal.getNumberOfPages()
+  doc.setFontSize(8)
+  for (let i = 1; i <= pageCount; i++) {
+    doc.setPage(i)
+    doc.text(
+      `Página ${i} de ${pageCount}`,
+      doc.internal.pageSize.width / 2,
+      doc.internal.pageSize.height - 10,
+      { align: 'center' }
+    )
+  }
+
+   // Agregar marca de agua o logo si lo tienes
+  doc.addImage('https://jhzweohhdshzyvjmkhce.supabase.co/storage/v1/object/public/Logo//telbook_logo.png', 'PNG', 15, 5, 33, 11)
+
+
+  doc.save(`Planificaciones_Largo_Plazo_${nombreCurso.value}_${new Date().toISOString().split('T')[0]}.pdf`)
 }
+
 </script>
 
 <template>
