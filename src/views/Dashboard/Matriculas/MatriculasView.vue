@@ -77,6 +77,11 @@ async function exportarResumen() {
 
   doc.save('resumen.pdf')
 }
+// JPS computed que guarda solo los perfiles permitidos para registrar alumno
+const puedeRegistrarAlumno = computed(() => {
+  const perfilesPermitidos = [1, 2, 4]
+  return perfilesPermitidos.includes(authStore.perfil?.codigo_perfil_usuario ?? -1)
+})
 
 /**
  * Exporta el libro de matriculas completo en formato Excel
@@ -137,7 +142,11 @@ onMounted(async () => {
           <CardTitle class="flex items-center justify-between">
             <span> Matriculas </span>
             <div class="flex items-center space-x-2">
-              <Button @click="$router.push('/dashboard/matriculas/nueva')">
+              <Button
+                :disabled="!puedeRegistrarAlumno"
+                @click="$router.push('/dashboard/matriculas/nueva')"
+
+              >
                 <UserPlus class="h-4 w-4" />
                 <span class="ml-2 hidden md:block">Nuevo alumno</span>
               </Button>
