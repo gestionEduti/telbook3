@@ -30,6 +30,12 @@ const formularioValido = computed(() => {
   )
 })
 
+// JPS computed que guarda solo los perfiles permitidos para Registrar Planificación Largo Plazo
+const puedeRegistrarPCP = computed(() => {
+  const perfilesPermitidos = [1, 2, 3, 4, 6]
+  return perfilesPermitidos.includes(authStore.perfil?.codigo_perfil_usuario ?? -1)
+})
+
 /**
  * guarda la planificacion en supabase
  */
@@ -59,7 +65,8 @@ async function guardarPlanificacion() {
 <template>
   <Dialog>
     <DialogTrigger as-child>
-      <Button :disabled="!props.existeProyectoEje">
+      <Button :disabled="!props.existeProyectoEje || !puedeRegistrarPCP"
+      >
         <Plus />
         <span> Crear planificacion </span>
       </Button>
