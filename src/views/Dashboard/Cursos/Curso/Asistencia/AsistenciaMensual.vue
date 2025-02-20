@@ -14,6 +14,16 @@ const nombreCurso = computed(() => props.nivel + props.letra)
 
 const store = useAsistenciaMensualStore()
 
+//JPS computed que  genera restricción de perfil dependiendo del tipo
+
+const authStore = useAuthStore()
+
+const puedeEditarAsistencia = computed(() => {
+  const perfilesPermitidos = [1, 2, 4] // Super Administrador, Administrador y  JEFE UTP
+  return perfilesPermitidos.includes(authStore.perfil?.codigo_perfil_usuario ?? -1)
+})
+
+
 /**
  * accion cuando se presiona el boton editar
  */
@@ -90,7 +100,9 @@ onMounted(async () => {
           <Transition name="fade" mode="out-in">
             <div v-if="store.asistencias">
               <!-- boton para comenzar a editar -->
-              <Button v-if="!store.modoEdicion" @click="handleComenzarEdicion" class="w-24">
+              <Button v-if="!store.modoEdicion"
+                      @click="handleComenzarEdicion" class="w-24"
+                      :disabled="!puedeEditarAsistencia">
                 <Pencil />
                 <span>editar</span>
               </Button>
