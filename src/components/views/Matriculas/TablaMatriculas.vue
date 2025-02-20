@@ -92,6 +92,13 @@ const retirarAlumno = async (alumno: Tables<'mv_libro_matricula'>) => {
     emit('alumnoRetirado')
   }
 }
+
+//JPS computed que guarda los perfiles de Admin y Super Admin
+const tienePermisos = computed(() => {
+  const codigoPerfil = authStore.perfil?.codigo_perfil_usuario
+  return codigoPerfil === 1 || codigoPerfil === 2
+})
+
 </script>
 
 <template>
@@ -175,25 +182,37 @@ const retirarAlumno = async (alumno: Tables<'mv_libro_matricula'>) => {
                     <DropdownMenuLabel>Acciones</DropdownMenuLabel>
                     <DropdownMenuSeparator />
                     <DropdownMenuGroup>
-                      <DropdownMenuItem v-if="alumno.codigo_estado_alumno == 1">
+                      <!-- JPS le agrego la validación por si tiene permisos -->
+                      <DropdownMenuItem v-if="alumno.codigo_estado_alumno == 1"
+                                        :disabled="!tienePermisos"
+                                        >
                         <!-- TODO: ver si se debe ocultar este boton si es que ya esta retirado -->
                         <RouterLink
-                          :to="{
-                            name: 'editar-matricula',
-                            params: { matriculaId: alumno.id },
-                          }"
-                          class="flex space-x-2"
-                        >
+                           :to="tienePermisos ? {
+                           name: 'editar-matricula',
+                           params: { matriculaId: alumno.id },
+                           } : '#'"
+                           class="flex space-x-2"
+                           :class="{ 'opacity-50 cursor-not-allowed': !tienePermisos }"
+        >
+
                           <UserPen class="h-4 w-4" />
                           <span>Editar</span>
                         </RouterLink>
                       </DropdownMenuItem>
 
                       <!-- boton retirar -->
-                      <DropdownMenuItem @click.stop v-if="alumno.codigo_estado_alumno == 1">
+                      <!-- JPS le agrego la validación por si tiene permisos -->
+                      <DropdownMenuItem  @click.stop
+                                         v-if="alumno.codigo_estado_alumno == 1"
+                                         :disabled="!tienePermisos"
+>
                         <AlertDialog>
-                          <AlertDialogTrigger @click.stop>
-                            <div class="flex space-x-2">
+                          <AlertDialogTrigger @click.stop
+                                              :disabled="!tienePermisos"
+>
+                            <div class="flex space-x-2" :class="{ 'opacity-50 cursor-not-allowed': !tienePermisos }"
+>
                               <UserX class="h-4 w-4" />
                               <span>Retirar</span>
                             </div>
@@ -240,10 +259,12 @@ const retirarAlumno = async (alumno: Tables<'mv_libro_matricula'>) => {
                       </DropdownMenuItem>
 
                       <!-- boton eliminar -->
-                      <DropdownMenuItem>
+                      <DropdownMenuItem :disabled="!tienePermisos">
                         <AlertDialog>
-                          <AlertDialogTrigger @click.stop>
-                            <div class="flex space-x-2">
+                          <AlertDialogTrigger @click.stop
+                                              :disabled="!tienePermisos">
+                            <div class="flex space-x-2" :class="{ 'opacity-50 cursor-not-allowed': !tienePermisos }"
+>
                               <Trash2 class="h-4 w-4" />
                               <span>Eliminar</span>
                             </div>
@@ -251,7 +272,7 @@ const retirarAlumno = async (alumno: Tables<'mv_libro_matricula'>) => {
                           <AlertDialogContent>
                             <AlertDialogHeader>
                               <AlertDialogTitle>
-                                Seguro que desea retirar al alumno?
+                                ¿Seguro que desea eliminar al alumno?
                               </AlertDialogTitle>
                               <AlertDialogDescription>
                                 Esta acción no se puede deshacer.
@@ -259,7 +280,9 @@ const retirarAlumno = async (alumno: Tables<'mv_libro_matricula'>) => {
                             </AlertDialogHeader>
                             <AlertDialogFooter>
                               <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                              <AlertDialogAction @click.stop="eliminarAlumno(alumno.id)">
+                              <AlertDialogAction @click.stop="eliminarAlumno(alumno.id)"
+                                                 :disabled="!tienePermisos"
+                              >
                                 Confirmar
                               </AlertDialogAction>
                             </AlertDialogFooter>
