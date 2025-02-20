@@ -37,6 +37,12 @@ const nuevaPlanificacion = ref<string>('')
 const fechaNuevaPlanificacion = ref('')
 const otp = ref('') // codigo de verificacion
 
+// JPS computed que guarda solo los perfiles permitidos para Registrar Planificación Largo Plazo
+const puedeRegistrarPLP = computed(() => {
+  const perfilesPermitidos = [1, 2, 3, 4, 6]
+  return perfilesPermitidos.includes(authStore.perfil?.codigo_perfil_usuario ?? -1)
+})
+
 async function fetchPlanificaciones() {
   const { data, error } = await supabase
     .from('mv_pla_largo_plazo')
@@ -136,7 +142,8 @@ onMounted(async () => {
 
           <Dialog>
             <DialogTrigger as-child>
-              <Button>
+              <Button :disabled="!puedeRegistrarPLP"
+              >
                 <Plus />
                 <span> Crear planificacion </span>
               </Button>
