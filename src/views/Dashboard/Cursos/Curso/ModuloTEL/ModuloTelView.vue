@@ -11,6 +11,14 @@ const props = defineProps<{
 
 const nombreCurso = computed(() => props.nivel + props.letra)
 
+//JPS agrego computed que maneja los perfiles permitidos para que el botón esté hábilitado
+
+const puedeAgregarRegistro = computed(() => {
+  const perfilesPermitidos = [1, 4, 5] // Super Administrador JEFE UTP y Fonoaudiologo
+  return perfilesPermitidos.includes(authStore.perfil?.codigo_perfil_usuario ?? -1)
+})
+
+
 // registros fonoaudiologicos
 interface ResumenInterface {
   id: number
@@ -60,7 +68,11 @@ const registrosDiaSeleccionado = computed(() => {
         <!-- botones -->
         <div class="space-x-2">
           <ModuloTelDialogoAgregar @registro-creado="fetchRegistros()">
-            <Button>
+            <Button
+              :disabled="!puedeAgregarRegistro"
+              :title="!puedeAgregarRegistro ?
+              'No tienes permisos para agregar registros fonoaudiológicos' : ''"
+              >
               <Plus />
               <span>Agregar registro fonoaudiologico</span>
             </Button>
