@@ -6,6 +6,10 @@ const { toast } = useToast()
 
 import type { Tables } from '@/types/supabase'
 
+// JPS agrego jsPDF
+import jsPDF from 'jspdf'
+import autoTable from 'jspdf-autotable'
+
 const errorStore = useErrorStore()
 const authStore = useAuthStore()
 const mineducStore = useMineducStore()
@@ -87,6 +91,9 @@ async function insertPlanificacion() {
     await fetchPlanificaciones()
   }
 }
+  const hayPlanificaciones = computed(() => {
+  return planificaciones.value !== null && planificaciones.value.length > 0
+})
 
 async function eliminarPlanificacion(id: number) {
   const { error } = await supabase.from('mv_pla_largo_plazo').delete().eq('id_planificacion', id)
@@ -125,6 +132,40 @@ function planificacionesMes(mes: string) {
 onMounted(async () => {
   await fetchPlanificaciones()
 })
+
+/**
+ * Exporta el planificaciones de Largo plazo en formato PDF
+ */
+
+async function exportarPLP() {
+  const doc = new jsPDF()
+
+  //Agregar titulo y otros datos
+  doc.setFontSize(16)
+  doc.text(`Planificaciones de Largo Plazo - ${nombreCurso.value}`, 14, 20)
+  doc.setFontSize(11)
+  doc.text(`Establecimiento: ${authStore.establecimiento?.razon_social}`, 14, 25)
+  doc.text(`RBD: ${authStore.establecimiento?.rbd}`, 14, 32)
+  doc.text(`Fecha: ${new Date().toLocaleDateString()}`, 14, 39)
+  //doc.text(`Total de registros: ${alumnos.value?.length}`, 14, 46)
+
+ // Preparar datos para la tabla
+  const datos = planificaciones.value?.map(p => [
+    formatearFecha(p.fecha_planificacion),
+    p.descripcion_planificacion
+  ]) || []
+
+  // Agregar tabla
+  autoTable(doc, {
+    head: [['Fecha', 'Descripción']],
+    body: datos,
+    startY: 45,
+    margin: { top: 25 }
+  })
+
+  // Guardar el documento
+  doc.save('Reporte_Planificaciones_Largo_Plazo.pdf')
+}
 </script>
 
 <template>
@@ -135,8 +176,11 @@ onMounted(async () => {
 
         <!-- botones -->
         <div class="space-x-2">
-          <Button variant="secondary" disabled>
-            <Download />
+          <Button variant="outline"
+                  @click="exportarPLP"
+                  :disabled="!hayPlanificaciones"
+          >
+            <Download class="mr-2 h-4 w-4" />
             <span> Descargar reporte </span>
           </Button>
 
