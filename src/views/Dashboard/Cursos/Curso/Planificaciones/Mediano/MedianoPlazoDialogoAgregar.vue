@@ -32,7 +32,7 @@ const formularioValido = computed(() => {
   )
 })
 
-// JPS computed que guarda solo los perfiles permitidos para Registrar Planificación Largo Plazo
+// JPS computed que guarda solo los perfiles permitidos para Registrar Planificación Mediano Plazo
 const puedeRegistrarPMP = computed(() => {
   const perfilesPermitidos = [1, 2, 3, 4, 6]
   return perfilesPermitidos.includes(authStore.perfil?.codigo_perfil_usuario ?? -1)
