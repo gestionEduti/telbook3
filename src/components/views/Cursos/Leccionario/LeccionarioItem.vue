@@ -54,6 +54,12 @@ async function fetchEvaluacion() {
   }
 }
 
+// JPS computed que guarda solo los perfiles permitidos para Registrar Leccionario
+const puedeRegistrarLeccionario = computed(() => {
+  const perfilesPermitidos = [1, 2, 3, 4, 6]
+  return perfilesPermitidos.includes(authStore.perfil?.codigo_perfil_usuario ?? -1)
+})
+
 async function guardarEvaluacion() {
   evaluacionInicial.value = evaluacionCombobox.value
 
@@ -156,7 +162,10 @@ onMounted(async () => {
                     </p>
 
                     <Dialog>
-                      <DialogTrigger>
+                      <DialogTrigger
+                                    as-child :disabled="!puedeRegistrarLeccionario"
+
+                      >
                         <Button>
                           <ClipboardPenLine />
                           <span>Evaluar</span>
