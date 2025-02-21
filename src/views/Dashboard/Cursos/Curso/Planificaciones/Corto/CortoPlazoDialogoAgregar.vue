@@ -36,11 +36,14 @@ const puedeRegistrarPCP = computed(() => {
   return perfilesPermitidos.includes(authStore.perfil?.codigo_perfil_usuario ?? -1)
 })
 
+// Agregar ref para controlar el diálogo
+const dialogoAbierto = ref(false)
+
 /**
  * guarda la planificacion en supabase
  */
 async function guardarPlanificacion() {
-  const { error } = await supabase.rpc('tx_crear_plan_corto', {
+  const { data, error } = await supabase.rpc('tx_crear_plan_corto', {
     planificacion: {
       rbd: authStore.perfil!.rbd_usuario,
       curso: nombreCurso.value,
@@ -48,22 +51,31 @@ async function guardarPlanificacion() {
       ...nuevaPlanificacion.value,
     },
   })
-  if (error) errorStore.setError({ error, customCode: 500 })
-  else {
-    emit('planificacionCreada')
+
+  if (error) {
+    errorStore.setError({ error, customCode: 500 })
+    return
   }
 
-  // limpiar formulario
-  nuevaPlanificacion.value.fecha = ''
-  nuevaPlanificacion.value.recursos = ''
-  nuevaPlanificacion.value.instrumentosEvaluacion = ''
-  nuevaPlanificacion.value.inicioDesarrolloCierre = ''
-  nuevaPlanificacion.value.oas = []
+  emit('planificacionCreada')
+  limpiarFormulario()
+  dialogoAbierto.value = false  // Cerrar el diálogo después de guardar
+}
+
+// Nueva función
+function limpiarFormulario() {
+  nuevaPlanificacion.value = {
+    fecha: '',
+    recursos: '',
+    instrumentosEvaluacion: '',
+    inicioDesarrolloCierre: '',
+    oas: [],
+  }
 }
 </script>
 
 <template>
-  <Dialog>
+  <Dialog v-model:open="dialogoAbierto">
     <DialogTrigger as-child>
       <Button :disabled="!props.existeProyectoEje || !puedeRegistrarPCP"
       >
@@ -134,13 +146,12 @@ async function guardarPlanificacion() {
 
       <!-- boton de guardar -->
       <DialogFooter>
-        <DialogClose>
-          <Button @click="guardarPlanificacion" :disabled="!formularioValido">
-            <Save />
-            <span>Guardar</span>
-          </Button>
-        </DialogClose>
-      </DialogFooter>
+        <!-- Removido DialogClose que envolvía el Button -->
+    <Button @click="guardarPlanificacion" :disabled="!formularioValido">
+      <Save />
+      <span>Guardar</span>
+    </Button>
+  </DialogFooter>
     </DialogScrollContent>
   </Dialog>
 </template>

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { OctagonX, Goal, Download } from 'lucide-vue-next'
+import { OctagonX, Goal, Download, Filter } from 'lucide-vue-next'
 import { jsPDF } from 'jspdf'
 import autoTable from 'jspdf-autotable'
 
@@ -43,6 +43,27 @@ const cursoTienePlanificacionActiva = computed(() => {
 const hayPlanificaciones = computed(() => {
   return resumenPlanificaciones.value !== null && resumenPlanificaciones.value.length > 0
 })
+
+// Agregar después de las interfaces existentes
+const filtroProyectoEje = ref('todos')
+
+// Modificar el computed existente y agregar uno nuevo
+const proyectosEjesUnicos = computed(() => {
+  if (!resumenPlanificaciones.value) return []
+  return [...new Set(resumenPlanificaciones.value.map(p => p.proyecto_eje))].sort()
+})
+
+const planificacionesFiltradas = computed(() => {
+  if (!resumenPlanificaciones.value) return []
+  if (filtroProyectoEje.value === 'todos') return resumenPlanificaciones.value
+
+  return resumenPlanificaciones.value.filter(p =>
+    p.proyecto_eje === filtroProyectoEje.value
+  )
+})
+
+// Agregar ref para controlar la visibilidad del select
+const mostrarSelect = ref(false)
 
 /**
  * trae las planificaciones+oas del curso desde una funcion de supabase
@@ -455,9 +476,7 @@ onMounted(async () => {
     <CardHeader>
       <CardTitle class="flex items-end justify-between">
         <span>Planificacion mediano plazo</span>
-
-        <!-- botones superiores -->
-        <div class="flex gap-2">
+        <div class="flex items-center gap-2">
           <Button
             variant="outline"
             @click="descargarTodasLasPlanificaciones"
@@ -474,12 +493,42 @@ onMounted(async () => {
         </div>
       </CardTitle>
       <CardDescription>Descripcion planificacion mediano plazo.</CardDescription>
-      <Separator />
     </CardHeader>
+
+    <div class="px-6 pb-4">
+      <div class="flex items-center gap-2">
+        <Button
+          variant="outline"
+          class="h-10"
+          @click="mostrarSelect = !mostrarSelect"
+        >
+          <Filter class="mr-2 h-4 w-4" />
+          Filtrar por proyecto eje
+        </Button>
+        <select
+          v-if="mostrarSelect && hayPlanificaciones"
+          v-model="filtroProyectoEje"
+          class="h-10 w-[200px] rounded-md border border-input bg-background px-3 text-sm"
+        >
+          <option value="todos">Todos los proyectos</option>
+          <option
+            v-for="proyecto in proyectosEjesUnicos"
+            :key="proyecto"
+            :value="proyecto"
+          >
+            {{ proyecto }}
+          </option>
+        </select>
+      </div>
+      <p class="mt-2 text-sm text-muted-foreground">
+        Mostrando planificaciones de {{ filtroProyectoEje === 'todos' ? 'todos los proyectos' : `proyecto "${filtroProyectoEje}"` }}
+      </p>
+    </div>
+
+    <Separator />
 
     <Transition name="fade" mode="out-in">
       <CardContent v-if="!loadingPlanificaciones">
-        <!-- si no hay planificaciones -->
         <InfoMensajeSinData
           v-if="!resumenPlanificaciones || !resumenPlanificaciones.length"
           icono="vacio"
@@ -489,7 +538,7 @@ onMounted(async () => {
         <Table v-else>
           <TableBody>
             <TableRow
-              v-for="planificacion in resumenPlanificaciones"
+              v-for="planificacion in planificacionesFiltradas"
               :key="planificacion.id"
               class="group flex min-h-20 items-center"
             >
