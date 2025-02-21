@@ -276,24 +276,48 @@ function descargarTodasLasPlanificaciones() {
       // Objetivos de Aprendizaje
       autoTable(doc, {
         head: [['OBJETIVOS DE APRENDIZAJE']],
-        body: planificacion.oas.map(oa => [
-          `${oa.descripcion_ambito} - ${oa.descripcion_nucleo}`,
-          oa.descripcion_oa
-        ]),
+        body: [['']],
         startY: doc.lastAutoTable.finalY + 5,
         styles: {
-          fontSize: 10,
+          fontSize: 12,
           cellPadding: 5
         },
         headStyles: {
           fillColor: [52, 152, 219],
           textColor: 255,
-          fontSize: 11
+          fontSize: 14,
+          halign: 'center'
+        }
+      })
+
+      // Tabla con los detalles de los OAs
+      autoTable(doc, {
+        head: [['Ámbito y Núcleo', 'Descripción del Objetivo']],
+        body: planificacion.oas.map(oa => [
+          {
+            content: `${oa.descripcion_ambito}\n${oa.descripcion_nucleo}`,
+            styles: { fontStyle: 'bold' }
+          },
+          oa.descripcion_oa
+        ]),
+        startY: doc.lastAutoTable.finalY + 2,
+        styles: {
+          fontSize: 10,
+          cellPadding: 5,
+          valign: 'middle'
+        },
+        headStyles: {
+          fillColor: [52, 152, 219],
+          textColor: 255,
+          fontSize: 11,
+          halign: 'left'
         },
         columnStyles: {
-          0: { cellWidth: 70, fontStyle: 'bold' },
+          0: { cellWidth: 70 },
           1: { cellWidth: 'auto' }
-        }
+        },
+        margin: { left: 15 },
+        tableWidth: 'auto'
       })
     })
   } else {
