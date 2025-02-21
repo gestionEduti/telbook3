@@ -33,6 +33,25 @@ const resumenPlanificaciones = ref<ResumenPlanificacionesItem[] | null>(null)
 
 const diaSeleccionado = ref(new Date().toISOString().split('T')[0])
 
+// Añadir computed para obtener los últimos 5 días
+const ultimosCincoDias = computed(() => {
+  const dias = []
+  for (let i = 0; i < 5; i++) {
+    const fecha = new Date()
+    fecha.setDate(fecha.getDate() - i)
+    dias.push(fecha.toISOString().split('T')[0])
+  }
+  return dias
+})
+
+// Modificar el computed para filtrar por los últimos 5 días
+const planificacionesDiaSeleccionado = computed(() => {
+  if (!resumenPlanificaciones.value) return []
+  return resumenPlanificaciones.value.filter(
+    (planificacion) => ultimosCincoDias.value.includes(planificacion.fecha)
+  ).sort((a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime())
+})
+
 /**
  * trae las planificaciones+oas del curso desde una funcion de supabase
  */
@@ -45,13 +64,6 @@ async function fetchPlanificaciones() {
   else resumenPlanificaciones.value = data as unknown as ResumenPlanificacionesItem[]
 }
 
-const planificacionesDiaSeleccionado = computed(() => {
-  if (!resumenPlanificaciones.value) return []
-  return resumenPlanificaciones.value.filter(
-    (planificacion) => planificacion.fecha === diaSeleccionado.value,
-  )
-})
-
 onMounted(async () => {
   await fetchPlanificaciones() // TODO: fetch planificaciones solo al cambiar de dia
   loading.value = false
@@ -63,25 +75,15 @@ onMounted(async () => {
     <Card v-if="loading === false">
       <CardHeader>
         <CardTitle>Leccionario</CardTitle>
-        <CardDescription>Descripcion leccionario.</CardDescription>
+        <CardDescription>Muestra las planificaciones de los últimos 5 días.</CardDescription>
         <Separator />
       </CardHeader>
 
       <CardContent>
-        <FormKit
-          type="date"
-          v-model="diaSeleccionado"
-          value="1999-01-01"
-          label="Selecciona un dia"
-          validation-visibility="live"
-        />
-
-        <Separator />
-
         <p v-if="!planificacionesDiaSeleccionado.length">
           <InfoMensajeSinData
             icono="vacio"
-            mensaje="No hay planificaciones para el día seleccionado."
+            mensaje="No hay planificaciones en los últimos 5 días."
           />
         </p>
         <Table v-else>
