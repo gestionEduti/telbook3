@@ -2,6 +2,23 @@
 import { Pencil, Save, LoaderCircle, FileDown } from 'lucide-vue-next'
 import jsPDF from 'jspdf'
 import 'jspdf-autotable'
+import * as XLSX from 'xlsx'
+
+// Definimos el objeto meses al inicio del componente
+const meses = {
+  '1': 'Enero',
+  '2': 'Febrero',
+  '3': 'Marzo',
+  '4': 'Abril',
+  '5': 'Mayo',
+  '6': 'Junio',
+  '7': 'Julio',
+  '8': 'Agosto',
+  '9': 'Septiembre',
+  '10': 'Octubre',
+  '11': 'Noviembre',
+  '12': 'Diciembre'
+}
 
 const props = defineProps<{
   nivel: string
@@ -207,6 +224,129 @@ async function handleExportarPDF() {
   }
 }
 
+/**
+ * Genera y descarga el archivo Excel con la asistencia mensual
+ */
+async function handleExportarExcel() {
+  if (!store.asistencias || !store.alumnos?.length) return
+
+  try {
+    const año = new Date().getFullYear()
+
+    // Preparar headers
+    const headers = ['Nombre']
+    for (let i = 1; i <= store.cantidadDiasMesActual; i++) {
+      headers.push(i.toString())
+    }
+    headers.push('T', 'P', 'A', '%P', '%A')
+
+    // Preparar datos
+    const data = store.alumnos.map(alumno => {
+      const row = [alumno.nombre_completo_alumno]
+      const asistenciasAlumno = store.asistencias[alumno.rut_alumno] || {}
+
+      // Agregar estado de cada día (1 para presente, 0 para ausente, vacío para sin asistencia)
+      for (let i = 1; i <= store.cantidadDiasMesActual; i++) {
+        const estado = asistenciasAlumno[i]
+        row.push(estado === 1 ? 1 : estado === 0 ? 0 : '')
+      }
+
+      // Calcular totales
+      let presentes = 0, ausentes = 0, total = 0
+      Object.values(asistenciasAlumno).forEach(v => {
+        if (v === 1) presentes++
+        if (v === 0) ausentes++
+        if (v === 0 || v === 1) total++
+      })
+
+      // Agregar totales
+      row.push(
+        total,
+        presentes,
+        ausentes,
+        total ? Math.round((presentes/total)*100) : 0,
+        total ? Math.round((ausentes/total)*100) : 0
+      )
+
+      return row
+    })
+
+    // Agregar totales por día
+    const presentes = ['Presente']
+    const ausentes = ['Ausente']
+    const totales = ['Total']
+
+    for (let i = 1; i <= store.cantidadDiasMesActual; i++) {
+      let presentesDia = 0
+      let ausentesDia = 0
+      Object.values(store.asistencias).forEach(alumno => {
+        if (alumno[i] === 1) presentesDia++
+        if (alumno[i] === 0) ausentesDia++
+      })
+      presentes.push(presentesDia)
+      ausentes.push(ausentesDia)
+      totales.push(presentesDia + ausentesDia)
+    }
+
+    // Crear worksheet
+    const ws = XLSX.utils.aoa_to_sheet([
+      [`Asistencia Mensual - ${nombreCurso.value} - ${año}`],
+      [`RBD: ${authStore.perfil?.rbd_usuario}`],
+      [`Mes: ${meses[store.mesSeleccionado]}`],
+      [],
+      headers,
+      ...data,
+      [],
+      presentes,
+      ausentes,
+      totales,
+      [],
+      ['Leyenda:'],
+      ['T: Días Trabajados'],
+      ['P: Días Presente'],
+      ['A: Días Ausentes'],
+      ['%P: Porcentaje de asistencia'],
+      ['%A: Porcentaje de Inasistencia']
+    ])
+
+    // Configurar ancho de columnas
+    const wscols = [
+      { wch: 30 },  // Nombre (columna A)
+      ...Array(store.cantidadDiasMesActual).fill({ wch: 3 }), // Días del mes (columnas B-AC)
+      { wch: 5 },   // T (Total)
+      { wch: 5 },   // P (Presentes)
+      { wch: 5 },   // A (Ausentes)
+      { wch: 5 },   // %P
+      { wch: 5 }    // %A
+    ]
+    ws['!cols'] = wscols
+
+    // Configurar alto de filas para el encabezado
+    const wsrows = [
+      { hpt: 30 },  // Altura para el título
+      { hpt: 20 },  // Altura para RBD
+      { hpt: 20 },  // Altura para Mes
+      { hpt: 15 },  // Espacio
+      { hpt: 20 }   // Altura para headers
+    ]
+    ws['!rows'] = wsrows
+
+    // Aplicar estilos al título y encabezados
+    ws['!merges'] = [
+      { s: { r: 0, c: 0 }, e: { r: 0, c: 5 } }  // Merge para el título
+    ]
+
+    // Crear workbook y guardar
+    const wb = XLSX.utils.book_new()
+    XLSX.utils.book_append_sheet(wb, ws, 'Asistencia')
+
+    // Guardar archivo
+    XLSX.writeFile(wb, `asistencia_${nombreCurso.value}_${meses[store.mesSeleccionado]}.xlsx`)
+  } catch (error) {
+    console.error('Error al exportar Excel:', error)
+  }
+}
+
 onMounted(async () => {
   loading.value = true
   await Promise.all([
@@ -227,16 +367,29 @@ onMounted(async () => {
             <CardDescription>Descripcion asistencia mensual.</CardDescription>
           </div>
 
-          <!-- Botón de exportar simplificado -->
-          <Button
-            variant="outline"
-            class="gap-2"
-            @click="handleExportarPDF"
-            :disabled="!store.asistencias || !store.alumnos?.length"
-          >
-            <FileDown class="h-4 w-4" />
-            <span>Exportar PDF</span>
-          </Button>
+          <div class="flex gap-2">
+            <!-- Botón Excel -->
+            <Button
+              variant="outline"
+              class="gap-2"
+              @click="handleExportarExcel"
+              :disabled="!store.asistencias || !store.alumnos?.length"
+            >
+              <FileDown class="h-4 w-4" />
+              <span>Exportar Excel</span>
+            </Button>
+
+            <!-- Botón PDF existente -->
+            <Button
+              variant="outline"
+              class="gap-2"
+              @click="handleExportarPDF"
+              :disabled="!store.asistencias || !store.alumnos?.length"
+            >
+              <FileDown class="h-4 w-4" />
+              <span>Exportar PDF</span>
+            </Button>
+          </div>
         </div>
         <Separator />
       </CardHeader>
