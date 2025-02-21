@@ -1,5 +1,9 @@
 <script setup lang="ts">
-import { Plus, OctagonX, NotebookText, Users } from 'lucide-vue-next'
+import { Plus, NotebookText, Users, Calendar, X, Download } from 'lucide-vue-next'
+import { Label } from '@/components/ui/label'
+import { Input } from '@/components/ui/input'
+import { jsPDF } from 'jspdf'
+import autoTable from 'jspdf-autotable'
 
 const authStore = useAuthStore()
 const errorStore = useErrorStore()
@@ -49,14 +53,323 @@ async function fetchRegistros() {
 }
 fetchRegistros()
 
-const diaSeleccionado = ref(new Date().toISOString().split('T')[0])
-
-const registrosDiaSeleccionado = computed(() => {
-  if (!registrosFonoaudiologicos.value) return []
-  return registrosFonoaudiologicos.value.filter(
-    (registro) => registro.fecha_evaluacion === diaSeleccionado.value,
-  )
+const filtroFecha = ref({
+  desde: '',
+  hasta: '',
 })
+
+const mostrarFiltroFecha = ref(false)
+
+function limpiarFiltros() {
+  mostrarFiltroFecha.value = false
+  filtroFecha.value = {
+    desde: '',
+    hasta: '',
+  }
+}
+
+// Modificar el computed registrosFiltrados
+const registrosFiltrados = computed(() => {
+  if (!registrosFonoaudiologicos.value) return []
+
+  // Si no hay filtro activo, mostrar últimos 5 días
+  if (!mostrarFiltroFecha.value) {
+    const hoy = new Date()
+    const cincoDiasAtras = new Date(hoy)
+    cincoDiasAtras.setDate(hoy.getDate() - 5)
+
+    return registrosFonoaudiologicos.value
+      .filter(registro => {
+        const fechaRegistro = new Date(registro.fecha_evaluacion)
+        return fechaRegistro >= cincoDiasAtras && fechaRegistro <= hoy
+      })
+      .sort((a, b) => b.fecha_evaluacion.localeCompare(a.fecha_evaluacion))
+  }
+
+  // Aplicar filtros de fecha si están activos
+  return registrosFonoaudiologicos.value
+    .filter(registro => {
+      const fecha = new Date(registro.fecha_evaluacion)
+      const desde = filtroFecha.value.desde ? new Date(filtroFecha.value.desde) : null
+      const hasta = filtroFecha.value.hasta ? new Date(filtroFecha.value.hasta) : null
+
+      if (desde && hasta) {
+        return fecha >= desde && fecha <= hasta
+      } else if (desde) {
+        return fecha >= desde
+      } else if (hasta) {
+        return fecha <= hasta
+      }
+      return true
+    })
+    .sort((a, b) => b.fecha_evaluacion.localeCompare(a.fecha_evaluacion))
+})
+
+// Agregar función para descargar registros
+function descargarRegistros() {
+  const doc = new jsPDF({
+    orientation: 'landscape',
+    unit: 'mm',
+    format: 'a4'
+  })
+
+  // Configuración inicial
+  doc.setFont('helvetica')
+  doc.addImage(
+    'https://jhzweohhdshzyvjmkhce.supabase.co/storage/v1/object/public/Logo//telbook_logo.png',
+    'PNG',
+    15,
+    5,
+    33,
+    11
+  )
+
+  // Título y subtítulo
+  doc.setFontSize(20)
+  doc.setTextColor(44, 62, 80)
+  doc.text('Registros Fonoaudiológicos', doc.internal.pageSize.width / 2, 15, { align: 'center' })
+
+  // Solo el curso
+  doc.setFontSize(14)
+  doc.text(`Curso: ${nombreCurso.value}`, doc.internal.pageSize.width / 2, 25, { align: 'center' })
+
+  // Fecha de generación
+  doc.setFontSize(10)
+  doc.setTextColor(127, 140, 141)
+  doc.text(
+    `Generado el: ${new Date().toLocaleDateString('es-CL')}`,
+    doc.internal.pageSize.width - 15,
+    10,
+    { align: 'right' }
+  )
+
+  // Línea separadora
+  doc.setDrawColor(200, 200, 200)
+  doc.setLineWidth(0.1)
+  doc.line(15, 30, doc.internal.pageSize.width - 15, 30)
+
+  if (registrosFiltrados.value?.length) {
+    registrosFiltrados.value.forEach((registro, index) => {
+      if (index > 0) {
+        doc.addPage()
+        // Repetir encabezado en nuevas páginas
+        doc.addImage(
+          'https://jhzweohhdshzyvjmkhce.supabase.co/storage/v1/object/public/Logo//telbook_logo.png',
+          'PNG',
+          15,
+          5,
+          33,
+          11
+        )
+      }
+
+      // Fecha del registro
+      autoTable(doc, {
+        head: [['REGISTRO FONOAUDIOLÓGICO']],
+        body: [[`Fecha: ${registro.fecha_evaluacion}`]],
+        startY: index === 0 ? 40 : 20,
+        theme: 'grid',
+        styles: {
+          fontSize: 12,
+          cellPadding: 5,
+          halign: 'left',
+        },
+        headStyles: {
+          fillColor: [52, 152, 219],
+          textColor: 255,
+          fontSize: 14,
+        }
+      })
+
+      // Modalidad y Observaciones
+      autoTable(doc, {
+        body: [
+          ['Modalidad de evaluación', registro.modalidad_evaluacion],
+          ['Observaciones fonoaudiológicas', registro.observaciones_fonoaudiologicas]
+        ],
+        startY: doc.lastAutoTable.finalY + 5,
+        styles: {
+          fontSize: 10,
+          cellPadding: 5
+        },
+        columnStyles: {
+          0: { fontStyle: 'bold', fillColor: [245, 247, 250], cellWidth: 60 },
+          1: { cellWidth: 'auto' }
+        }
+      })
+
+      // Alumnos
+      autoTable(doc, {
+        head: [['ALUMNOS EVALUADOS']],
+        body: registro.alumnos.map(alumno => [alumno.nombre_completo]),
+        startY: doc.lastAutoTable.finalY + 5,
+        styles: {
+          fontSize: 10,
+          cellPadding: 5
+        },
+        headStyles: {
+          fillColor: [52, 152, 219],
+          textColor: 255,
+          fontSize: 11
+        }
+      })
+
+      // Contenidos
+      autoTable(doc, {
+        head: [['CONTENIDOS TRABAJADOS']],
+        body: registro.contenidos.map(contenido => [contenido]),
+        startY: doc.lastAutoTable.finalY + 5,
+        styles: {
+          fontSize: 10,
+          cellPadding: 5
+        },
+        headStyles: {
+          fillColor: [52, 152, 219],
+          textColor: 255,
+          fontSize: 11
+        }
+      })
+    })
+  } else {
+    // Caso sin registros
+    autoTable(doc, {
+      body: [['No hay registros para mostrar']],
+      startY: 40,
+      styles: {
+        fontSize: 12,
+        cellPadding: 5,
+        halign: 'center'
+      }
+    })
+  }
+
+  // Agregar pie de página con números de página
+  const pageCount = doc.internal.getNumberOfPages()
+  doc.setFontSize(8)
+  for (let i = 1; i <= pageCount; i++) {
+    doc.setPage(i)
+    doc.setDrawColor(200, 200, 200)
+    doc.setLineWidth(0.1)
+    doc.line(15, doc.internal.pageSize.height - 15, doc.internal.pageSize.width - 15, doc.internal.pageSize.height - 15)
+    doc.text(
+      `Página ${i} de ${pageCount}`,
+      doc.internal.pageSize.width / 2,
+      doc.internal.pageSize.height - 10,
+      { align: 'center' }
+    )
+  }
+
+  const nombreArchivo = `Registros_Fonoaudiologicos_${nombreCurso.value}_${new Date().toLocaleDateString('es-CL').replace(/\//g, '-')}`
+  doc.save(`${nombreArchivo}.pdf`)
+}
+
+// Agregar función para descargar registro individual
+function descargarRegistroIndividual(registro: ResumenInterface) {
+  const doc = new jsPDF({
+    orientation: 'landscape',
+    unit: 'mm',
+    format: 'a4'
+  })
+
+  // Configuración inicial
+  doc.setFont('helvetica')
+  doc.addImage(
+    'https://jhzweohhdshzyvjmkhce.supabase.co/storage/v1/object/public/Logo//telbook_logo.png',
+    'PNG',
+    15,
+    5,
+    33,
+    11
+  )
+
+  // Título y subtítulo
+  doc.setFontSize(20)
+  doc.setTextColor(44, 62, 80)
+  doc.text('Registro Fonoaudiológico', doc.internal.pageSize.width / 2, 15, { align: 'center' })
+
+  // Solo el curso
+  doc.setFontSize(14)
+  doc.text(`Curso: ${nombreCurso.value}`, doc.internal.pageSize.width / 2, 25, { align: 'center' })
+
+  let startY = 40  // Ajustar el startY inicial ya que eliminamos una línea
+
+  // Fecha del registro
+  autoTable(doc, {
+    head: [['REGISTRO FONOAUDIOLÓGICO']],
+    body: [[`Fecha: ${registro.fecha_evaluacion}`]],
+    startY,
+    theme: 'grid',
+    styles: {
+      fontSize: 12,
+      cellPadding: 5,
+      halign: 'left',
+    },
+    headStyles: {
+      fillColor: [52, 152, 219],
+      textColor: 255,
+      fontSize: 14,
+    }
+  })
+
+  startY += 30 // Incrementar la posición Y
+
+  // Modalidad y Observaciones
+  autoTable(doc, {
+    body: [
+      ['Modalidad de evaluación', registro.modalidad_evaluacion],
+      ['Observaciones fonoaudiológicas', registro.observaciones_fonoaudiologicas]
+    ],
+    startY,
+    styles: {
+      fontSize: 10,
+      cellPadding: 5
+    },
+    columnStyles: {
+      0: { fontStyle: 'bold', fillColor: [245, 247, 250], cellWidth: 60 },
+      1: { cellWidth: 'auto' }
+    }
+  })
+
+  startY += 40 // Incrementar la posición Y
+
+  // Alumnos
+  autoTable(doc, {
+    head: [['ALUMNOS EVALUADOS']],
+    body: registro.alumnos.map(alumno => [alumno.nombre_completo]),
+    startY,
+    styles: {
+      fontSize: 10,
+      cellPadding: 5
+    },
+    headStyles: {
+      fillColor: [52, 152, 219],
+      textColor: 255,
+      fontSize: 11
+    }
+  })
+
+  startY += 40 + (registro.alumnos.length * 8) // Incrementar basado en cantidad de alumnos
+
+  // Contenidos
+  autoTable(doc, {
+    head: [['CONTENIDOS TRABAJADOS']],
+    body: registro.contenidos.map(contenido => [contenido]),
+    startY,
+    styles: {
+      fontSize: 10,
+      cellPadding: 5
+    },
+    headStyles: {
+      fillColor: [52, 152, 219],
+      textColor: 255,
+      fontSize: 11
+    }
+  })
+
+  const nombreArchivo = `Registro_Fonoaudiologico_${registro.fecha_evaluacion.replace(/[^a-zA-Z0-9]/g, '_')}_${nombreCurso.value}`
+  doc.save(`${nombreArchivo}.pdf`)
+}
+
 </script>
 
 <template>
@@ -67,51 +380,104 @@ const registrosDiaSeleccionado = computed(() => {
 
         <!-- botones -->
         <div class="space-x-2">
+          <Button
+            variant="outline"
+            @click="descargarRegistros"
+            :disabled="!registrosFiltrados?.length"
+          >
+            <Download class="mr-2 h-4 w-4" />
+            Descargar Reporte Completo
+          </Button>
+
+          <!-- Botón para descargar registros filtrados -->
+          <Button
+            v-if="mostrarFiltroFecha"
+            variant="outline"
+            @click="descargarRegistros"
+            :disabled="!registrosFiltrados?.length || !filtroFecha.desde || !filtroFecha.hasta"
+          >
+            <Download class="mr-2 h-4 w-4" />
+            Descargar Registros Filtrados
+          </Button>
+
           <ModuloTelDialogoAgregar @registro-creado="fetchRegistros()">
             <Button
               :disabled="!puedeAgregarRegistro"
               :title="!puedeAgregarRegistro ?
               'No tienes permisos para agregar registros fonoaudiológicos' : ''"
-              >
+            >
               <Plus />
               <span>Agregar registro fonoaudiologico</span>
             </Button>
           </ModuloTelDialogoAgregar>
         </div>
       </CardTitle>
-      <CardDescription>Descripcion modulo tel.</CardDescription>
+
+      <!-- Agregar sección de filtros -->
+      <div class="mt-4 flex items-center gap-4">
+        <Button
+          variant="outline"
+          @click="mostrarFiltroFecha = !mostrarFiltroFecha"
+          :class="{ 'bg-primary/10': mostrarFiltroFecha }"
+        >
+          <Calendar class="mr-2 h-4 w-4" />
+          Filtrar por fecha
+        </Button>
+
+        <div v-if="mostrarFiltroFecha" class="flex items-center gap-2">
+          <div class="flex items-center gap-2">
+            <Label>Desde:</Label>
+            <Input type="date" v-model="filtroFecha.desde" />
+          </div>
+          <div class="flex items-center gap-2">
+            <Label>Hasta:</Label>
+            <Input type="date" v-model="filtroFecha.hasta" />
+          </div>
+          <Button variant="ghost" @click="limpiarFiltros">
+            <X class="h-4 w-4" />
+          </Button>
+        </div>
+      </div>
+
+      <CardDescription>
+        {{ mostrarFiltroFecha ? 'Mostrando registros filtrados por fecha' : 'Mostrando registros de los últimos 5 días' }}
+      </CardDescription>
       <Separator />
     </CardHeader>
 
     <Transition name="fade" mode="out-in">
       <CardContent v-if="registrosFonoaudiologicos">
-        <FormKit
-          type="date"
-          v-model="diaSeleccionado"
-          value="1999-01-01"
-          label="Selecciona un dia"
-          validation-visibility="live"
-        />
-
         <!-- si no hay registros -->
         <InfoMensajeSinData
-          v-if="!registrosDiaSeleccionado.length"
+          v-if="!registrosFiltrados.length"
           icono="mantencion"
-          mensaje="No hay registros para el dia seleccionado."
+          mensaje="No hay registros para el rango de fechas seleccionado."
         />
 
         <!-- si hubiera -->
         <Table v-else>
           <TableBody>
             <TableRow
-              v-for="planificacion in registrosDiaSeleccionado"
+              v-for="planificacion in registrosFiltrados"
               :key="planificacion.id"
               class="group flex min-h-20 items-center"
             >
               <TableCell class="w-full">
                 <Card>
                   <CardHeader>
-                    <CardTitle> {{ planificacion.fecha_evaluacion }} </CardTitle>
+                    <CardTitle>
+                      <div class="flex items-start justify-between">
+                        <span>{{ planificacion.fecha_evaluacion }}</span>
+                        <Button
+                          variant="outline"
+                          class="hover:bg-primary/10 text-foreground"
+                          @click="descargarRegistroIndividual(planificacion)"
+                        >
+                          <Download class="mr-2 h-4 w-4" />
+                          Descargar PDF
+                        </Button>
+                      </div>
+                    </CardTitle>
 
                     <CardDescription> </CardDescription>
                   </CardHeader>
@@ -152,6 +518,9 @@ const registrosDiaSeleccionado = computed(() => {
                     </Accordion>
                   </CardContent>
                   <CardFooter class="flex justify-end">
+                    <!-- Comentar todo este bloque ya que 'estado' no existe en la interfaz ResumenInterface
+                         y 'finalizarPlanificacion' no está definido -->
+                    <!--
                     <Dialog v-if="planificacion.estado === 1">
                       <DialogTrigger as-child>
                         <Button variant="destructive">
@@ -176,6 +545,7 @@ const registrosDiaSeleccionado = computed(() => {
                         </DialogFooter>
                       </DialogContent>
                     </Dialog>
+                    -->
                   </CardFooter>
                 </Card>
               </TableCell>
