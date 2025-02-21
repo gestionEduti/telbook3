@@ -70,7 +70,7 @@ async function finalizarPlanificacion(id: number) {
 /**
  * Genera y descarga un PDF con el reporte de planificaciones
  */
-function descargarReporte() {
+function descargarTodasLasPlanificaciones() {
   const doc = new jsPDF({
     orientation: 'landscape',
     unit: 'mm',
@@ -284,8 +284,9 @@ function descargarReporte() {
     )
   }
 
-  // Descargar el PDF
-  doc.save(`Planificaciones_Mediano_Plazo_${nombreCurso.value}_${new Date().toISOString().split('T')[0]}.pdf`)
+  // Modificar el nombre del archivo para el reporte completo
+  const nombreArchivo = `PlaMedianoPlazo_Reporte_Completo_${nombreCurso.value}_${new Date().toLocaleDateString('es-CL').replace(/\//g, '-')}`
+  doc.save(`${nombreArchivo}.pdf`)
 }
 
 /**
@@ -439,16 +440,7 @@ function descargarPlanificacionIndividual(planificacion: ResumenPlanificaciones)
     }
   })
 
-  // Agregar pie de página
-  doc.setFontSize(8)
-  doc.text(
-    `Página 1 de 1`,
-    doc.internal.pageSize.width / 2,
-    doc.internal.pageSize.height - 10,
-    { align: 'center' }
-  )
-
-  // Modificar la línea donde se guarda el archivo
+  // Nombre del archivo para planificación individual
   const nombreArchivo = `PlaMedianoPlazo_${planificacion.proyecto_eje.replace(/[^a-zA-Z0-9]/g, '_')}_${nombreCurso.value}_${new Date().toLocaleDateString('es-CL').replace(/\//g, '-')}`
   doc.save(`${nombreArchivo}.pdf`)
 }
@@ -464,15 +456,15 @@ onMounted(async () => {
       <CardTitle class="flex items-end justify-between">
         <span>Planificacion mediano plazo</span>
 
-        <!-- botones -->
+        <!-- botones superiores -->
         <div class="flex gap-2">
           <Button
             variant="outline"
-            @click="descargarReporte"
+            @click="descargarTodasLasPlanificaciones"
             :disabled="!hayPlanificaciones"
           >
             <Download class="mr-2 h-4 w-4" />
-            Descargar Reporte
+            Descargar Reporte Completo
           </Button>
 
           <MedianoPlazoDialogoAgregar
