@@ -63,10 +63,11 @@ export const useAuthStore = defineStore('auth-store', () => {
       })
       return
     }
+
     if (!perfil.value || perfil.value.id !== usuario.value.id) {
       const { data, error } = await supabase
         .from('mv_usuario')
-        .select()
+        .select(`*, mv_profesor_cursos(rbd_establecimiento,curso_asignado)`)
         .eq('id', usuario.value.id)
         .single()
       if (error) {
