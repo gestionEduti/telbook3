@@ -23,6 +23,31 @@ const handleUpdatePassword = async () => {
 
   try {
     loading.value = true
+
+    // Obtenemos el usuario actual
+    const { data: { user: currentUser } } = await supabase.auth.getUser()
+
+    if (!currentUser?.email) throw new Error('No se encontró el usuario')
+
+    // Verificamos el código del perfil en mv_usuario
+    const { data: usuario, error: userError } = await supabase
+      .from('mv_usuario')
+      .select('codigo_perfil_usuario')
+      .eq('email', currentUser.email)
+      .single()
+
+    if (userError) throw userError
+
+    if (usuario?.codigo_perfil_usuario === 1 || usuario?.codigo_perfil_usuario === 2) {
+      toast({
+        title: 'No autorizado',
+        description: 'No tienes permiso para cambiar la contraseña',
+        variant: 'destructive',
+        duration: 3000,
+      })
+      return
+    }
+
     const { error } = await supabase.auth.updateUser({
       password: password.value,
     })

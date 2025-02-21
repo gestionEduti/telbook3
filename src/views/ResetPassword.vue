@@ -11,6 +11,26 @@ const loading = ref(false)
 const handleResetPassword = async () => {
   try {
     loading.value = true
+
+    // Verificamos el código del perfil en mv_usuario
+    const { data: usuario, error: userError } = await supabase
+      .from('mv_usuario')
+      .select('codigo_perfil_usuario')
+      .eq('email', email.value)
+      .single()
+
+    if (userError) throw userError
+
+    if (usuario?.codigo_perfil_usuario === 1 || usuario?.codigo_perfil_usuario === 2) {
+      toast({
+        title: 'No autorizado',
+        description: 'No tienes permiso para cambiar la contraseña',
+        variant: 'destructive',
+        duration: 3000,
+      })
+      return
+    }
+
     const { error } = await supabase.auth.resetPasswordForEmail(email.value, {
       redirectTo: `${window.location.origin}/actualizar-password`,
     })
