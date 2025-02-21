@@ -66,7 +66,7 @@ async function guardarEvaluacion() {
   // llamada a la api de mineduc
   const respuestaOTP = await mineducStore.validarOTP(otp.value)
 
-  // guardar asistencia en supabase
+  // guardar leccionario en supabase
   const { error } = await supabase.from('mv_leccionario').insert({
     id_planificacion: props.planificacion.id,
     evaluacion: evaluacionCombobox.value,
@@ -152,6 +152,7 @@ onMounted(async () => {
                       <span class="text-lg capitalize">{{ evaluacionInicial }}</span>
                     </div>
                     <p class="mt-4" v-if="evaluacionComentario !== ''">
+                      <span class="font-bold">Observación: </span>
                       {{ evaluacionComentario }}
                     </p>
                   </div>
