@@ -104,3 +104,10 @@ onMounted(() => {
     </p>
   </div>
 </template>
+
+@media print {
+  .card-content-to-export {
+    background: white;
+    padding: 20px;
+  }
+}

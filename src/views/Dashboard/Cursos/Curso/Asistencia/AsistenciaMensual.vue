@@ -1,5 +1,7 @@
 <script setup lang="ts">
-import { Pencil, Save, LoaderCircle } from 'lucide-vue-next'
+import { Pencil, Save, LoaderCircle, FileDown } from 'lucide-vue-next'
+import jsPDF from 'jspdf'
+import 'jspdf-autotable'
 
 const props = defineProps<{
   nivel: string
@@ -24,6 +26,7 @@ const puedeEditarAsistencia = computed(() => {
 })
 
 
+
 /**
  * accion cuando se presiona el boton editar
  */
@@ -46,6 +49,164 @@ async function handleDialogo(accion: 'guardar' | 'cancelar') {
   }
 }
 
+/**
+ * Genera y descarga el PDF con la asistencia mensual
+ */
+async function handleExportarPDF() {
+  if (!store.asistencias || !store.alumnos?.length) return
+
+  try {
+    const doc = new jsPDF('l', 'mm', 'a4')
+
+    // Obtener el año actual
+    const año = new Date().getFullYear()
+
+    // Configuración inicial
+    doc.setFont('helvetica')
+    doc.addImage(
+      'https://jhzweohhdshzyvjmkhce.supabase.co/storage/v1/object/public/Logo//telbook_logo.png',
+      'PNG',
+      15,
+      5,
+      33,
+      11
+    )
+
+    // Encabezado
+    doc.setFontSize(16)
+    doc.text(`Asistencia Mensual - ${nombreCurso.value} - ${año}`, 15, 25)
+
+    // Información adicional
+    doc.setFontSize(12)
+    doc.text(`RBD: ${authStore.perfil?.rbd_usuario}`, 15, 32)
+    doc.text(`Mes: ${meses[store.mesSeleccionado]}`, 15, 39)
+
+    // Preparar datos para la tabla
+    const headers = ['Nombre']
+    for (let i = 1; i <= store.cantidadDiasMesActual; i++) {
+      headers.push(i.toString())
+    }
+    headers.push('T', 'P', 'A', '%P', '%A')
+
+    // Generar datos de la tabla
+    const data = store.alumnos.map(alumno => {
+      const row = [alumno.nombre_completo_alumno]
+      const asistenciasAlumno = store.asistencias[alumno.rut_alumno] || {}
+
+      // Agregar estado de cada día
+      for (let i = 1; i <= store.cantidadDiasMesActual; i++) {
+        const estado = asistenciasAlumno[i]
+        row.push(estado === 1 ? 'P' : estado === 0 ? 'A' : '-')
+      }
+
+      // Calcular totales
+      let presentes = 0, ausentes = 0, total = 0
+      Object.values(asistenciasAlumno).forEach(v => {
+        if (v === 1) presentes++
+        if (v === 0) ausentes++
+        if (v === 0 || v === 1) total++
+      })
+
+      // Agregar totales
+      row.push(
+        total.toString(),
+        presentes.toString(),
+        ausentes.toString(),
+        total ? Math.round((presentes/total)*100).toString() + '%' : '0%',
+        total ? Math.round((ausentes/total)*100).toString() + '%' : '0%'
+      )
+
+      return row
+    })
+
+    // Generar tabla
+    doc.autoTable({
+      head: [headers],
+      body: data,
+      foot: [
+        // Agregar filas de totales
+        ['Presente', ...Array(store.cantidadDiasMesActual).fill(0).map((_, i) =>
+          Object.values(store.asistencias).reduce((sum, alumno) =>
+            alumno[i + 1] === 1 ? sum + 1 : sum, 0
+          )
+        )],
+        ['Ausente', ...Array(store.cantidadDiasMesActual).fill(0).map((_, i) =>
+          Object.values(store.asistencias).reduce((sum, alumno) =>
+            alumno[i + 1] === 0 ? sum + 1 : sum, 0
+          )
+        )],
+        ['Total', ...Array(store.cantidadDiasMesActual).fill(0).map((_, i) =>
+          Object.values(store.asistencias).reduce((sum, alumno) =>
+            (alumno[i + 1] === 0 || alumno[i + 1] === 1) ? sum + 1 : sum, 0
+          )
+        )]
+      ],
+      startY: 45,
+      styles: {
+        fontSize: 8,
+        cellPadding: 1,
+        lineColor: [80, 80, 80],
+        lineWidth: 0.1,
+      },
+      headStyles: {
+        fillColor: [41, 128, 185],
+        textColor: 255,
+        fontStyle: 'bold'
+      },
+      footStyles: {
+        fillColor: [245, 245, 245],
+        textColor: [70, 70, 70],
+        fontStyle: 'bold'
+      },
+      columnStyles: {
+        0: { cellWidth: 40 },
+      },
+      didDrawCell: function(data) {
+        if (data.section === 'body' && data.column.index > 0 && data.column.index <= store.cantidadDiasMesActual) {
+          const cellText = data.cell.text[0];
+          if (cellText === 'P') {
+            doc.setFillColor(34, 197, 94); // Verde
+            doc.rect(data.cell.x, data.cell.y, data.cell.width, data.cell.height, 'F');
+            doc.setTextColor(255, 255, 255);
+            doc.text('P', data.cell.x + data.cell.width / 2, data.cell.y + data.cell.height / 2, { align: 'center', baseline: 'middle' });
+          } else if (cellText === 'A') {
+            doc.setFillColor(248, 113, 113); // Rojo
+            doc.rect(data.cell.x, data.cell.y, data.cell.width, data.cell.height, 'F');
+            doc.setTextColor(255, 255, 255);
+            doc.text('A', data.cell.x + data.cell.width / 2, data.cell.y + data.cell.height / 2, { align: 'center', baseline: 'middle' });
+          } else {
+            doc.setFillColor(209, 213, 219); // Gris
+            doc.rect(data.cell.x, data.cell.y, data.cell.width, data.cell.height, 'F');
+            doc.setTextColor(0, 0, 0);
+            doc.text('-', data.cell.x + data.cell.width / 2, data.cell.y + data.cell.height / 2, { align: 'center', baseline: 'middle' });
+          }
+        }
+      },
+      didDrawPage: function(data) {
+        // Agregar leyenda al pie de página
+        const pageHeight = doc.internal.pageSize.height
+        doc.setFontSize(10)
+        doc.setFont('helvetica', 'bold')
+
+        // Posicionar la leyenda más abajo para dar espacio a los totales
+        const startY = pageHeight - 25
+        doc.text('Leyenda:', 15, startY)
+
+        doc.setFont('helvetica', 'normal')
+        doc.text('T: Días Trabajados', 15, startY + 5)
+        doc.text('P: Días Presente', 15, startY + 10)
+        doc.text('A: Días Ausentes', 15, startY + 15)
+        doc.text('%P: Porcentaje de asistencia', 80, startY + 5)
+        doc.text('%A: Porcentaje de Inasistencia', 80, startY + 10)
+      }
+    })
+
+    doc.save(`asistencia_${nombreCurso.value}_${meses[store.mesSeleccionado]}.pdf`)
+  } catch (error) {
+    console.error('Error al exportar PDF:', error)
+  }
+}
+
 onMounted(async () => {
   loading.value = true
   await Promise.all([
@@ -60,8 +221,23 @@ onMounted(async () => {
   <Transition name="fade" mode="out-in">
     <Card v-if="store.alumnos" :class="store.modoEdicion ? 'bg-red-50' : ''">
       <CardHeader>
-        <CardTitle>Asistencia mensual</CardTitle>
-        <CardDescription>Descripcion asistencia mensual.</CardDescription>
+        <div class="flex justify-between items-center">
+          <div>
+            <CardTitle>Asistencia mensual</CardTitle>
+            <CardDescription>Descripcion asistencia mensual.</CardDescription>
+          </div>
+
+          <!-- Botón de exportar simplificado -->
+          <Button
+            variant="outline"
+            class="gap-2"
+            @click="handleExportarPDF"
+            :disabled="!store.asistencias || !store.alumnos?.length"
+          >
+            <FileDown class="h-4 w-4" />
+            <span>Exportar PDF</span>
+          </Button>
+        </div>
         <Separator />
       </CardHeader>
 
@@ -74,8 +250,8 @@ onMounted(async () => {
               v-model="store.mesSeleccionado"
               @update:model-value="store.fetchAsistenciasMes(nombreCurso)"
             >
-              <SelectTrigger class="w-48 border-gray-400">
-                <SelectValue placeholder="Selecciona un mes" />
+            <SelectTrigger class="w-48 border-gray-400">
+              <SelectValue placeholder="Selecciona un mes" />
               </SelectTrigger>
               <SelectContent>
                 <SelectGroup>
