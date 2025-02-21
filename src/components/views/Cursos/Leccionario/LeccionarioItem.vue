@@ -1,5 +1,7 @@
 <script setup lang="ts">
-import { ThumbsUp, ThumbsDown, Save, Goal, ClipboardPenLine } from 'lucide-vue-next'
+import { ThumbsUp, ThumbsDown, Save, Goal, ClipboardPenLine, Download } from 'lucide-vue-next'
+import jsPDF from 'jspdf'
+import autoTable from 'jspdf-autotable'
 
 interface ResumenPlanificacionesItem {
   id: number
@@ -25,6 +27,7 @@ const props = defineProps<{
 const errorStore = useErrorStore()
 const authStore = useAuthStore()
 const mineducStore = useMineducStore()
+
 
 const loading = ref(true)
 const evaluacionInicial = ref<string>('') // evaluacion cuando carga el componente
@@ -80,6 +83,161 @@ async function guardarEvaluacion() {
   fetchEvaluacion()
 }
 
+// Agregar función para descargar PDF
+async function descargarPDF() {
+  try {
+    const doc = new jsPDF()
+
+    // Configuración inicial y logo
+    doc.setFont('helvetica')
+    doc.addImage(
+      'https://jhzweohhdshzyvjmkhce.supabase.co/storage/v1/object/public/Logo//telbook_logo.png',
+      'PNG',
+      15,
+      5,
+      33,
+      11
+    )
+
+    // Título principal centrado
+    doc.setFontSize(20)
+    doc.setTextColor(44, 62, 80)
+    doc.text('Leccionario', doc.internal.pageSize.width / 2, 15, { align: 'center' })
+
+    // Subtítulo con información del curso
+    doc.setFontSize(14)
+    doc.setTextColor(52, 73, 94)
+    //doc.text(`Curso: ${props.planificacion.}`, doc.internal.pageSize.width / 2, 25, { align: 'center' })
+
+    // Fecha del leccionario
+    autoTable(doc, {
+      head: [['LECCIONARIO DIARIO']],
+      body: [[`Fecha: ${props.planificacion.fecha}`]],
+      startY: 35,
+      theme: 'grid',
+      styles: {
+        fontSize: 12,
+        cellPadding: 5,
+        halign: 'left',
+      },
+      headStyles: {
+        fillColor: [52, 152, 219],
+        textColor: 255,
+        fontSize: 14,
+      }
+    })
+
+    // Detalles del leccionario
+    autoTable(doc, {
+      body: [
+        ['Recursos', props.planificacion.recursos],
+        ['Instrumentos', props.planificacion.instrumentos],
+        ['Inicio, desarrollo y cierre', props.planificacion.inicioDesarrolloCierre]
+      ],
+      startY: doc.lastAutoTable.finalY + 5,
+      styles: {
+        fontSize: 10,
+        cellPadding: 5
+      },
+      columnStyles: {
+        0: { fontStyle: 'bold', fillColor: [245, 247, 250], cellWidth: 40 },
+        1: { cellWidth: 'auto' }
+      }
+    })
+
+    // Objetivos de Aprendizaje
+    if (props.planificacion.oas && props.planificacion.oas.length > 0) {
+      autoTable(doc, {
+        head: [['OBJETIVOS DE APRENDIZAJE']],
+        body: [['']],
+        startY: doc.lastAutoTable.finalY + 5,
+        styles: {
+          fontSize: 12,
+          cellPadding: 5
+        },
+        headStyles: {
+          fillColor: [52, 152, 219],
+          textColor: 255,
+          fontSize: 14,
+          halign: 'center'
+        }
+      })
+
+      autoTable(doc, {
+        head: [['Ámbito y Núcleo', 'Descripción del Objetivo']],
+        body: props.planificacion.oas.map(oa => [
+          {
+            content: `${oa.descripcion_ambito || ''}\n${oa.descripcion_nucleo || ''}`,
+            styles: { fontStyle: 'bold' }
+          },
+          oa.descripcion_oa || ''
+        ]),
+        startY: doc.lastAutoTable.finalY + 2,
+        styles: {
+          fontSize: 10,
+          cellPadding: 5,
+          valign: 'middle',
+          overflow: 'linebreak',
+          cellWidth: 'wrap'
+        },
+        headStyles: {
+          fillColor: [52, 152, 219],
+          textColor: 255,
+          fontSize: 11,
+          halign: 'left'
+        },
+        columnStyles: {
+          0: { cellWidth: 80 },
+          1: { cellWidth: 'auto' }
+        }
+      })
+    }
+
+    // Evaluación
+    autoTable(doc, {
+      head: [['EVALUACIÓN']],
+      body: evaluacionInicial.value ? [
+        [`Evaluación: ${evaluacionInicial.value}`],
+        evaluacionComentario.value ? [`Observación: ${evaluacionComentario.value}`] : ['Sin observaciones']
+      ] : [['Sin evaluación registrada']],
+      startY: doc.lastAutoTable.finalY + 5,
+      styles: {
+        fontSize: 10,
+        cellPadding: 5
+      },
+      headStyles: {
+        fillColor: [52, 152, 219],
+        textColor: 255,
+        fontSize: 14,
+        halign: 'left'
+      }
+    })
+
+    // Pie de página con números de página
+    const pageCount = doc.internal.getNumberOfPages()
+    doc.setFontSize(8)
+    for (let i = 1; i <= pageCount; i++) {
+      doc.setPage(i)
+      doc.setDrawColor(200, 200, 200)
+      doc.setLineWidth(0.1)
+      doc.line(15, doc.internal.pageSize.height - 15, doc.internal.pageSize.width - 15, doc.internal.pageSize.height - 15)
+      doc.text(
+        `Página ${i} de ${pageCount}`,
+        doc.internal.pageSize.width / 2,
+        doc.internal.pageSize.height - 10,
+        { align: 'center' }
+      )
+    }
+
+    // Guardar el PDF
+    const nombreArchivo = `Leccionario_${props.planificacion.id}_${props.planificacion.fecha.replace(/\//g, '-')}`
+    doc.save(`${nombreArchivo}.pdf`)
+
+  } catch (error) {
+    errorStore.setError({ error, customCode: 500 })
+  }
+}
+
 onMounted(async () => {
   await fetchEvaluacion()
   loading.value = false
@@ -92,8 +250,17 @@ onMounted(async () => {
       <div class="w-full">
         <Card>
           <CardHeader>
-            <CardDescription>
+            <CardDescription class="flex items-center justify-between">
               <p>{{ planificacion.fecha }}</p>
+              <Button
+                variant="outline"
+                size="sm"
+                @click="descargarPDF"
+                class="text-black hover:text-black hover:bg-gray-100"
+              >
+                <Download class="mr-2 h-4 w-4" />
+                Descargar PDF
+              </Button>
             </CardDescription>
           </CardHeader>
 
