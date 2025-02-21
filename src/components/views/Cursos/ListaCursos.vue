@@ -1,10 +1,19 @@
 <script setup lang="ts">
 import type { Tables } from '@/types/supabase' // types de supabase
 
+const errorStore = useErrorStore()
+
+interface ProfesoresCursosEstablecimientoInterface {
+  curso_asignado: string
+  rut_profesor: string
+  nombre_usuario: string
+  apellido_usuario: string
+}
+
 const props = defineProps<{
   cursos: Tables<'tp_cursos'>[]
   niveles: Tables<'tp_niveles'>[]
-  profesores: Tables<'view_profesor_curso'>[]
+  profesores: ProfesoresCursosEstablecimientoInterface[]
 }>()
 
 // methods
@@ -15,9 +24,13 @@ const cursosFiltradosPorNivel = (nivel: Tables<'tp_niveles'>) => {
 }
 
 const profesorDelCurso = (curso: Tables<'tp_cursos'>) => {
-  return props.profesores.find((profesor) => {
-    return profesor.nombre_curso === curso.nombre_curso
-  })
+  if (props.profesores === null) {
+    return []
+  } else {
+    return props.profesores.filter((profesor) => {
+      return profesor.curso_asignado === curso.nombre_curso
+    })
+  }
 }
 </script>
 
@@ -33,10 +46,15 @@ const profesorDelCurso = (curso: Tables<'tp_cursos'>) => {
         <!-- cursos nivel -->
         <ul
           data-test="cursos-lista-lista"
-          class="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-5"
+          class="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4"
         >
           <li v-for="curso in cursosFiltradosPorNivel(nivel)" :key="curso.id">
-            <ListaCursosItem :curso :niveles="props.niveles" :profesor="profesorDelCurso(curso)" />
+            <ListaCursosItem
+              v-if="props.profesores"
+              :curso
+              :niveles="props.niveles"
+              :profesor="profesorDelCurso(curso)"
+            />
           </li>
         </ul>
         <Separator class="my-4" />

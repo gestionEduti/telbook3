@@ -9,7 +9,21 @@ const errorStore = useErrorStore()
 // data
 const cursos = ref<Tables<'tp_cursos'>[] | null>(null)
 const niveles = ref<Tables<'tp_niveles'>[] | null>(null)
-const profesores = ref<Tables<'view_profesor_curso'>[]>([])
+// const profesores = ref<Tables<'view_profesor_curso'>[]>([])
+
+// computed
+const cursosFiltradosUsuario = computed(() => {
+  if (authStore.perfil?.codigo_perfil_usuario !== 3) {
+    return cursos.value
+  } else {
+    return cursos.value?.filter((curso) => {
+      const nombreCurso = curso.sigla_nivel_curso + curso.letra_nivel_curso
+      return authStore.perfil?.mv_profesor_cursos.some(
+        (curso) => curso.curso_asignado === nombreCurso,
+      )
+    })
+  }
+})
 
 // methods
 const fetchCursos = async () => {
@@ -30,18 +44,52 @@ const fetchNiveles = async () => {
   else niveles.value = data
 }
 
-const fetchProfesores = async () => {
+// const fetchProfesores = async () => {
+//   const { data, error, status } = await supabase
+//     .from('view_profesor_curso')
+//     .select()
+//     .eq('rbd', authStore.perfil?.rbd_usuario)
+//   if (error) errorStore.setError({ error: error, customCode: status })
+//   else profesores.value = data
+// }
+
+// traer los profesores de cada curso de este establecimiento
+interface ProfesoresCursosEstablecimientoInterface {
+  curso_asignado: string
+  rut_profesor: string
+  nombre_usuario: string
+  apellido_usuario: string
+}
+const profesoresCursosEstablecimiento = ref<ProfesoresCursosEstablecimientoInterface[] | null>(null)
+async function fetchProfesoresCursosEstablecimiento() {
   const { data, error, status } = await supabase
-    .from('view_profesor_curso')
-    .select()
-    .eq('rbd', authStore.perfil?.rbd_usuario)
+    .from('mv_profesor_cursos')
+    .select(
+      `
+    curso_asignado,
+    rut_profesor,
+    ...mv_usuario!inner(
+      nombre_usuario,
+      apellido_usuario
+    )
+    `,
+    )
+    .eq('rbd_establecimiento', '26005')
+    .order('rbd_establecimiento')
+    .order('curso_asignado')
+    .order('rut_profesor')
   if (error) errorStore.setError({ error: error, customCode: status })
-  else profesores.value = data
+  else profesoresCursosEstablecimiento.value = data
 }
 
-onMounted(async () => {
-  await Promise.all([fetchNiveles(), fetchCursos(), fetchProfesores()])
-})
+fetchProfesoresCursosEstablecimiento()
+fetchNiveles()
+fetchCursos()
+// fetchProfesores()
+
+// onMounted(async () => {
+//   await Promise.all([fetchNiveles(), fetchCursos(), fetchProfesores()])
+// })
 </script>
 
 <template>
@@ -54,7 +102,12 @@ onMounted(async () => {
           <Separator />
         </CardHeader>
         <CardContent data-test="cursos-card-content">
-          <ListaCursos v-if="cursos.length && niveles.length" :cursos :niveles :profesores />
+          <ListaCursos
+            v-if="cursos.length && niveles.length"
+            :cursos="cursosFiltradosUsuario"
+            :niveles
+            :profesores="profesoresCursosEstablecimiento"
+          />
           <!-- TODO: extraer a un componente de cuando no hay resultados -->
           <div v-else class="flex flex-col items-center justify-center space-y-2 py-8">
             <ListX :size="32" class="text-gray-500" />
