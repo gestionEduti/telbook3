@@ -480,7 +480,9 @@ function descargarPlanificacionIndividual(planificacion: ResumenPlanificaciones[
       columnStyles: {
         0: { cellWidth: 70 },
         1: { cellWidth: 'auto' }
-      }
+      },
+      margin: { left: 15 },
+      tableWidth: 'auto'
     })
   }
 
@@ -497,6 +499,218 @@ function descargarPlanificacionIndividual(planificacion: ResumenPlanificaciones[
   )
 
   const nombreArchivo = `PlaCortoPlazo_${planificacion.fecha.replace(/[^a-zA-Z0-9]/g, '_')}_${nombreCurso.value}`
+  doc.save(`${nombreArchivo}.pdf`)
+}
+
+// Agregar nueva función para descargar planificaciones filtradas
+function descargarPlanificacionesFiltradas() {
+  const doc = new jsPDF({
+    orientation: 'landscape',
+    unit: 'mm',
+    format: 'a4'
+  })
+
+  // Configuración inicial igual que en descargarTodasLasPlanificaciones
+  doc.setFont('helvetica')
+  doc.addImage(
+    'https://jhzweohhdshzyvjmkhce.supabase.co/storage/v1/object/public/Logo//telbook_logo.png',
+    'PNG',
+    15,
+    5,
+    33,
+    11
+  )
+
+  // Título principal centrado
+  doc.setFontSize(20)
+  doc.setTextColor(44, 62, 80)
+  doc.text('Planificaciones de Corto Plazo (Filtradas)', doc.internal.pageSize.width / 2, 15, { align: 'center' })
+
+  // Subtítulo con información del curso
+  doc.setFontSize(14)
+  doc.setTextColor(52, 73, 94)
+  doc.text(`Curso: ${nombreCurso.value}`, doc.internal.pageSize.width / 2, 25, { align: 'center' })
+
+  // Información del filtro
+  doc.setFontSize(12)
+  doc.setTextColor(52, 73, 94)
+  const rangoFechas = `Desde: ${filtroFecha.value.desde || 'Sin fecha inicial'} - Hasta: ${filtroFecha.value.hasta || 'Sin fecha final'}`
+  doc.text(rangoFechas, doc.internal.pageSize.width / 2, 35, { align: 'center' })
+
+  // Línea separadora
+  doc.setDrawColor(200, 200, 200)
+  doc.setLineWidth(0.1)
+  doc.line(15, 40, doc.internal.pageSize.width - 15, 40)
+
+  if (proyectoEje.value && planificacionesFiltradas.value?.length) {
+    // Mostrar información del proyecto eje
+    autoTable(doc, {
+      head: [['PROYECTO EJE EN CURSO']],
+      body: [[proyectoEje.value.proyecto_eje]],
+      startY: 50,
+      theme: 'grid',
+      styles: {
+        fontSize: 14,
+        cellPadding: 8,
+        halign: 'center',
+        valign: 'middle',
+        lineWidth: 0.5,
+      },
+      headStyles: {
+        fillColor: [41, 128, 185],
+        textColor: 255,
+        fontSize: 16,
+        fontStyle: 'bold',
+      },
+      bodyStyles: {
+        fillColor: [235, 245, 251],
+        textColor: [44, 62, 80],
+        fontStyle: 'bold'
+      }
+    })
+
+    // Mostrar cada planificación filtrada
+    planificacionesFiltradas.value.forEach((planificacion, index) => {
+      if (index > 0) {
+        doc.addPage()
+        // Repetir encabezado en nuevas páginas
+        doc.addImage(
+          'https://jhzweohhdshzyvjmkhce.supabase.co/storage/v1/object/public/Logo//telbook_logo.png',
+          'PNG',
+          15,
+          5,
+          33,
+          11
+        )
+      }
+
+      // Fecha de la planificación
+      autoTable(doc, {
+        head: [['PLANIFICACIÓN DIARIA']],
+        body: [[`Fecha: ${planificacion.fecha}`]],
+        startY: index === 0 ? doc.lastAutoTable.finalY + 10 : 40,
+        theme: 'grid',
+        styles: {
+          fontSize: 12,
+          cellPadding: 5,
+          halign: 'left',
+        },
+        headStyles: {
+          fillColor: [52, 152, 219],
+          textColor: 255,
+          fontSize: 14,
+        }
+      })
+
+      // Detalles de la planificación
+      autoTable(doc, {
+        body: [
+          ['Recursos', planificacion.recursos],
+          ['Instrumentos', planificacion.instrumentos],
+          ['Inicio, desarrollo y cierre', planificacion.inicioDesarrolloCierre]
+        ],
+        startY: doc.lastAutoTable.finalY + 5,
+        styles: {
+          fontSize: 10,
+          cellPadding: 5
+        },
+        columnStyles: {
+          0: { fontStyle: 'bold', fillColor: [245, 247, 250], cellWidth: 40 },
+          1: { cellWidth: 'auto' }
+        }
+      })
+
+      // Objetivos de Aprendizaje - Primero verificamos si hay OAs
+      if (planificacion.oas && planificacion.oas.length > 0) {
+        // Título de la sección
+        autoTable(doc, {
+          head: [['OBJETIVOS DE APRENDIZAJE']],
+          body: [['']],
+          startY: doc.lastAutoTable.finalY + 5,
+          styles: {
+            fontSize: 12,
+            cellPadding: 5
+          },
+          headStyles: {
+            fillColor: [52, 152, 219],
+            textColor: 255,
+            fontSize: 14,
+            halign: 'center'
+          }
+        })
+
+        // Contenido de los OAs
+        autoTable(doc, {
+          head: [['Ámbito y Núcleo', 'Descripción del Objetivo']],
+          body: planificacion.oas.map(oa => [
+            {
+              content: `${oa.descripcion_ambito || ''}\n${oa.descripcion_nucleo || ''}`,
+              styles: { fontStyle: 'bold' }
+            },
+            oa.descripcion_oa || ''
+          ]),
+          startY: doc.lastAutoTable.finalY + 2,
+          styles: {
+            fontSize: 10,
+            cellPadding: 5,
+            valign: 'middle',
+            overflow: 'linebreak',
+            cellWidth: 'wrap'
+          },
+          headStyles: {
+            fillColor: [52, 152, 219],
+            textColor: 255,
+            fontSize: 11,
+            halign: 'left'
+          },
+          columnStyles: {
+            0: { cellWidth: 80 },
+            1: { cellWidth: 'auto' }
+          },
+          margin: { left: 15, right: 15 },
+          tableWidth: 'auto',
+          didDrawCell: (data) => {
+            // Para debugging
+            if (data.row.index === 0) {
+              console.log('OA Data:', data.cell.text);
+            }
+          }
+        })
+      }
+
+      // Para debugging
+      console.log('Planificación OAs:', planificacion.oas);
+    })
+  } else {
+    // Caso sin planificaciones
+    autoTable(doc, {
+      body: [['No hay planificaciones registradas para este rango de fechas']],
+      startY: 50,
+      styles: {
+        fontSize: 12,
+        cellPadding: 5,
+        halign: 'center'
+      }
+    })
+  }
+
+  // Agregar pie de página con números de página
+  const pageCount = doc.internal.getNumberOfPages()
+  doc.setFontSize(8)
+  for (let i = 1; i <= pageCount; i++) {
+    doc.setPage(i)
+    doc.setDrawColor(200, 200, 200)
+    doc.setLineWidth(0.1)
+    doc.line(15, doc.internal.pageSize.height - 15, doc.internal.pageSize.width - 15, doc.internal.pageSize.height - 15)
+    doc.text(
+      `Página ${i} de ${pageCount}`,
+      doc.internal.pageSize.width / 2,
+      doc.internal.pageSize.height - 10,
+      { align: 'center' }
+    )
+  }
+
+  const nombreArchivo = `PlaCortoPlazo_Filtradas_${nombreCurso.value}_${new Date().toLocaleDateString('es-CL').replace(/\//g, '-')}`
   doc.save(`${nombreArchivo}.pdf`)
 }
 
@@ -521,6 +735,17 @@ onMounted(async () => {
           >
             <Download class="mr-2 h-4 w-4" />
             Descargar Reporte Completo
+          </Button>
+
+          <!-- Botón para descargar planificaciones filtradas -->
+          <Button
+            v-if="mostrarFiltroFecha"
+            variant="outline"
+            @click="descargarPlanificacionesFiltradas"
+            :disabled="!planificacionesFiltradas?.length || !filtroFecha.desde || !filtroFecha.hasta"
+          >
+            <Download class="mr-2 h-4 w-4" />
+            Descargar Planificaciones Filtradas
           </Button>
 
           <CortoPlazoDialogoAgregar

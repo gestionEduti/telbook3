@@ -68,7 +68,7 @@ function agregarQuitarAlumnoSeleccionado(id: number) {
 
       <DialogFooter>
         <DialogClose>
-          <Button> Volver </Button>
+          <Button> Aceptar </Button>
         </DialogClose>
       </DialogFooter>
     </DialogScrollContent>

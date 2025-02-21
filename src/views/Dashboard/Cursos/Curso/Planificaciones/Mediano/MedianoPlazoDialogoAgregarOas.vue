@@ -155,7 +155,7 @@ const optionsOas = computed(() => {
 
       <DialogFooter>
         <DialogClose>
-          <Button> Volver </Button>
+          <Button> Aceptar </Button>
         </DialogClose>
       </DialogFooter>
     </DialogScrollContent>

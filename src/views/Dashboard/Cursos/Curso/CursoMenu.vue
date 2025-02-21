@@ -8,7 +8,12 @@ const props = defineProps<{
 
 // data
 const menuPlanificaciones: { title: string; to: string; description: string }[] = [
-  {
+{
+    title: 'Plan Anual',
+    to: 'planificacionesLargoPlazo',
+    description: 'Realiza el Plan Anual',
+  },
+{
     title: 'Corto plazo',
     to: 'planificacionesCortoPlazo',
     description: 'Realiza las planificaciones a corto plazo',
@@ -18,11 +23,7 @@ const menuPlanificaciones: { title: string; to: string; description: string }[] 
     to: 'planificacionesMedianoPlazo',
     description: 'Realiza las planificaciones a mediano plazo',
   },
-  {
-    title: 'Largo plazo',
-    to: 'planificacionesLargoPlazo',
-    description: 'Realiza las planificaciones a largo plazo',
-  },
+
   {
     title: 'Leccionario ',
     to: 'leccionario',

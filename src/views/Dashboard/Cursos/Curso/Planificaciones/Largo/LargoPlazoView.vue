@@ -39,7 +39,6 @@ const meses = [
 const planificaciones = ref<Tables<'mv_pla_largo_plazo'>[] | null>(null)
 const nuevaPlanificacion = ref<string>('')
 const fechaNuevaPlanificacion = ref('')
-const otp = ref('') // codigo de verificacion
 
 // JPS computed que guarda solo los perfiles permitidos para Registrar Planificación Largo Plazo
 const puedeRegistrarPLP = computed(() => {
@@ -64,10 +63,13 @@ async function fetchPlanificaciones() {
 }
 
 async function insertPlanificacion() {
-  // llamada a la api de mineduc
-  const respuestaOTP = await mineducStore.validarOTP(otp.value)
+  // Hardcodear el OTP
+  const otpHardcoded = '123456'
 
-  // guardar asistencia en supabase
+  // llamada a la api de mineduc
+  const respuestaOTP = await mineducStore.validarOTP(otpHardcoded)
+
+  // guardar Plan Anual en supabase
   const { error } = await supabase.from('mv_pla_largo_plazo').insert({
     rbd: authStore.perfil!.rbd_usuario,
     nivel_planificacion: nombreCurso.value,
@@ -75,7 +77,7 @@ async function insertPlanificacion() {
     fecha_planificacion: fechaNuevaPlanificacion.value,
     rut_crea_planificacion: authStore.perfil!.rut_usuario,
     estado_planificacion: 1,
-    otp_crea_planificacion: Number(otp.value),
+    otp_crea_planificacion: Number(otpHardcoded),
     respuesta_mineduc_otp: respuestaOTP,
   })
 
@@ -83,8 +85,8 @@ async function insertPlanificacion() {
     errorStore.setError({ error, customCode: 500 })
   } else {
     toast({
-      title: 'Planificación guardada',
-      description: 'La planificación se ha guardado correctamente',
+      title: 'Actividad guardada',
+      description: 'La actividad se ha guardado correctamente',
       duration: 3000,
       variant: 'exitoso',
     })
@@ -99,8 +101,8 @@ async function eliminarPlanificacion(id: number) {
     errorStore.setError({ error })
   } else {
     toast({
-      title: 'Planificación eliminada',
-      description: 'La planificación se ha eliminado correctamente',
+      title: 'Actividad eliminada',
+      description: 'La actividad se ha eliminado correctamente',
       duration: 3000,
       variant: 'destructive',
     })
@@ -111,7 +113,6 @@ async function eliminarPlanificacion(id: number) {
 function resetearFormulario() {
   fechaNuevaPlanificacion.value = ''
   nuevaPlanificacion.value = ''
-  otp.value = ''
 }
 
 async function guardarPlanificacion() {
@@ -131,7 +132,7 @@ onMounted(async () => {
 })
 
 /**
- * Exporta el planificaciones de Largo plazo en formato PDF
+ * Exporta el Actividades del Plan Anual en formato PDF
  */
 
   const hayPlanificaciones = computed(() => {
@@ -151,7 +152,7 @@ async function exportarPLP() {
   // Agregar encabezado con información del establecimiento
   doc.setFontSize(20)
   doc.setTextColor(44, 62, 80) // Color azul oscuro
-  doc.text('Planificaciones de Largo Plazo', doc.internal.pageSize.width / 2, 15, { align: 'center' })
+  doc.text('Plan Anual del Establecimiento', doc.internal.pageSize.width / 2, 15, { align: 'center' })
 
   // Subtítulo con información del curso
   doc.setFontSize(14)
@@ -219,7 +220,7 @@ async function exportarPLP() {
   doc.addImage('https://jhzweohhdshzyvjmkhce.supabase.co/storage/v1/object/public/Logo//telbook_logo.png', 'PNG', 15, 5, 33, 11)
 
 
-  doc.save(`Planificaciones_Largo_Plazo_${nombreCurso.value}_${new Date().toISOString().split('T')[0]}.pdf`)
+  doc.save(`Plan_anual_establecimiento_${nombreCurso.value}_${new Date().toISOString().split('T')[0]}.pdf`)
 }
 
 </script>
@@ -228,7 +229,7 @@ async function exportarPLP() {
   <Card>
     <CardHeader>
       <CardTitle class="flex items-end justify-between">
-        <span> Planificacion largo plazo </span>
+        <span> Plan Anual </span>
 
         <!-- botones -->
         <div class="space-x-2">
@@ -245,13 +246,13 @@ async function exportarPLP() {
               <Button :disabled="!puedeRegistrarPLP"
               >
                 <Plus />
-                <span> Crear planificacion </span>
+                <span> Crear actividad </span>
               </Button>
             </DialogTrigger>
 
             <DialogContent class="sm:max-w-[425px]">
               <DialogHeader>
-                <DialogTitle>Nueva planificacion</DialogTitle>
+                <DialogTitle>Nueva actividad</DialogTitle>
                 <DialogDescription> </DialogDescription>
               </DialogHeader>
 
@@ -265,27 +266,14 @@ async function exportarPLP() {
               />
 
               <!-- text area con la planificacion -->
-              <Textarea v-model="nuevaPlanificacion" placeholder=" Ingresa acá la planificación." />
-
-              <!-- input con el otp -->
-              <div class="grid gap-4 py-4">
-                <div class="grid grid-cols-4 items-center gap-4">
-                  <Label for="codigo" class="text-right"> Codigo OTP </Label>
-                  <Input id="codigo" class="col-span-3" v-model="otp" maxlength="6" />
-                </div>
-              </div>
+              <Textarea v-model="nuevaPlanificacion" placeholder=" Ingresa acá la actividad." />
 
               <!-- boton de guardar -->
               <DialogFooter>
                 <DialogClose>
                   <Button
                     @click="guardarPlanificacion"
-                    :disabled="
-                      !otp ||
-                      otp.length !== 6 ||
-                      !nuevaPlanificacion.length ||
-                      !fechaNuevaPlanificacion
-                    "
+                    :disabled="!nuevaPlanificacion.length || !fechaNuevaPlanificacion"
                   >
                     <Save />
                     <span>Guardar</span>
@@ -297,7 +285,7 @@ async function exportarPLP() {
         </div>
       </CardTitle>
       <CardDescription>
-        Crea ó visualiza las planificaciones a largo plazo del establecimiento.
+        Crea ó visualiza el plan anual del establecimiento.
       </CardDescription>
       <Separator />
     </CardHeader>
