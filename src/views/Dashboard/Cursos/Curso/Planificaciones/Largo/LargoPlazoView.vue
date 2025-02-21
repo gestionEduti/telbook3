@@ -66,8 +66,8 @@ async function insertPlanificacion() {
   // Hardcodear el OTP
   const otpHardcoded = '123456'
 
-  // llamada a la api de mineduc
-  const respuestaOTP = await mineducStore.validarOTP(otpHardcoded)
+  // Comentamos la llamada a la api de mineduc
+  // const respuestaOTP = await mineducStore.validarOTP(otpHardcoded)
 
   // guardar Plan Anual en supabase
   const { error } = await supabase.from('mv_pla_largo_plazo').insert({
@@ -78,7 +78,7 @@ async function insertPlanificacion() {
     rut_crea_planificacion: authStore.perfil!.rut_usuario,
     estado_planificacion: 1,
     otp_crea_planificacion: Number(otpHardcoded),
-    respuesta_mineduc_otp: respuestaOTP,
+    respuesta_mineduc_otp: 'OK', // Hardcodeamos la respuesta
   })
 
   if (error) {
