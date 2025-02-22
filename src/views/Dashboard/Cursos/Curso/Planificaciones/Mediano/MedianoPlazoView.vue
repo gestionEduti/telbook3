@@ -92,6 +92,12 @@ async function finalizarPlanificacion(id: number) {
  * Genera y descarga un PDF con el reporte de planificaciones
  */
 function descargarTodasLasPlanificaciones() {
+  // Validación más estricta
+  if (!resumenPlanificaciones.value || resumenPlanificaciones.value.length === 0) {
+    console.warn('No hay planificaciones para descargar');
+    return;
+  }
+
   const doc = new jsPDF({
     orientation: 'landscape',
     unit: 'mm',
@@ -136,155 +142,142 @@ function descargarTodasLasPlanificaciones() {
   doc.setLineWidth(0.1)
   doc.line(15, 30, doc.internal.pageSize.width - 15, 30)
 
-  if (resumenPlanificaciones.value?.length) {
-    resumenPlanificaciones.value.forEach((planificacion, index) => {
-      if (index > 0) {
-        doc.addPage()
-        // Repetir encabezado en nuevas páginas
-        doc.addImage(
-          'https://jhzweohhdshzyvjmkhce.supabase.co/storage/v1/object/public/Logo//telbook_logo.png',
-          'PNG',
-          15,
-          5,
-          33,
-          11
-        )
-        doc.setDrawColor(200, 200, 200)
-        doc.setLineWidth(0.1)
-        doc.line(15, 30, doc.internal.pageSize.width - 15, 30)
-      }
+  resumenPlanificaciones.value.forEach((planificacion, index) => {
+    if (!planificacion) return; // Skip si la planificación es null
 
+    if (index > 0) {
+      doc.addPage();
+      // Repetir encabezado en nuevas páginas
+      doc.addImage(
+        'https://jhzweohhdshzyvjmkhce.supabase.co/storage/v1/object/public/Logo//telbook_logo.png',
+        'PNG',
+        15,
+        5,
+        33,
+        11
+      );
+      doc.setDrawColor(200, 200, 200);
+      doc.setLineWidth(0.1);
+      doc.line(15, 30, doc.internal.pageSize.width - 15, 30);
+    }
 
-      autoTable(doc, {
-        head: [['PROYECTO EJE']],
-        body: [[planificacion.proyecto_eje]],
-        startY: 40,
-        theme: 'grid',
-        styles: {
-          fontSize: 14,
-          cellPadding: 8,
-          halign: 'center',
-          valign: 'middle',
-          lineWidth: 0.5,
-        },
-        headStyles: {
-          fillColor: [41, 128, 185],
-          textColor: 255,
-          fontSize: 16,
-          fontStyle: 'bold',
-        },
-        bodyStyles: {
-          fillColor: [235, 245, 251],
-          textColor: [44, 62, 80],
-          fontStyle: 'bold'
-        }
-      })
+    // Asegurarse de que oas existe y es un array
+    const oasData = planificacion.oas?.map(oa => [
+      `${oa.descripcion_ambito} - ${oa.descripcion_nucleo}`,
+      oa.descripcion_oa
+    ]) || [];
 
-      // Información general de la planificación
-      autoTable(doc, {
-        body: [
-          ['Fecha', planificacion.fecha],
-          ['Duración', `${planificacion.cantidad_semanas} semanas`],
-          ['Estado', planificacion.estado === 1 ? 'En curso' : 'Finalizado']
-        ],
-        startY: doc.lastAutoTable.finalY + 5,
-        theme: 'grid',
-        styles: {
-          fontSize: 11,
-          cellPadding: 5
-        },
-        columnStyles: {
-          0: { fontStyle: 'bold', fillColor: [245, 247, 250], cellWidth: 40 },
-          1: { cellWidth: 'auto' }
-        }
-      })
-
-
-      autoTable(doc, {
-        head: [['OBJETIVOS GENERALES DEL PROYECTO']],
-        body: [[planificacion.objetivos_generales]],
-        startY: doc.lastAutoTable.finalY + 10,
-        styles: {
-          fontSize: 10,
-          cellPadding: 5
-        },
-        headStyles: {
-          fillColor: [41, 128, 185],
-          textColor: 255,
-          fontSize: 12,
-          fontStyle: 'bold'
-        }
-      })
-
-      autoTable(doc, {
-        head: [['ESTRATEGIAS PARA ALCANZAR EL PROYECTO']],
-        body: [[planificacion.estrategias]],
-        startY: doc.lastAutoTable.finalY + 10,
-        styles: {
-          fontSize: 10,
-          cellPadding: 5
-        },
-        headStyles: {
-          fillColor: [41, 128, 185],
-          textColor: 255,
-          fontSize: 12,
-          fontStyle: 'bold'
-        }
-      })
-
-
-      autoTable(doc, {
-        head: [['OBJETIVOS DE APRENDIZAJE ASOCIADOS AL PROYECTO']],
-        body: [['']],
-        startY: doc.lastAutoTable.finalY + 10,
-        styles: {
-          fontSize: 12,
-          cellPadding: 5
-        },
-        headStyles: {
-          fillColor: [41, 128, 185],
-          textColor: 255,
-          fontSize: 12,
-          fontStyle: 'bold'
-        }
-      })
-
-      const oasData = planificacion.oas.map(oa => [
-        `${oa.descripcion_ambito} - ${oa.descripcion_nucleo}`,
-        oa.descripcion_oa
-      ])
-
-      autoTable(doc, {
-        head: [['Ámbito - Núcleo', 'Objetivo de Aprendizaje']],
-        body: oasData,
-        startY: doc.lastAutoTable.finalY + 2,
-        styles: {
-          fontSize: 10,
-          cellPadding: 5
-        },
-        headStyles: {
-          fillColor: [52, 152, 219],
-          textColor: 255,
-          fontSize: 11
-        },
-        columnStyles: {
-          0: { cellWidth: 70, fontStyle: 'bold' },
-          1: { cellWidth: 'auto' }
-        }
-      })
-    })
-  } else {
-    // Caso sin planificaciones
     autoTable(doc, {
-      body: [['No hay planificaciones registradas']],
-      startY: 40, // Ajustado también para consistencia
+      head: [['PROYECTO EJE']],
+      body: [[planificacion.proyecto_eje]],
+      startY: 40,
+      theme: 'grid',
+      styles: {
+        fontSize: 14,
+        cellPadding: 8,
+        halign: 'center',
+        valign: 'middle',
+        lineWidth: 0.5,
+      },
+      headStyles: {
+        fillColor: [41, 128, 185],
+        textColor: 255,
+        fontSize: 16,
+        fontStyle: 'bold',
+      },
+      bodyStyles: {
+        fillColor: [235, 245, 251],
+        textColor: [44, 62, 80],
+        fontStyle: 'bold'
+      }
+    })
+
+    // Información general de la planificación
+    autoTable(doc, {
+      body: [
+        ['Fecha', planificacion.fecha],
+        ['Duración', `${planificacion.cantidad_semanas} semanas`],
+        ['Estado', planificacion.estado === 1 ? 'En curso' : 'Finalizado']
+      ],
+      startY: doc.lastAutoTable.finalY + 5,
+      theme: 'grid',
+      styles: {
+        fontSize: 11,
+        cellPadding: 5
+      },
+      columnStyles: {
+        0: { fontStyle: 'bold', fillColor: [245, 247, 250], cellWidth: 40 },
+        1: { cellWidth: 'auto' }
+      }
+    })
+
+    autoTable(doc, {
+      head: [['OBJETIVOS GENERALES DEL PROYECTO']],
+      body: [[planificacion.objetivos_generales]],
+      startY: doc.lastAutoTable.finalY + 10,
+      styles: {
+        fontSize: 10,
+        cellPadding: 5
+      },
+      headStyles: {
+        fillColor: [41, 128, 185],
+        textColor: 255,
+        fontSize: 12,
+        fontStyle: 'bold'
+      }
+    })
+
+    autoTable(doc, {
+      head: [['ESTRATEGIAS PARA ALCANZAR EL PROYECTO']],
+      body: [[planificacion.estrategias]],
+      startY: doc.lastAutoTable.finalY + 10,
+      styles: {
+        fontSize: 10,
+        cellPadding: 5
+      },
+      headStyles: {
+        fillColor: [41, 128, 185],
+        textColor: 255,
+        fontSize: 12,
+        fontStyle: 'bold'
+      }
+    })
+
+    autoTable(doc, {
+      head: [['OBJETIVOS DE APRENDIZAJE ASOCIADOS AL PROYECTO']],
+      body: [['']],
+      startY: doc.lastAutoTable.finalY + 10,
       styles: {
         fontSize: 12,
-        cellPadding: 5,
-        halign: 'center'
+        cellPadding: 5
+      },
+      headStyles: {
+        fillColor: [41, 128, 185],
+        textColor: 255,
+        fontSize: 12,
+        fontStyle: 'bold'
       }
     })
-  }
+
+    autoTable(doc, {
+      head: [['Ámbito - Núcleo', 'Objetivo de Aprendizaje']],
+      body: oasData,
+      startY: doc.lastAutoTable.finalY + 2,
+      styles: {
+        fontSize: 10,
+        cellPadding: 5
+      },
+      headStyles: {
+        fillColor: [52, 152, 219],
+        textColor: 255,
+        fontSize: 11
+      },
+      columnStyles: {
+        0: { cellWidth: 70, fontStyle: 'bold' },
+        1: { cellWidth: 'auto' }
+      }
+    })
+  })
 
   // Agregar pie de página con números de página
   const pageCount = doc.internal.getNumberOfPages()
@@ -305,9 +298,9 @@ function descargarTodasLasPlanificaciones() {
     )
   }
 
-  // Modificar el nombre del archivo para el reporte completo
-  const nombreArchivo = `PlaMedianoPlazo_Reporte_Completo_${nombreCurso.value}_${new Date().toLocaleDateString('es-CL').replace(/\//g, '-')}`
-  doc.save(`${nombreArchivo}.pdf`)
+  // Nombre del archivo y guardado
+  const nombreArchivo = `PlaMedianoPlazo_Reporte_Completo_${nombreCurso.value}_${new Date().toLocaleDateString('es-CL').replace(/\//g, '-')}`;
+  doc.save(`${nombreArchivo}.pdf`);
 }
 
 /**
