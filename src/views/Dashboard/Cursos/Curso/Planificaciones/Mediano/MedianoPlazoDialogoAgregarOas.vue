@@ -138,7 +138,7 @@ const optionsOas = computed(() => {
 
       <ScrollArea class="h-64 border p-4">
         <ul class="flex flex-col gap-1">
-          <li v-for="oa in optionsOas" :key="oa.id">
+          <li v-for="(oa, index) in optionsOas" :key="oa.id">
             <div
               @click="agregarQuitarOaSeleccionado(oa.id)"
               class="flex items-center gap-2 space-y-2"
@@ -146,7 +146,7 @@ const optionsOas = computed(() => {
               <Info :size="24" />
               <Checkbox :checked="oasSeleccionados.includes(oa.id)" class="h-6 w-6" />
               <div class="w-full cursor-pointer rounded-sm">
-                <p class="truncate text-sm">{{ oa.descripcion_oa }}</p>
+                <p class="truncate text-sm">{{ index + 1 }}. {{ oa.descripcion_oa }}</p>
               </div>
             </div>
           </li>

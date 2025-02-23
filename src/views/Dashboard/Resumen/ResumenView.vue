@@ -70,7 +70,7 @@ onMounted(async () => {
               </CardHeader>
               <CardContent>
                 <div class="text-2xl font-bold">{{ totalMatriculas }}</div>
-                <p class="text-xs text-muted-foreground">+23% desde el año pasado</p>
+                <!-- <p class="text-xs text-muted-foreground">+23% desde el año pasado</p> -->
               </CardContent>
             </Card>
             <Card>
