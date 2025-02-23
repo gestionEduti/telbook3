@@ -40,7 +40,6 @@ const colorCurso: Record<string, string> = {
         </div>
       </CardContent>
       <CardFooter class="h-full justify-center text-sm">
-        <!-- Comentamos toda la sección de mostrar profesores
         <p v-if="props.profesor.length" class="flex items-center justify-center gap-2">
           <span>{{ profesor[0].nombre_usuario }} {{ profesor[0].apellido_usuario }}</span>
           <span
@@ -64,7 +63,6 @@ const colorCurso: Record<string, string> = {
           </span>
         </p>
         <p v-else class="text-sm tracking-tighter text-gray-500">sin profesor asignado</p>
-        -->
       </CardFooter>
     </Card>
   </RouterLink>

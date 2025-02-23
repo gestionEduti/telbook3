@@ -44,15 +44,6 @@ const fetchNiveles = async () => {
   else niveles.value = data
 }
 
-// const fetchProfesores = async () => {
-//   const { data, error, status } = await supabase
-//     .from('view_profesor_curso')
-//     .select()
-//     .eq('rbd', authStore.perfil?.rbd_usuario)
-//   if (error) errorStore.setError({ error: error, customCode: status })
-//   else profesores.value = data
-// }
-
 // traer los profesores de cada curso de este establecimiento
 interface ProfesoresCursosEstablecimientoInterface {
   curso_asignado: string
@@ -74,7 +65,7 @@ async function fetchProfesoresCursosEstablecimiento() {
     )
     `,
     )
-    .eq('rbd_establecimiento', '26005')
+    .eq('rbd_establecimiento', authStore.perfil?.rbd_usuario)
     .order('rbd_establecimiento')
     .order('curso_asignado')
     .order('rut_profesor')
@@ -85,17 +76,12 @@ async function fetchProfesoresCursosEstablecimiento() {
 fetchProfesoresCursosEstablecimiento()
 fetchNiveles()
 fetchCursos()
-// fetchProfesores()
-
-// onMounted(async () => {
-//   await Promise.all([fetchNiveles(), fetchCursos(), fetchProfesores()])
-// })
 </script>
 
 <template>
   <div class="flex-1 space-y-3 px-4 py-8 pt-3">
     <Transition name="fade" mode="out-in">
-      <Card class="shadow-xl" v-if="cursos && niveles">
+      <Card class="shadow-xl" v-if="cursos && niveles && profesoresCursosEstablecimiento">
         <CardHeader>
           <CardTitle class="flex items-center justify-between"> Cursos </CardTitle>
           <CardDescription>Todos los cursos del establecimiento.</CardDescription>
