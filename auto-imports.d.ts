@@ -67,6 +67,7 @@ declare global {
   const useErrorStore: typeof import('./src/stores/error')['useErrorStore']
   const useId: typeof import('vue')['useId']
   const useLink: typeof import('vue-router')['useLink']
+  const useMatriculasStore: typeof import('./src/stores/matriculas')['useMatriculasStore']
   const useMineducStore: typeof import('./src/stores/mineduc')['useMineducStore']
   const useModel: typeof import('vue')['useModel']
   const useNuevaMatriculaLoaderStore: typeof import('./src/stores/loaders/nuevaMatricula')['useNuevaMatriculaLoaderStore']

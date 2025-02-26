@@ -98,7 +98,6 @@ const tienePermisos = computed(() => {
   const codigoPerfil = authStore.perfil?.codigo_perfil_usuario
   return codigoPerfil === 1 || codigoPerfil === 2
 })
-
 </script>
 
 <template>
@@ -183,19 +182,23 @@ const tienePermisos = computed(() => {
                     <DropdownMenuSeparator />
                     <DropdownMenuGroup>
                       <!-- JPS le agrego la validación por si tiene permisos -->
-                      <DropdownMenuItem v-if="alumno.codigo_estado_alumno == 1"
-                                        :disabled="!tienePermisos"
-                                        >
+                      <DropdownMenuItem
+                        v-if="alumno.codigo_estado_alumno == 1"
+                        :disabled="!tienePermisos"
+                      >
                         <!-- TODO: ver si se debe ocultar este boton si es que ya esta retirado -->
                         <RouterLink
-                           :to="tienePermisos ? {
-                           name: 'editar-matricula',
-                           params: { matriculaId: alumno.id },
-                           } : '#'"
-                           class="flex space-x-2"
-                           :class="{ 'opacity-50 cursor-not-allowed': !tienePermisos }"
-        >
-
+                          :to="
+                            tienePermisos
+                              ? {
+                                  name: 'editar-matricula',
+                                  params: { matriculaId: alumno.id },
+                                }
+                              : '#'
+                          "
+                          class="flex space-x-2"
+                          :class="{ 'cursor-not-allowed opacity-50': !tienePermisos }"
+                        >
                           <UserPen class="h-4 w-4" />
                           <span>Editar</span>
                         </RouterLink>
@@ -203,16 +206,17 @@ const tienePermisos = computed(() => {
 
                       <!-- boton retirar -->
                       <!-- JPS le agrego la validación por si tiene permisos -->
-                      <DropdownMenuItem  @click.stop
-                                         v-if="alumno.codigo_estado_alumno == 1"
-                                         :disabled="!tienePermisos"
->
+                      <DropdownMenuItem
+                        @click.stop
+                        v-if="alumno.codigo_estado_alumno == 1"
+                        :disabled="!tienePermisos"
+                      >
                         <AlertDialog>
-                          <AlertDialogTrigger @click.stop
-                                              :disabled="!tienePermisos"
->
-                            <div class="flex space-x-2" :class="{ 'opacity-50 cursor-not-allowed': !tienePermisos }"
->
+                          <AlertDialogTrigger @click.stop :disabled="!tienePermisos">
+                            <div
+                              class="flex space-x-2"
+                              :class="{ 'cursor-not-allowed opacity-50': !tienePermisos }"
+                            >
                               <UserX class="h-4 w-4" />
                               <span>Retirar</span>
                             </div>
@@ -261,10 +265,11 @@ const tienePermisos = computed(() => {
                       <!-- boton eliminar -->
                       <DropdownMenuItem :disabled="!tienePermisos">
                         <AlertDialog>
-                          <AlertDialogTrigger @click.stop
-                                              :disabled="!tienePermisos">
-                            <div class="flex space-x-2" :class="{ 'opacity-50 cursor-not-allowed': !tienePermisos }"
->
+                          <AlertDialogTrigger @click.stop :disabled="!tienePermisos">
+                            <div
+                              class="flex space-x-2"
+                              :class="{ 'cursor-not-allowed opacity-50': !tienePermisos }"
+                            >
                               <Trash2 class="h-4 w-4" />
                               <span>Eliminar</span>
                             </div>
@@ -280,8 +285,9 @@ const tienePermisos = computed(() => {
                             </AlertDialogHeader>
                             <AlertDialogFooter>
                               <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                              <AlertDialogAction @click.stop="eliminarAlumno(alumno.id)"
-                                                 :disabled="!tienePermisos"
+                              <AlertDialogAction
+                                @click.stop="eliminarAlumno(alumno.id)"
+                                :disabled="!tienePermisos"
                               >
                                 Confirmar
                               </AlertDialogAction>

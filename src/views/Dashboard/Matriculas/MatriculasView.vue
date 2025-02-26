@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Tables } from '@/types/supabase' // types de supabase
+import { columns } from '@/components/views/Matriculas/columns'
 
 // jsPDF
 import jsPDF from 'jspdf'
@@ -12,22 +12,10 @@ import { Download, UserPlus, FileText, ListX, ChevronDown, FileSpreadsheet } fro
 import { formatearFecha } from '@/lib/formato' // iconos
 
 const authStore = useAuthStore()
-const errorStore = useErrorStore()
+const matriculasStore = useMatriculasStore()
+const { alumnos } = storeToRefs(matriculasStore)
 
-// data
-const alumnos = ref<Tables<'mv_libro_matricula'>[] | null>(null)
-
-// methods
-async function fetchSupabase() {
-  const { data, error, status } = await supabase
-    .from('mv_libro_matricula')
-    .select()
-    .or('codigo_estado_alumno.eq.0,codigo_estado_alumno.eq.1')
-    .eq('rbd_establecimiento', authStore.perfil!.rbd_usuario) // // TODO: setear error si es que el perfil no existe
-    .order('id', { ascending: true })
-  if (error) errorStore.setError({ error: error, customCode: status })
-  else alumnos.value = data
-}
+matriculasStore.fetchAlumnos()
 
 /**
  * Exporta el resumen de matriculas en formato PDF
@@ -128,10 +116,6 @@ function exportarCompleto() {
   const nombreArchivo = `Libro_Matriculas_RBD_${authStore.establecimiento?.rbd || 'Desconocido'}.xlsx`
   XLSX.writeFile(libro, nombreArchivo)
 }
-
-onMounted(async () => {
-  await fetchSupabase()
-})
 </script>
 
 <template>
@@ -145,7 +129,6 @@ onMounted(async () => {
               <Button
                 :disabled="!puedeRegistrarAlumno"
                 @click="$router.push('/dashboard/matriculas/nueva')"
-
               >
                 <UserPlus class="h-4 w-4" />
                 <span class="ml-2 hidden md:block">Nuevo alumno</span>
@@ -187,12 +170,7 @@ onMounted(async () => {
           <Separator class="mb-2 mt-6" />
 
           <!-- tabla -->
-          <TablaMatriculas
-            v-if="alumnos"
-            :alumnos
-            @alumno-eliminado="fetchSupabase()"
-            @alumno-retirado="fetchSupabase()"
-          />
+          <DataTable :columns="columns" :data="alumnos" />
         </CardContent>
         <CardContent v-else>
           <!-- TODO: extraer a un componente de cuando no hay resultados -->
