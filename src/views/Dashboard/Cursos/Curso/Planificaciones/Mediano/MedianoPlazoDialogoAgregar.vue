@@ -85,7 +85,7 @@ async function guardarPlanificacion() {
       </TooltipProvider>
     </DialogTrigger>
 
-    <DialogContent>
+    <DialogContent class="max-h-[90vh] overflow-y-auto">
       <DialogHeader>
         <DialogTitle>Nueva planificacion</DialogTitle>
         <DialogDescription> </DialogDescription>
