@@ -4,8 +4,10 @@ import type { Database, Tables } from '@/types/supabase'
 import { useToast } from '@/components/ui/toast/use-toast'
 const { toast } = useToast()
 
+
 // vueuse
 import { useDateFormat, useNow } from '@vueuse/core'
+import { formatearFecha } from '@/lib/formato'
 const year = useDateFormat(useNow(), 'YYYY')
 const month = useDateFormat(useNow(), 'MM')
 const day = useDateFormat(useNow(), 'DD')
@@ -125,7 +127,11 @@ const fetchObsevacionesConvivenciaEscolar = async () => {
                     <CardFooter
                       class="px-2 pb-2 text-sm font-medium tracking-tighter text-gray-400"
                     >
-                      Realizada por: {{ item.rut_anotador }}</CardFooter
+                    Fecha: {{formatearFecha(item.fecha_anotacion) }} <br>
+                    Realizada por: {{ item.rut_anotador }}
+
+                      </CardFooter
+
                     >
                   </Card>
                 </li>

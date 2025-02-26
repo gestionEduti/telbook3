@@ -77,6 +77,11 @@ const planificacionesFiltradas = computed(() => {
     .sort((a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime())
 })
 
+//JPS computed que guarda solo los perfiles permitidos para elimnar planificaciones
+  const puedeEliminarPCP = computed(() => {
+  const perfilesPermitidos = [1, 2, 3, 4, 6]
+  return perfilesPermitidos.includes(authStore.perfil?.codigo_perfil_usuario ?? -1)
+})
 function limpiarFiltros() {
   mostrarFiltroFecha.value = false
   filtroFecha.value = {
@@ -869,7 +874,8 @@ onMounted(async () => {
 
                                 <Dialog v-if="planificacion.fecha === diaActual">
                                   <DialogTrigger as-child>
-                                    <Button variant="destructive">
+                                    <Button :disabled="!puedeEliminarPCP"
+                                      variant="destructive">
                                       <Trash2 />
                                       <span>Eliminar</span>
                                     </Button>

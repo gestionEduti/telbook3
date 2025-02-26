@@ -46,6 +46,13 @@ const cursoTienePlanificacionActiva = computed(() => {
 // otros
 const diaActual = obtenerFechaActualComoYYYMMDD()
 
+//JPS computed que guarda solo los perfiles permitidos para elimnar planificaciones
+  const puedeEliminarPMP = computed(() => {
+  const perfilesPermitidos = [1, 2, 3, 4, 6]
+  return perfilesPermitidos.includes(authStore.perfil?.codigo_perfil_usuario ?? -1)
+})
+
+
 const hayPlanificaciones = computed(() => {
   return resumenPlanificaciones.value !== null && resumenPlanificaciones.value.length > 0
 })
@@ -578,7 +585,8 @@ onMounted(async () => {
                         </Button>
                         <Dialog v-if="planificacion.fecha === diaActual">
                                   <DialogTrigger as-child>
-                                    <Button variant="destructive">
+                                    <Button :disabled="!puedeEliminarPMP"
+                                      variant="destructive">
                                       <Trash2 />
                                       <span>Eliminar</span>
                                     </Button>
@@ -669,7 +677,8 @@ onMounted(async () => {
                   <CardFooter class="flex justify-end">
                     <Dialog v-if="planificacion.estado === 1">
                       <DialogTrigger as-child>
-                        <Button variant="destructive">
+                        <Button :disabled="!puedeEliminarPMP"
+                          variant="destructive">
                           <OctagonX />
                           <span>Finalizar planificación</span>
                         </Button>
