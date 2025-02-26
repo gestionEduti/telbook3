@@ -20,12 +20,22 @@ const authStore = useAuthStore()
 
           <!-- nombre colegio y avatar -->
           <div class="flex items-center space-x-4">
-            <p
-              data-test="dashboard-nombre-establecimiento"
-              class="text-xs font-semibold capitalize tracking-tight text-gray-500"
-            >
-              {{ authStore.establecimiento?.razon_social?.toLocaleLowerCase() }}
-            </p>
+            <div>
+              <p
+                data-test="dashboard-nombre-establecimiento"
+                class="text-xs font-semibold capitalize tracking-tight text-gray-500"
+              >
+                {{ authStore.establecimiento?.razon_social?.toLocaleLowerCase() }}
+              </p>
+              <p class="text-xs text-gray-400">
+                {{ new Date().toLocaleDateString('es-ES', {
+                  weekday: 'long',
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric'
+                }) }}
+              </p>
+            </div>
             <DashboardAvatar />
           </div>
         </div>
