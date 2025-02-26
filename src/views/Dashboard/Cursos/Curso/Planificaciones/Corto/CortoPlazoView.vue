@@ -758,7 +758,7 @@ onMounted(async () => {
             :disabled="!planificacionesFiltradas?.length"
           >
             <Download class="mr-2 h-4 w-4" />
-            Descargar Reporte Completo
+            Descargar Reporte por proyecto eje activo
           </Button>
 
           <!-- Botón para descargar planificaciones filtradas -->
