@@ -18,7 +18,7 @@ const nombreCurso = computed(() => props.nivel + props.letra)
 //JPS agrego computed que maneja los perfiles permitidos para que el botón esté hábilitado
 
 const puedeAgregarRegistro = computed(() => {
-  const perfilesPermitidos = [1, 4, 5] // Super Administrador JEFE UTP y Fonoaudiologo
+  const perfilesPermitidos = [1,2, 4, 5] // Super Administrador JEFE UTP y Fonoaudiologo
   return perfilesPermitidos.includes(authStore.perfil?.codigo_perfil_usuario ?? -1)
 })
 
