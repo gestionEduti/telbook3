@@ -80,7 +80,9 @@ async function guardarEvaluacion() {
   })
   if (error) errorStore.setError({ error, customCode: 500 })
 
-  fetchEvaluacion()
+  await fetchEvaluacion()
+  // Descargar PDF automáticamente después de guardar
+  await descargarPDF()
 }
 
 // Agregar función para descargar PDF
@@ -387,13 +389,11 @@ onMounted(async () => {
                         <DialogFooter>
                           <DialogClose>
                             <Button
-                              :disabled="
-                                evaluacionCombobox === '' || otp === '' || otp.length !== 6
-                              "
+                              :disabled="evaluacionCombobox === '' || otp === '' || otp.length !== 6"
                               @click="guardarEvaluacion"
                             >
                               <Save />
-                              <span>Guardar</span>
+                              <span>Guardar y Descargar PDF</span>
                             </Button>
                           </DialogClose>
                         </DialogFooter>
