@@ -1,7 +1,10 @@
 <script setup lang="ts">
-import { OctagonX, Goal, Download, Filter } from 'lucide-vue-next'
+import { OctagonX, Goal, Download, Filter, Trash2 } from 'lucide-vue-next'
 import { jsPDF } from 'jspdf'
 import autoTable from 'jspdf-autotable'
+import { obtenerFechaActualComoYYYMMDD } from '@/lib/formato'
+import { useToast } from '@/components/ui/toast'
+const { toast } = useToast()
 
 const props = defineProps<{
   nivel: string
@@ -39,6 +42,9 @@ const resumenPlanificaciones = ref<ResumenPlanificaciones[] | null>(null)
 const cursoTienePlanificacionActiva = computed(() => {
   return resumenPlanificaciones.value?.some((p) => p.estado === 1) || false
 })
+
+// otros
+const diaActual = obtenerFechaActualComoYYYMMDD()
 
 const hayPlanificaciones = computed(() => {
   return resumenPlanificaciones.value !== null && resumenPlanificaciones.value.length > 0
@@ -87,6 +93,27 @@ async function finalizarPlanificacion(id: number) {
   if (error) errorStore.setError({ error, customCode: 500 })
   else await fetchPlanificaciones()
 }
+
+/**
+ * eliminar una planificacion del dia actual
+ * @param id
+ */
+async function eliminarPlanificacionDelDia(id: number) {
+  const { error } = await supabase.from('mv_pla_mediano_plazo').delete().eq('id_planificacion', id)
+
+  if (error) {
+    errorStore.setError({ error })
+  } else {
+    toast({
+      title: 'Planificación eliminada',
+      description: 'La planificación se ha eliminado correctamente',
+      duration: 3000,
+      variant: 'destructive',
+    })
+    resumenPlanificaciones.value = resumenPlanificaciones.value!.filter((p) => p.id !== id)
+  }
+}
+
 
 /**
  * Genera y descarga un PDF con el reporte de planificaciones
@@ -549,6 +576,35 @@ onMounted(async () => {
                           <Download class="mr-2 h-4 w-4" />
                           Descargar PDF
                         </Button>
+                        <Dialog v-if="planificacion.fecha === diaActual">
+                                  <DialogTrigger as-child>
+                                    <Button variant="destructive">
+                                      <Trash2 />
+                                      <span>Eliminar</span>
+                                    </Button>
+                                  </DialogTrigger>
+
+                                  <DialogContent class="sm:max-w-[425px]">
+                                    <DialogHeader>
+                                      <DialogTitle>Confirmar eliminacion</DialogTitle>
+                                      <DialogDescription
+                                        >Esta acción no se puede deshacer.</DialogDescription
+                                      >
+                                    </DialogHeader>
+
+                                    <!-- boton de guardar -->
+                                    <DialogFooter>
+                                      <DialogClose>
+                                        <Button
+                                          @click.stop="eliminarPlanificacionDelDia(planificacion.id)"
+                                        >
+                                          <Trash2 />
+                                          <span>Eliminar planificación</span>
+                                        </Button>
+                                      </DialogClose>
+                                    </DialogFooter>
+                                  </DialogContent>
+                                </Dialog>
                       </div>
                     </CardTitle>
 
