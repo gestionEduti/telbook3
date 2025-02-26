@@ -11,19 +11,15 @@ export const columns: ColumnDef<Tables<'mv_libro_matricula'>>[] = [
   // Accessor Columns
   {
     accessorKey: 'numero_matricula_alumno',
-    header: () => h('div', { class: 'font-medium w-4 text-right' }, 'Nº'),
+    header: () => h('div', { class: ' w-4 text-right' }, 'Nº'),
     cell: ({ row }) =>
-      h('div', { class: 'font-medium w-4 text-right' }, row.getValue('numero_matricula_alumno')),
+      h('div', { class: ' w-4 text-right' }, row.getValue('numero_matricula_alumno')),
   },
   {
     accessorKey: 'rut_alumno',
     header: () => h('div', { class: 'text-center w-24' }, 'Rut'),
     cell: ({ row }) =>
-      h(
-        'div',
-        { class: ' font-medium w-24 text-xs text-right' },
-        formatearRut(row.getValue('rut_alumno')),
-      ),
+      h('div', { class: '  w-24 text-xs text-right' }, formatearRut(row.getValue('rut_alumno'))),
   },
   {
     accessorKey: 'nombre_completo_alumno',
@@ -32,7 +28,7 @@ export const columns: ColumnDef<Tables<'mv_libro_matricula'>>[] = [
       h(
         'div',
         {
-          class: 'w-full text-md text-left font-medium',
+          class: 'w-full text-md text-left ',
         },
         row.getValue('nombre_completo_alumno'),
       ),
@@ -41,11 +37,7 @@ export const columns: ColumnDef<Tables<'mv_libro_matricula'>>[] = [
     accessorKey: 'procedencia_alumno',
     header: () => h('div', { class: 'text-center min-w-18' }, 'Procedencia'),
     cell: ({ row }) =>
-      h(
-        'div',
-        { class: 'text-xs text-center font-medium min-w-18' },
-        row.getValue('procedencia_alumno'),
-      ),
+      h('div', { class: 'text-xs text-center  min-w-18' }, row.getValue('procedencia_alumno')),
   },
   {
     accessorKey: 'fecha_nacimiento_alumno',
@@ -53,7 +45,7 @@ export const columns: ColumnDef<Tables<'mv_libro_matricula'>>[] = [
     cell: ({ row }) =>
       h(
         'div',
-        { class: 'text-center font-medium min-w-18' },
+        { class: 'text-center  min-w-18' },
         formatearFecha(row.getValue('fecha_nacimiento_alumno')),
       ),
   },
@@ -63,7 +55,7 @@ export const columns: ColumnDef<Tables<'mv_libro_matricula'>>[] = [
     cell: ({ row }) =>
       h(
         'div',
-        { class: 'text-center font-medium min-w-18' },
+        { class: 'text-center  min-w-18' },
         formatearFecha(row.getValue('fecha_incorporacion_alumno')),
       ),
   },
@@ -71,11 +63,7 @@ export const columns: ColumnDef<Tables<'mv_libro_matricula'>>[] = [
     accessorKey: 'estado_alumno',
     header: () => h('div', { class: 'text-center  min-w-18' }, 'Estado'),
     cell: ({ row }) =>
-      h(
-        'div',
-        { class: 'text-xs text-center font-medium min-w-18' },
-        row.getValue('estado_alumno'),
-      ),
+      h('div', { class: 'text-xs text-center  min-w-18' }, row.getValue('estado_alumno')),
   },
 
   // Display Columns
@@ -98,6 +86,6 @@ export const columns: ColumnDef<Tables<'mv_libro_matricula'>>[] = [
   //     currency: 'USD',
   //   }).format(amount)
 
-  //   return h('div', { class: 'text-right font-medium' }, formatted)
+  //   return h('div', { class: 'text-right ' }, formatted)
   // },
 ]
