@@ -758,7 +758,7 @@ onMounted(async () => {
             :disabled="!planificacionesFiltradas?.length"
           >
             <Download class="mr-2 h-4 w-4" />
-            Descargar Reporte por proyecto eje activo
+            Descargar Reporte de Planificaciones de 5 días
           </Button>
 
           <!-- Botón para descargar planificaciones filtradas -->
