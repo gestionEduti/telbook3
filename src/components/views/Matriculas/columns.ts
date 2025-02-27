@@ -6,6 +6,7 @@ import DropdownAction from '@/components/ui/datatable/data-table-dropdown.vue'
 import { h } from 'vue'
 import type { Tables } from '@/types/supabase'
 import { formatearFecha, formatearRut } from '@/lib/formato' // utilidades para formatear
+import { capitalizarPalabras } from '@/lib/formato'
 
 export const columns: ColumnDef<Tables<'mv_libro_matricula'>>[] = [
   // Accessor Columns
@@ -23,14 +24,14 @@ export const columns: ColumnDef<Tables<'mv_libro_matricula'>>[] = [
   },
   {
     accessorKey: 'nombre_completo_alumno',
-    header: () => h('div', { class: 'text-left w-full' }, 'Nombre'),
+    header: () => h('div', { class: 'text-left w-full' }, 'Nombre Alumno'),
     cell: ({ row }) =>
       h(
         'div',
         {
           class: 'w-full text-md text-left ',
         },
-        row.getValue('nombre_completo_alumno'),
+        capitalizarPalabras(row.getValue('nombre_completo_alumno')),
       ),
   },
   {
@@ -41,7 +42,7 @@ export const columns: ColumnDef<Tables<'mv_libro_matricula'>>[] = [
   },
   {
     accessorKey: 'fecha_nacimiento_alumno',
-    header: () => h('div', { class: 'text-center min-w-18' }, 'Nacimiento'),
+    header: () => h('div', { class: 'text-center min-w-18' }, ' Fecha Nacimiento'),
     cell: ({ row }) =>
       h(
         'div',
@@ -51,7 +52,7 @@ export const columns: ColumnDef<Tables<'mv_libro_matricula'>>[] = [
   },
   {
     accessorKey: 'fecha_incorporacion_alumno',
-    header: () => h('div', { class: 'text-center min-w-18' }, 'Incorporación'),
+    header: () => h('div', { class: 'text-center min-w-18' }, 'Fecha Incorporación'),
     cell: ({ row }) =>
       h(
         'div',
