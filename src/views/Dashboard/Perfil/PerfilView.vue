@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { KeyRound } from 'lucide-vue-next'
+//import { KeyRound } from 'lucide-vue-next'
 const { usuario, perfil, establecimiento } = useAuthStore()
 
 import { formatearRut } from '@/lib/formato' // utilidades para formatear
