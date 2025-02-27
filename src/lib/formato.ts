@@ -9,6 +9,14 @@ export function formatearFecha(fecha: string): string {
   return `${day}-${month}-${year}`
 }
 
+// Utilidad para capitalizar palabras
+export function capitalizarPalabras(texto: string): string {
+  return texto
+    .toLowerCase()
+    .replace(/\b\w/g, (letra) => letra.toUpperCase());
+}
+
+
 export function obtenerFechaActualComoYYYMMDD() {
   const fecha = new Date()
   const year = fecha.getFullYear()
