@@ -34,6 +34,7 @@ const fetchSupabase = async () => {
     .from('mv_libro_matricula')
     .select()
     .eq('rbd_establecimiento', authStore.perfil!.rbd_usuario) // TODO: asegurar 100% que el perfil va a existir
+    .eq('codigo_estado_alumno', 1)
     .ilike('nivel_alumno', props.nivel + props.letra)
     .order('numero_lista_nivel_alumno', { ascending: true })
   if (error) console.error(error)
