@@ -36,12 +36,12 @@ import { formatearRut } from '@/lib/formato' // utilidades para formatear
             <p class="mb-3">
               {{ String(perfil.rbd_usuario).toLocaleLowerCase() }}
             </p>
-            <RouterLink to="/reset-password" class="btn btn-primary">
+            <!-- <RouterLink to="/reset-password" class="btn btn-primary">
               <Button class="mt-8">
                 <KeyRound />
                 <span>Reiniciar mi contraseña</span>
               </Button>
-            </RouterLink>
+            </RouterLink> -->
           </CardContent>
         </Card>
       </Transition>
