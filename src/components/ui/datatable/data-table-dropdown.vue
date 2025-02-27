@@ -24,7 +24,7 @@ defineProps<{
 // usado para los permisos de los botones
 const tienePermisos = computed(() => {
   const codigoPerfil = authStore.perfil?.codigo_perfil_usuario
-  return codigoPerfil === 1 || codigoPerfil === 2
+  return codigoPerfil === 1 || codigoPerfil === 2 || codigoPerfil === 4
 })
 
 // logica para retirar un alumno
