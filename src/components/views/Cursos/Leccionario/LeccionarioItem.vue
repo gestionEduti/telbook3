@@ -82,7 +82,7 @@ async function guardarEvaluacion() {
 
   await fetchEvaluacion()
   // Descargar PDF automáticamente después de guardar
-  await descargarPDF()
+
 }
 
 // Agregar función para descargar PDF
@@ -393,7 +393,7 @@ onMounted(async () => {
                               @click="guardarEvaluacion"
                             >
                               <Save />
-                              <span>Guardar y Descargar PDF</span>
+                              <span>Guardar</span>
                             </Button>
                           </DialogClose>
                         </DialogFooter>
