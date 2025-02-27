@@ -505,7 +505,9 @@ function descargarRegistroIndividual(registro: ResumenInterface) {
 
                           <Dialog v-if="planificacion.fecha_evaluacion === diaActual">
                             <DialogTrigger asChild>
-                              <Button variant="destructive">
+                              <Button variant="destructive"
+                              :disabled="!puedeAgregarRegistro"
+                                >
                                 <Trash2 class="mr-2 h-4 w-4" />
                                 Eliminar
                               </Button>
