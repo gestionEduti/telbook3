@@ -1,9 +1,12 @@
 <script setup lang="ts">
-import { Plus, NotebookText, Users, Calendar, X, Download } from 'lucide-vue-next'
+import { Plus, NotebookText, Users, Calendar, X, Download , Trash2} from 'lucide-vue-next'
 import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 import { jsPDF } from 'jspdf'
 import autoTable from 'jspdf-autotable'
+import { useToast } from '@/components/ui/toast'
+const toast = useToast()
+import { obtenerFechaActualComoYYYMMDD } from '@/lib/formato'
 
 const authStore = useAuthStore()
 const errorStore = useErrorStore()
@@ -12,6 +15,8 @@ const props = defineProps<{
   nivel: string
   letra: string
 }>()
+
+const diaActual = obtenerFechaActualComoYYYMMDD()
 
 const nombreCurso = computed(() => props.nivel + props.letra)
 
@@ -104,6 +109,26 @@ const registrosFiltrados = computed(() => {
     })
     .sort((a, b) => b.fecha_evaluacion.localeCompare(a.fecha_evaluacion))
 })
+
+/**
+ * eliminar una planificacion del dia actual
+ * @param id
+ */
+async function eliminarRegistroDelDia(id: number) {
+  const { error } = await supabase.from('mv_tel_alumnos').delete().eq('id', id)
+
+  if (error) {
+    errorStore.setError({ error })
+  } else {
+    toast.toast({
+      title: 'Planificación eliminada',
+      description: 'La planificación se ha eliminado correctamente',
+      duration: 3000,
+      variant: 'destructive',
+    })
+    registrosFonoaudiologicos.value = registrosFonoaudiologicos.value!.filter((p) => p.id !== id)
+  }
+}
 
 // Agregar función para descargar registros
 function descargarRegistros() {
@@ -468,14 +493,44 @@ function descargarRegistroIndividual(registro: ResumenInterface) {
                     <CardTitle>
                       <div class="flex items-start justify-between">
                         <span>{{ planificacion.fecha_evaluacion }}</span>
-                        <Button
-                          variant="outline"
-                          class="hover:bg-primary/10 text-foreground"
-                          @click="descargarRegistroIndividual(planificacion)"
-                        >
-                          <Download class="mr-2 h-4 w-4" />
-                          Descargar PDF
-                        </Button>
+                        <div class="flex items-center gap-2">
+                          <Button
+                            variant="outline"
+                            class="hover:bg-primary/10 text-foreground"
+                            @click="descargarRegistroIndividual(planificacion)"
+                          >
+                            <Download class="mr-2 h-4 w-4" />
+                            Descargar PDF
+                          </Button>
+
+                          <Dialog v-if="planificacion.fecha_evaluacion === diaActual">
+                            <DialogTrigger asChild>
+                              <Button variant="destructive">
+                                <Trash2 class="mr-2 h-4 w-4" />
+                                Eliminar
+                              </Button>
+                            </DialogTrigger>
+                            <DialogContent>
+                              <DialogHeader>
+                                <DialogTitle>Confirmar eliminación</DialogTitle>
+                                <DialogDescription>
+                                  Esta acción no se puede deshacer.
+                                </DialogDescription>
+                              </DialogHeader>
+                              <DialogFooter>
+                                <DialogClose asChild>
+                                  <Button variant="outline">Cancelar</Button>
+                                </DialogClose>
+                                <Button
+                                  variant="destructive"
+                                  @click="eliminarRegistroDelDia(planificacion.id)"
+                                >
+                                  Aceptar
+                                </Button>
+                              </DialogFooter>
+                            </DialogContent>
+                          </Dialog>
+                        </div>
                       </div>
                     </CardTitle>
 
