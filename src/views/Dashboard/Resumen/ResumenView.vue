@@ -22,7 +22,8 @@ const obtenerTotalMatriculas = async () => {
     .from('mv_libro_matricula')
     .select('id', { count: 'exact' })
     .eq('anio_libro', 2025) // TODO cambiar a año sacado desde la futura tabla de configuraciones
-    .eq('rbd_establecimiento', String(authStore.establecimiento?.rbd)) // TODO: setear error si es que el perfil no existe
+    .eq('rbd_establecimiento', String(authStore.establecimiento?.rbd))
+    .in('codigo_estado_alumno', [0,1])// TODO: setear error si es que el perfil no existe
   if (error) useErrorStore().setError({ error: error, customCode: status })
   else totalMatriculas.value = count
 }
