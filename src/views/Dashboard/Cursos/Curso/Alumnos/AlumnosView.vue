@@ -55,13 +55,13 @@ onMounted(async () => {
           <Transition name="fade" mode="out-in">
             <TableBody as-child>
               <TableRow
-                v-for="alumno in alumnos"
+                v-for="(alumno, index) in alumnos"
                 :key="alumno.id"
                 class="cursor-pointer"
                 @click="$router.push({ name: 'alumno', params: { rut: alumno.rut_alumno } })"
               >
                 <TableCell class="text-center font-medium">
-                  {{ alumno.numero_lista_nivel_alumno }}
+                  {{ index + 1 }}
                 </TableCell>
                 <TableCell class="text-right">{{ formatearRut(alumno.rut_alumno) }}</TableCell>
                 <TableCell class="text-left capitalize">{{
