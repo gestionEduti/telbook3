@@ -87,7 +87,7 @@ async function guardarPlanificacion() {
 
     <DialogContent class="max-h-[90vh] overflow-y-auto">
       <DialogHeader>
-        <DialogTitle>Nueva planificacion</DialogTitle>
+        <DialogTitle>Nueva planificación</DialogTitle>
         <DialogDescription> </DialogDescription>
       </DialogHeader>
 
@@ -128,9 +128,12 @@ async function guardarPlanificacion() {
             v-model="dataFormulario.objetivosGenerales"
             type="textarea"
             placeholder="Ingresa acá los objetivos generales"
-            validation="required"
-            validation-visibility="dirty"
-            outer-class="min-w-full"
+            validation="required|length:0,1000"
+          :validation-messages="{lenght:'El texto no puede exceder los 1000 caracteres.'}"
+          validation-visibility="dirty"
+          outer-class="min-w-full"
+          help-class="text-sm text-gray-500 text-right"
+          :help="(dataFormulario.objetivosGenerales?.length || 0) + '/1000 caracteres'"
           />
         </div>
         <div>
@@ -139,9 +142,12 @@ async function guardarPlanificacion() {
             v-model="dataFormulario.estrategias"
             type="textarea"
             placeholder=" Ingresa acá las estrategias."
-            validation="required"
+            validation="required|length:0,1000"
+            :validation-messages="{lenght:'El texto no puede exceder los 1000 caracteres.'}"
             validation-visibility="dirty"
             outer-class="min-w-full"
+            help-class="text-sm text-gray-500 text-right"
+            :help="(dataFormulario.estrategias?.length || 0) + '/1000 caracteres'"
           />
         </div>
         <div>
@@ -150,9 +156,12 @@ async function guardarPlanificacion() {
             v-model="dataFormulario.cierre"
             type="textarea"
             placeholder=" Ingresa acá el cierre del proyecto."
-            validation="required"
+            validation="required|length:0,1000"
+            :validation-messages="{lenght:'El texto no puede exceder los 1000 caracteres.'}"
             validation-visibility="dirty"
             outer-class="min-w-full"
+            help-class="text-sm text-gray-500 text-right"
+            :help="(dataFormulario.cierre?.length || 0) + '/1000 caracteres'"
           />
         </div>
       </div>

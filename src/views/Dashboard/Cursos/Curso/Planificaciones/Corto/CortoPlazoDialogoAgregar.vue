@@ -86,7 +86,7 @@ function limpiarFormulario() {
 
     <DialogScrollContent class="sm:max-w-[425px]">
       <DialogHeader>
-        <DialogTitle>Nueva planificacion</DialogTitle>
+        <DialogTitle>Nueva planificación</DialogTitle>
         <DialogDescription> </DialogDescription>
       </DialogHeader>
 
@@ -116,9 +116,13 @@ function limpiarFormulario() {
           v-model="nuevaPlanificacion.recursos"
           type="textarea"
           placeholder="Ingresa acá los recursos"
-          validation="required"
+          validation="required|length:0,1000"
+          :validation-messages="{lenght:'El texto no puede exceder los 1000 caracteres.'}"
           validation-visibility="dirty"
           outer-class="min-w-full"
+          help-class="text-sm text-gray-500 text-right"
+          :help="(nuevaPlanificacion.recursos?.length || 0) + '/1000 caracteres'"
+
         />
       </div>
       <div>
@@ -127,9 +131,12 @@ function limpiarFormulario() {
           v-model="nuevaPlanificacion.instrumentosEvaluacion"
           type="textarea"
           placeholder=" Ingresa acá los instrumentos de evaluación."
-          validation="required"
+          validation="required|length:0,1000"
+          :validation-messages="{lenght:'El texto no puede exceder los 1000 caracteres.'}"
           validation-visibility="dirty"
           outer-class="min-w-full"
+          help-class="text-sm text-gray-500 text-right"
+          :help="(nuevaPlanificacion.instrumentosEvaluacion?.length || 0) + '/1000 caracteres'"
         />
       </div>
       <div>
@@ -138,9 +145,12 @@ function limpiarFormulario() {
           v-model="nuevaPlanificacion.inicioDesarrolloCierre"
           type="textarea"
           placeholder=" Ingresa acá el inicio, desarrollo, y cierre."
-          validation="required"
+          validation="required|length:0,2000"
+          :validation-messages="{lenght:'El texto no puede exceder los 2000 caracteres.'}"
           validation-visibility="dirty"
           outer-class="min-w-full"
+          help-class="text-sm text-gray-500 text-right"
+          :help="(nuevaPlanificacion.inicioDesarrolloCierre?.length || 0) + '/2000 caracteres'"
         />
       </div>
 
