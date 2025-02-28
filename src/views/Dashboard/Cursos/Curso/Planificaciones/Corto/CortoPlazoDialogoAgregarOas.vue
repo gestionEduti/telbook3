@@ -266,7 +266,7 @@ function quitarOa(id: number) {
               <SelectContent>
                 <SelectGroup>
                   <SelectItem v-for="item in optionsOas" :value="String(item.id)" :key="item.id">
-                    <p class="max-w-xs text-ellipsis">{{ item.id }}. {{ item.descripcion_oa }}</p>
+                    <p class="text-sm whitespace-normal">{{ item.id }}. {{ item.descripcion_oa }}</p>
                   </SelectItem>
                 </SelectGroup>
               </SelectContent>

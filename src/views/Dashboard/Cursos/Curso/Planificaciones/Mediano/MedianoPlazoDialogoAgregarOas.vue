@@ -143,10 +143,10 @@ const optionsOas = computed(() => {
               @click="agregarQuitarOaSeleccionado(oa.id)"
               class="flex items-center gap-2 space-y-2"
             >
-              <Info :size="24" />
+              <!-- <Info :size="24" /> -->
               <Checkbox :checked="oasSeleccionados.includes(oa.id)" class="h-6 w-6" />
               <div class="w-full cursor-pointer rounded-sm">
-                <p class="truncate text-sm">{{ index + 1 }}. {{ oa.descripcion_oa }}</p>
+                <p class="text-sm whitespace-normal">{{ index + 1 }}. {{ oa.descripcion_oa }}</p>
               </div>
             </div>
           </li>
