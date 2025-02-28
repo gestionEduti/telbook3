@@ -31,7 +31,7 @@ const formularioInvalido = computed(
     formData.value.fecha === '',
 )
 
-const modalidades = ref(['ONLINE', 'PRESENCIAL'])
+const modalidades = ref(['PRESENCIAL'])
 
 async function guardarRegistro() {
   // llamada a la api de mineduc

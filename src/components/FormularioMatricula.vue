@@ -38,7 +38,7 @@ const handleForm = async (formData: Tables<'mv_libro_matricula'>) => {
       .select()
     if (updateError?.code == '23505') {
       toast({
-        title: 'Exito',
+        title: 'Error',
         description: 'El numero de matricula ya existe.',
         variant: 'destructive',
         duration: 3000,
@@ -164,13 +164,13 @@ onMounted(async () => {
                   label="Numero de matricula"
                   validation="required"
                 />
-                <FormKit
+<!--                <FormKit
                   type="number"
                   name="numero_lista_nivel_alumno"
                   id="numero_lista"
                   label="Numero de lista"
                   validation="required"
-                />
+                />-->
               </div>
 
               <p class="telbook-label" :class="[formularioSeEstaEditando ? 'mt-8' : '']">
