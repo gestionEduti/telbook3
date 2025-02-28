@@ -9,6 +9,21 @@ export function formatearFecha(fecha: string): string {
   return `${day}-${month}-${year}`
 }
 
+export function formatearFechaNacimiento2(fecha: string): string {
+  if (!fecha) return ''
+  const [year, month, day] = fecha.split('-')
+  const date = new Date(parseInt(year), parseInt(month) - 1, parseInt(day))
+
+  return date.toLocaleString('es-CL', {
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric'
+  })
+}
+
+
+
 // Utilidad para capitalizar palabras
 export function capitalizarPalabras(texto: string): string {
   return texto

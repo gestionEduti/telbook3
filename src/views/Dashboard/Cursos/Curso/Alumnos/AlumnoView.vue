@@ -12,7 +12,7 @@ const props = defineProps<{
   rut: string
 }>()
 
-import { formatearFechaNacimiento, formatearNacionalidad } from '@/lib/formato' // utilidades para formatear
+import { formatearFechaNacimiento, formatearNacionalidad, formatearFecha, formatearFechaNacimiento2 } from '@/lib/formato' // utilidades para formatear
 
 import { ArrowLeft, Map, NotebookPen, User, Users } from 'lucide-vue-next' // iconos
 
@@ -105,7 +105,7 @@ onMounted(async () => {
                 <div v-if="alumno.fecha_nacimiento_alumno">
                   <p class="telbook-label">Fecha nacimiento</p>
                   <p class="mb-3 capitalize">
-                    {{ formatearFechaNacimiento(alumno.fecha_nacimiento_alumno) }}
+                    {{ formatearFechaNacimiento2(alumno.fecha_nacimiento_alumno) }}
                   </p>
                 </div>
               </template>
