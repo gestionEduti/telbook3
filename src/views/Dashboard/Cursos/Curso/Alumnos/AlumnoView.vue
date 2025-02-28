@@ -125,7 +125,8 @@ onMounted(async () => {
                 v-if="
                   !alumno.apoderado_tutor_alumno &&
                   !alumno.email_apoderado_alumno &&
-                  !alumno.vive_con_alumno
+                  !alumno.vive_con_alumno &&
+                  !alumno.telefono_apoderado_alumno
                 "
               >
                 <InfoMensajeSinData icono="vacio" mensaje="No hay datos de familia" />
@@ -148,6 +149,12 @@ onMounted(async () => {
                   <p class="telbook-label">Vive con</p>
                   <p class="mb-3 capitalize">
                     {{ alumno.vive_con_alumno?.toLocaleLowerCase() }}
+                  </p>
+                </div>
+                <div v-if="alumno.vive_con_alumno">
+                  <p class="telbook-label">Teléfono apoderado</p>
+                  <p class="mb-3 capitalize">
+                    {{ alumno.telefono_apoderado_alumno }}
                   </p>
                 </div>
               </template>
