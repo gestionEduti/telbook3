@@ -25,6 +25,7 @@ const fetchAlumno = async () => {
     .from('mv_libro_matricula')
     .select()
     .eq('rut_alumno', props.rut)
+    .eq('codigo_estado_alumno', 1)
     .single()
   if (error) errorStore.setError({ error: error, customCode: status })
   else alumno.value = data
