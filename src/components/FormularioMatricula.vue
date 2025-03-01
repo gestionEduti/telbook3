@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import type { Tables } from '@/types/supabase' // types de supabase
+import { useMatriculaValidacionStore } from '@/stores/matriculaValidacionStore'
 
 const router = useRouter()
 
 const authStore = useAuthStore()
 const errorStore = useErrorStore()
 const loaderStore = useNuevaMatriculaLoaderStore()
+const matriculaValidacionStore = useMatriculaValidacionStore()
 
 const props = defineProps<{
   matriculaParaEditar?: Tables<'mv_libro_matricula'>
@@ -24,6 +26,20 @@ const dataFormulario = ref<Tables<'mv_libro_matricula'>>()
 
 // computed
 const formularioSeEstaEditando = computed(() => !!props.matriculaParaEditar)
+
+// Modificar el computed para el mensaje
+const mensajeError = computed(() => {
+  if (!dataFormulario.value?.numero_matricula_alumno) return ''
+  return !matriculaValidacionStore.numeroMatriculaDisponible
+    ? 'Este número de matrícula no está disponible'
+    : '✓ Número de matrícula disponible'
+})
+
+// Agregar método de validación
+const validarMatricula = async (value: any) => {
+  if (!value) return
+  await matriculaValidacionStore.validarNumeroMatricula(value, props.matriculaParaEditar?.id)
+}
 
 // methods
 const handleForm = async (formData: Tables<'mv_libro_matricula'>) => {
@@ -132,6 +148,11 @@ onMounted(async () => {
   loadersReady.value = true
   if (formularioSeEstaEditando.value) dataFormulario.value = props.matriculaParaEditar
 })
+
+// Agregar este watcher
+watch(() => dataFormulario.value?.numero_matricula_alumno, (newValue) => {
+  console.log('🔄 Cambió número matrícula:', newValue)
+})
 </script>
 
 <template>
@@ -151,26 +172,44 @@ onMounted(async () => {
             type="form"
             id="nuevoAlumnoForm"
             @submit="handleForm"
-            :config="{ validationVisibility: 'dirty' }"
+            :config="{ validationVisibility: 'live' }"
             :actions="false"
           >
             <!-- slot que contiene los input -->
             <template #default>
-              <div v-if="formularioSeEstaEditando" class="flex gap-4">
+              <div class="flex gap-4">
                 <FormKit
+                  v-if="formularioSeEstaEditando"
                   type="number"
                   name="numero_matricula_alumno"
                   id="numero_matricula"
                   label="Numero de matricula"
                   validation="required"
+                  @input="validarMatricula"
+                  :help="mensajeError"
+                  :validation-messages="{
+                    required: 'Este campo es requerido'
+                  }"
+                  :classes="{
+                    input: !matriculaValidacionStore.numeroMatriculaDisponible ? 'border-red-500' : 'border-green-500',
+                    help: !matriculaValidacionStore.numeroMatriculaDisponible ? 'text-red-500' : 'text-green-500'
+                  }"
                 />
-<!--                <FormKit
+                <!-- <FormKit
+                  v-else
                   type="number"
-                  name="numero_lista_nivel_alumno"
-                  id="numero_lista"
-                  label="Numero de lista"
-                  validation="required"
-                />-->
+                  name="numero_matricula_alumno"
+                  id="numero_matricula"
+                  label="Numero de matricula (opcional)"
+                  validation-visibility="live"
+                  :validation-rules="{
+                    async disponible(value) {
+                      if (!value) return true
+                      const disponible = await matriculaValidacionStore.validarNumeroMatricula(value)
+                      return disponible || 'Este número de matrícula no está disponible'
+                    }
+                  }"
+                /> -->
               </div>
 
               <p class="telbook-label" :class="[formularioSeEstaEditando ? 'mt-8' : '']">
@@ -401,11 +440,19 @@ onMounted(async () => {
             <!-- slot que contiene los botones de accion -->
             <template #actions="{ state }">
               <div class="flex gap-2 place-self-start">
-                <Button v-if="formularioSeEstaEditando" :disabled="state.loading" class="mx-auto">
+                <Button
+                  v-if="formularioSeEstaEditando"
+                  :disabled="state.loading || !matriculaValidacionStore.numeroMatriculaDisponible"
+                  class="mx-auto"
+                >
                   <Loader v-if="state.loading" class="mr-2 h-6 w-6 animate-spin" />
                   Actualizar matricula
                 </Button>
-                <Button v-else :disabled="state.loading" class="mx-auto">
+                <Button
+                  v-else
+                  :disabled="state.loading || !matriculaValidacionStore.numeroMatriculaDisponible"
+                  class="mx-auto"
+                >
                   <Loader v-if="state.loading" class="mr-2 h-6 w-6 animate-spin" />
                   Crear matricula
                 </Button>
