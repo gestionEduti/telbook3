@@ -170,9 +170,9 @@ watch(() => dataFormulario.value?.numero_matricula_alumno, (newValue) => {
       <Card v-if="loadersReady">
         <CardHeader>
           <CardTitle class="flex items-center justify-between">
-            <span> Nueva Matricula </span>
+            <span> Nueva/Edita Matricula  </span>
           </CardTitle>
-          <CardDescription>Matricula un nuevo alumno en el establecimiento.</CardDescription>
+          <CardDescription>Matricula o edita un alumno en el establecimiento.</CardDescription>
           <Separator />
         </CardHeader>
         <CardContent class="mt-0 space-y-2">
