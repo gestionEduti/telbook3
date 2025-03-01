@@ -2,6 +2,9 @@
 import type { Tables } from '@/types/supabase' // types de supabase
 import { useMatriculaValidacionStore } from '@/stores/matriculaValidacionStore'
 
+
+
+
 const router = useRouter()
 
 const authStore = useAuthStore()
@@ -40,6 +43,12 @@ const validarMatricula = async (value: any) => {
   if (!value) return
   await matriculaValidacionStore.validarNumeroMatricula(value, props.matriculaParaEditar?.id)
 }
+
+const formatearPalabrasMayusculas = (event: Event) => {
+  const input = event.target as HTMLInputElement
+  input.value = input.value.toUpperCase()
+}
+
 
 // methods
 const handleForm = async (formData: Tables<'mv_libro_matricula'>) => {
@@ -233,6 +242,7 @@ watch(() => dataFormulario.value?.numero_matricula_alumno, (newValue) => {
                   label="Nombres"
                   placeholder="Ingresa los nombres"
                   validation="required"
+                  @change="formatearPalabrasMayusculas"
                 />
                 <FormKit
                   type="text"
@@ -241,6 +251,7 @@ watch(() => dataFormulario.value?.numero_matricula_alumno, (newValue) => {
                   label="Apellidos"
                   placeholder="Ingresa los apellidos"
                   validation="required"
+                  @change="formatearPalabrasMayusculas"
                 />
               </div>
               <FormKit
