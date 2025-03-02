@@ -52,6 +52,29 @@ const diaActual = obtenerFechaActualComoYYYMMDD()
   return perfilesPermitidos.includes(authStore.perfil?.codigo_perfil_usuario ?? -1)
 })
 
+// JPS función para reactivar la planificación
+  async function reactivarPlanificacion(id: number) {
+  const { error } = await supabase
+    .from('mv_pla_mediano_plazo')
+    .update({ estado_planificacion: 1 })
+    .eq('id_planificacion', id)
+    .select()
+
+  if (error) {
+    errorStore.setError({ error })
+  } else {
+    await fetchPlanificaciones()
+    toast({
+      title: 'Planificación reactivada',
+      description: 'La planificación se ha reactivado correctamente',
+      duration: 3000,
+      variant: 'success',
+      class: 'bg-green-100 border-green-500 text-green-700'
+
+    })
+  }
+}
+
 
 const hayPlanificaciones = computed(() => {
   return resumenPlanificaciones.value !== null && resumenPlanificaciones.value.length > 0
@@ -675,14 +698,25 @@ onMounted(async () => {
                     </div>
                   </CardContent>
                   <CardFooter class="flex justify-end">
+                     <!-- Botón de Reactivar (para planificaciones finalizadas) -->
+                  <Button
+                    v-if="planificacion.estado === 0"
+                    @click="reactivarPlanificacion(planificacion.id)"
+                    :disabled="cursoTienePlanificacionActiva"
+
+                  >
+                    <Goal class="w-4 h-4 mr-2" />
+                    Reactivar Planificación
+                  </Button>
+
                     <Dialog v-if="planificacion.estado === 1">
                       <DialogTrigger as-child>
-                        <Button :disabled="!puedeEliminarPMP"
+                      <Button :disabled="!puedeEliminarPMP"
                           variant="destructive">
                           <OctagonX />
                           <span>Finalizar planificación</span>
                         </Button>
-                      </DialogTrigger>
+                       </DialogTrigger>
 
                       <DialogContent class="sm:max-w-[425px]">
                         <DialogHeader>
