@@ -102,7 +102,7 @@ fetchCursos()
         </CardContent>
         <CardFooter>
           <p data-test="cursos-total-cursos" class="mx-auto text-sm text-muted-foreground">
-            {{ cursos.length }} curso(s) en total.
+            {{ cursosFiltradosUsuario?.length || cursos.length }} curso(s) en total.
           </p>
         </CardFooter>
       </Card>
