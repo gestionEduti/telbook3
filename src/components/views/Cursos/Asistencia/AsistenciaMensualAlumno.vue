@@ -77,11 +77,9 @@ onMounted(() => {
 <template>
   <div v-if="resumen" :class="`mb-1 grid grid-cols-[repeat(43,minmax(0,1fr))] gap-1`">
     <div class="col-span-5 flex h-6 items-center justify-start">
-      <ScrollArea>
-        <p class="truncate text-left text-xs">
-          {{ alumno.apellidos_alumno }} {{ alumno.nombres_alumno }}
-        </p>
-      </ScrollArea>
+      <p class="truncate text-left text-xs">
+        {{ alumno.apellidos_alumno }} {{ alumno.nombres_alumno }}
+      </p>
     </div>
 
     <AsistenciaMensualAlumnoBoton
