@@ -24,9 +24,35 @@ const ambitosNivel = computed(() =>
 )
 const ambitosUnicos = computed(() => new Set(ambitosNivel.value))
 const ambitoSeleccionado = ref<string>('')
-const contenidosDelAmbito = computed(() =>
+/*const contenidosDelAmbito = computed(() =>
   bases.value?.filter((n) => n.descripcion_ambito === ambitoSeleccionado.value),
-)
+)*/
+
+const contenidosDelAmbito = computed(() => {
+  if (!bases.value) return []
+
+  const contenidos = bases.value.filter(
+    (n) => n.descripcion_ambito === ambitoSeleccionado.value
+  )
+
+  return [...new Map(contenidos.map(item => [item.descripcion_contenido, item])).values()]
+    .sort((a, b) => {
+      // Primero ordenamos por descripción_ambito
+      const ambitoComparison = a.descripcion_ambito.localeCompare(b.descripcion_ambito)
+
+      // Si son del mismo ámbito, ordenamos por descripción_contenido
+      if (ambitoComparison === 0) {
+        return a.descripcion_contenido.localeCompare(b.descripcion_contenido)
+      }
+
+      return ambitoComparison
+    })
+})
+
+
+
+
+
 
 // contenidos seleccionados
 const contenidosSeleccionados = ref<number[]>([]) // lista de ids de alumnos seleccionados
