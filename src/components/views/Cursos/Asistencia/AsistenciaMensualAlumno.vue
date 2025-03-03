@@ -76,7 +76,14 @@ onMounted(() => {
 
 <template>
   <div v-if="resumen" :class="`mb-1 grid grid-cols-[repeat(43,minmax(0,1fr))] gap-1`">
-    <p class="col-span-5 truncate pr-2 text-right">{{ alumno.nombre_completo_alumno }}</p>
+    <div class="col-span-5 flex h-6 items-center justify-start">
+      <ScrollArea>
+        <p class="truncate text-left text-xs">
+          {{ alumno.apellidos_alumno }} {{ alumno.nombres_alumno }}
+        </p>
+      </ScrollArea>
+    </div>
+
     <AsistenciaMensualAlumnoBoton
       v-for="dia in cantidadDiasMesActual"
       :key="dia"
@@ -105,9 +112,4 @@ onMounted(() => {
   </div>
 </template>
 
-@media print {
-  .card-content-to-export {
-    background: white;
-    padding: 20px;
-  }
-}
+@media print { .card-content-to-export { background: white; padding: 20px; } }
