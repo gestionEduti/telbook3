@@ -29,7 +29,7 @@ export const useAsistenciaMensualStore = defineStore('asistencia-mensual', () =>
   /**
    * trae los alumnos del curso
    */
-  async function fetchAlumnosCurso(curso: string) {
+  /*async function fetchAlumnosCurso(curso: string) {
     cursoActual.value = curso
     const { data, error, status } = await supabase
       .from('mv_libro_matricula')
@@ -39,7 +39,21 @@ export const useAsistenciaMensualStore = defineStore('asistencia-mensual', () =>
       .order('apellidos_alumno', { ascending: true })
     if (error) errorStore.setError({ error: error, customCode: status })
     else alumnos.value = data
-  }
+  }*/
+
+//JPS traigo los datos de los alumnos con distinc usando una función.
+  async function fetchAlumnosCurso(curso: string) {
+  cursoActual.value = curso
+  const { data, error, status } = await supabase
+    .rpc('gestionar_datos_alumnos_distintos', {
+      p_rbd: authStore.perfil!.rbd_usuario,
+      p_curso: curso
+    })
+
+  if (error) errorStore.setError({ error: error, customCode: status })
+  else alumnos.value = data
+}
+
 
   /**
    * trae desde supabase la asistencia de cada alumno del curso, para el mes actual
