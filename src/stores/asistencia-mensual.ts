@@ -48,6 +48,7 @@ export const useAsistenciaMensualStore = defineStore('asistencia-mensual', () =>
     cursoActual.value = curso
     asistencias.value = null // al cambiar de mes, seteo como null para que la transicion se gatille
     const { data, error } = await supabase.rpc('resumen_asistencia_mes', {
+      rbd_param: authStore.perfil!.rbd_usuario,
       nivel_alumno_param: curso,
       year_param: Number(numeroYearActual.value), // TODO traer desde la DB el año de operacion actual
       mes_param: Number(mesSeleccionado.value),

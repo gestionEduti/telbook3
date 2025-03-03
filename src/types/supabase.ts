@@ -446,13 +446,6 @@ export type Database = {
             referencedRelation: "view_panel_administracion_resumen_establecimientos"
             referencedColumns: ["rbd"]
           },
-          {
-            foreignKeyName: "fk_mv_anotaciones_alumno_rbd"
-            columns: ["rbd_escuela"]
-            isOneToOne: false
-            referencedRelation: "view_profesor_curso"
-            referencedColumns: ["rbd"]
-          },
         ]
       }
       mv_anotaciones_fonoaudiologicas: {
@@ -505,13 +498,6 @@ export type Database = {
             columns: ["rbd_escuela"]
             isOneToOne: false
             referencedRelation: "view_panel_administracion_resumen_establecimientos"
-            referencedColumns: ["rbd"]
-          },
-          {
-            foreignKeyName: "mv_anotaciones_fonoaudiologicas_rbd_escuela_fkey"
-            columns: ["rbd_escuela"]
-            isOneToOne: false
-            referencedRelation: "view_profesor_curso"
             referencedColumns: ["rbd"]
           },
         ]
@@ -578,13 +564,6 @@ export type Database = {
             columns: ["rbd"]
             isOneToOne: false
             referencedRelation: "view_panel_administracion_resumen_establecimientos"
-            referencedColumns: ["rbd"]
-          },
-          {
-            foreignKeyName: "mv_asistencia_diaria_rbd_fkey"
-            columns: ["rbd"]
-            isOneToOne: false
-            referencedRelation: "view_profesor_curso"
             referencedColumns: ["rbd"]
           },
         ]
@@ -1020,13 +999,6 @@ export type Database = {
             referencedRelation: "view_panel_administracion_resumen_establecimientos"
             referencedColumns: ["rbd"]
           },
-          {
-            foreignKeyName: "mv_libro_matricula_rbd_establecimiento_fkey"
-            columns: ["rbd_establecimiento"]
-            isOneToOne: false
-            referencedRelation: "view_profesor_curso"
-            referencedColumns: ["rbd"]
-          },
         ]
       }
       mv_libro_matricula_log: {
@@ -1270,13 +1242,6 @@ export type Database = {
             referencedColumns: ["rbd"]
           },
           {
-            foreignKeyName: "mv_libro_matricula_duplicate_temp_rbd_establecimiento_fkey"
-            columns: ["rbd_establecimiento"]
-            isOneToOne: false
-            referencedRelation: "view_profesor_curso"
-            referencedColumns: ["rbd"]
-          },
-          {
             foreignKeyName: "mv_libro_matricula_duplicate_temp_sexo_alumno_fkey"
             columns: ["sexo_alumno"]
             isOneToOne: false
@@ -1363,13 +1328,6 @@ export type Database = {
             columns: ["rbd"]
             isOneToOne: false
             referencedRelation: "view_panel_administracion_resumen_establecimientos"
-            referencedColumns: ["rbd"]
-          },
-          {
-            foreignKeyName: "mv_pla_corto_plazo_rbd_fkey"
-            columns: ["rbd"]
-            isOneToOne: false
-            referencedRelation: "view_profesor_curso"
             referencedColumns: ["rbd"]
           },
         ]
@@ -1477,13 +1435,6 @@ export type Database = {
             referencedRelation: "view_panel_administracion_resumen_establecimientos"
             referencedColumns: ["rbd"]
           },
-          {
-            foreignKeyName: "mv_pla_mediano_plazo_rbd_fkey"
-            columns: ["rbd"]
-            isOneToOne: false
-            referencedRelation: "view_profesor_curso"
-            referencedColumns: ["rbd"]
-          },
         ]
       }
       mv_profesor_cursos: {
@@ -1520,6 +1471,13 @@ export type Database = {
             referencedColumns: ["rut_usuario"]
           },
           {
+            foreignKeyName: "mv_profesor_cursos_mv_usuario__fk"
+            columns: ["rut_profesor"]
+            isOneToOne: false
+            referencedRelation: "view_profesor_curso"
+            referencedColumns: ["rut_usuario"]
+          },
+          {
             foreignKeyName: "mv_profesor_cursos_tp_establecimientos__fk"
             columns: ["rbd_establecimiento"]
             isOneToOne: false
@@ -1531,13 +1489,6 @@ export type Database = {
             columns: ["rbd_establecimiento"]
             isOneToOne: false
             referencedRelation: "view_panel_administracion_resumen_establecimientos"
-            referencedColumns: ["rbd"]
-          },
-          {
-            foreignKeyName: "mv_profesor_cursos_tp_establecimientos__fk"
-            columns: ["rbd_establecimiento"]
-            isOneToOne: false
-            referencedRelation: "view_profesor_curso"
             referencedColumns: ["rbd"]
           },
         ]
@@ -1608,13 +1559,6 @@ export type Database = {
             columns: ["rbd"]
             isOneToOne: false
             referencedRelation: "view_panel_administracion_resumen_establecimientos"
-            referencedColumns: ["rbd"]
-          },
-          {
-            foreignKeyName: "mv_tel_alumnos_rbd_fkey"
-            columns: ["rbd"]
-            isOneToOne: false
-            referencedRelation: "view_profesor_curso"
             referencedColumns: ["rbd"]
           },
         ]
@@ -1692,13 +1636,6 @@ export type Database = {
             columns: ["rbd_usuario"]
             isOneToOne: false
             referencedRelation: "view_panel_administracion_resumen_establecimientos"
-            referencedColumns: ["rbd"]
-          },
-          {
-            foreignKeyName: "mv_usuario_rbd_usuario_fkey"
-            columns: ["rbd_usuario"]
-            isOneToOne: false
-            referencedRelation: "view_profesor_curso"
             referencedColumns: ["rbd"]
           },
         ]
@@ -1876,13 +1813,6 @@ export type Database = {
             columns: ["rbd_establecimiento"]
             isOneToOne: false
             referencedRelation: "view_panel_administracion_resumen_establecimientos"
-            referencedColumns: ["rbd"]
-          },
-          {
-            foreignKeyName: "tp_cursos_tp_establecimientos__fk"
-            columns: ["rbd_establecimiento"]
-            isOneToOne: false
-            referencedRelation: "view_profesor_curso"
             referencedColumns: ["rbd"]
           },
           {
@@ -2322,13 +2252,6 @@ export type Database = {
             referencedRelation: "view_panel_administracion_resumen_establecimientos"
             referencedColumns: ["rbd"]
           },
-          {
-            foreignKeyName: "mv_asistencia_diaria_rbd_fkey"
-            columns: ["rbd"]
-            isOneToOne: false
-            referencedRelation: "view_profesor_curso"
-            referencedColumns: ["rbd"]
-          },
         ]
       }
       view_panel_administracion_resumen_establecimientos: {
@@ -2345,8 +2268,24 @@ export type Database = {
           nombre_curso: string | null
           nombre_profesor: string | null
           rbd: number | null
+          rut_usuario: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "mv_usuario_rbd_usuario_fkey"
+            columns: ["rbd"]
+            isOneToOne: false
+            referencedRelation: "tp_establecimientos"
+            referencedColumns: ["rbd"]
+          },
+          {
+            foreignKeyName: "mv_usuario_rbd_usuario_fkey"
+            columns: ["rbd"]
+            isOneToOne: false
+            referencedRelation: "view_panel_administracion_resumen_establecimientos"
+            referencedColumns: ["rbd"]
+          },
+        ]
       }
     }
     Functions: {
@@ -2463,6 +2402,7 @@ export type Database = {
       }
       resumen_asistencia_mes: {
         Args: {
+          rbd_param: number
           nivel_alumno_param: string
           year_param: number
           mes_param: number
