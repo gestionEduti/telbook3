@@ -120,10 +120,10 @@ export const useAuthStore = defineStore('auth-store', () => {
    * Limpia la sesion actual del usuario.
    */
   const limipiarSesion = async () => {
-    await supabase.auth.signOut()
     usuario.value = null
     perfil.value = null
     establecimiento.value = null
+    supabase.auth.signOut()
   }
 
   return {
@@ -132,6 +132,7 @@ export const useAuthStore = defineStore('auth-store', () => {
     establecimiento,
     escucharCambios,
     obtenerSesion,
+    limipiarSesion,
   }
 })
 

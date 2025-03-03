@@ -1,8 +1,9 @@
 <script setup lang="ts">
 const router = useRouter()
+const authStore = useAuthStore()
 
 onMounted(async () => {
-  await supabase.auth.signOut()
+  authStore.limipiarSesion() // realiza un supabase signout, y limpia el store
   router.push({ name: 'login' })
 })
 </script>

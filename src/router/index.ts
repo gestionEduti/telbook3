@@ -2,20 +2,20 @@ import { createRouter, createWebHistory } from 'vue-router'
 
 const routes = [
   {
-  path: '/reset-password',
-  name: 'ResetPassword',
-  component: () => import('@/views/ResetPassword.vue'),
-  meta: {
-    requiresAuth: false,
-    isPublic: true
-  }
-},
-{
-  path: '/actualizar-password',
-  name: 'UpdatePassword',
-  component: () => import('@/views/UpdatePassword.vue')
-},
-{
+    path: '/reset-password',
+    name: 'ResetPassword',
+    component: () => import('@/views/ResetPassword.vue'),
+    meta: {
+      requiresAuth: false,
+      isPublic: true,
+    },
+  },
+  {
+    path: '/actualizar-password',
+    name: 'UpdatePassword',
+    component: () => import('@/views/UpdatePassword.vue'),
+  },
+  {
     path: '/',
     name: 'home',
     // component: () => import('../views/Home.vue'),
@@ -188,19 +188,34 @@ const router = createRouter({
   routes,
 })
 
-router.beforeEach(async (to, from) => {
+router.beforeEach(async (to) => {
   const authStore = useAuthStore()
   await authStore.obtenerSesion()
 
-  const paginaConAutenticacion = ['/login'].includes(to.path)
-  const paginasPublicas = ['/reset-password', '/login'].includes(to.path)
+  // booleano que indica si la pagina actual es una pagina de autenticacion
+  // se usa para que cuando un usuario ya este autenticado y quiera ir a una pagina de autenticacion...
+  // se reenvie al dashboard
+  const rutasAutenticacion = ['/login', '/reset-password', '/actualizar-password']
+  const esRelacionadaConAutenticacion = rutasAutenticacion.includes(to.path)
 
-  if (!authStore.usuario && !paginaConAutenticacion && !paginasPublicas
-) {
-    return { name: 'login' }
+  // booleano que indica si una pagina requiere autenticacion
+  // en este caso, todas las paginas bajo /dashboard requieren autenticacion
+  const requiereAutorizacion = to.matched.some((record) => record.path === '/dashboard')
+
+  // casos para cuando el usuario esta autenticado
+  if (authStore.usuario) {
+    // si es una pagina de autenticacion (login, logout, reset-password, etc...)
+    // se reenvia al dashboard
+    if (esRelacionadaConAutenticacion) return { name: 'dashboard' }
+    // de lo contrario continua (por ejemplo ir al dashboard)
   }
-  if (authStore.usuario && paginaConAutenticacion) {
-    return { name: 'dashboard' }
+
+  // casos para cuando el usuario no esta autenticado
+  else {
+    // si es una pagina que requiere autenticacion (dashboard, etc...)
+    // se reenvia al login
+    if (requiereAutorizacion) return { name: 'login' }
+    // de lo contrario continua (por ejemplo ir al login
   }
 })
 
