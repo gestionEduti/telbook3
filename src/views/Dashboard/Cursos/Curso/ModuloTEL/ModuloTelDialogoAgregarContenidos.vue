@@ -22,7 +22,11 @@ fetchBases()
 const ambitosNivel = computed(() =>
   bases.value?.filter((n) => n.nivel === nivel).map((n) => n.descripcion_ambito),
 )
-const ambitosUnicos = computed(() => new Set(ambitosNivel.value))
+const ambitosUnicos = computed(() => {
+  if (!ambitosNivel.value) return new Set()
+  return new Set([...ambitosNivel.value].sort((a, b) => a.localeCompare(b)))
+})
+
 const ambitoSeleccionado = ref<string>('')
 /*const contenidosDelAmbito = computed(() =>
   bases.value?.filter((n) => n.descripcion_ambito === ambitoSeleccionado.value),
