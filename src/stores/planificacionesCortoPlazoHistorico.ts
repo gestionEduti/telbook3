@@ -31,14 +31,17 @@ export const usePlanificacionesCortoPlazoStore = defineStore('planificacionesCor
   }),
 
   actions: {
-    async fetchPlanificacionesCortoPlazoHistorico() {
+    async fetchPlanificacionesCortoPlazoHistorico(nivel: string, letra: string) {
       try {
         this.loading = true
         this.error = null
 
+        const nombreCurso = nivel + letra
+
         const { data, error } = await supabase
           .rpc('gestionar_planificaciones_corto_plazo_historico', {
-            p_rbd: Number(authStore.perfil!.rbd_usuario)
+            p_rbd: Number(authStore.perfil!.rbd_usuario),
+            p_nivel: nombreCurso
           })
 
         if (error) throw error

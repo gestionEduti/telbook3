@@ -11,6 +11,9 @@ const authStore = useAuthStore()
 import type { Tables } from '@/types/supabase'
 import { obtenerFechaActualComoYYYMMDD } from '@/lib/formato'
 
+// Importar el store
+import { usePlanificacionesCortoPlazoStore } from '@/stores/planificacionesCortoPlazoHistorico'
+
 const props = defineProps<{
   nivel: string
   letra: string
@@ -90,6 +93,12 @@ function limpiarFiltros() {
   }
 }
 
+// Agregar el store al setup
+const planificacionesStore = usePlanificacionesCortoPlazoStore()
+
+// Agregar un ref para controlar la carga inicial
+const inicializado = ref(false)
+
 /**
  *
  */
@@ -135,227 +144,252 @@ async function eliminarPlanificacionDelDia(id: number) {
   }
 }
 
-/**
- * Genera y descarga un PDF con todas las planificaciones de corto plazo
- */
-function descargarTodasLasPlanificaciones() {
-  const doc = new jsPDF({
-    orientation: 'landscape',
-    unit: 'mm',
-    format: 'a4'
-  })
+// Modificar la función descargarTodasLasPlanificaciones
+async function descargarTodasLasPlanificaciones() {
+  try {
+    // Verificar si hay planificaciones
+    if (planificacionesStore.planificaciones.length === 0) {
+      toast({
+        title: 'Sin datos',
+        description: 'No hay planificaciones históricas para descargar',
+        duration: 3000,
+        variant: 'destructive',
+      })
+      return
+    }
 
-  // Configuración de fuentes y colores
-  doc.setFont('helvetica')
-
-  // Agregar logo
-  doc.addImage(
-    'https://jhzweohhdshzyvjmkhce.supabase.co/storage/v1/object/public/Logo//telbook_logo.png',
-    'PNG',
-    15,
-    5,
-    33,
-    11
-  )
-
-  // Título principal centrado
-  doc.setFontSize(20)
-  doc.setTextColor(44, 62, 80)
-  doc.text('Planificaciones de Corto Plazo', doc.internal.pageSize.width / 2, 15, { align: 'center' })
-
-  // Subtítulo con información del curso
-  doc.setFontSize(14)
-  doc.setTextColor(52, 73, 94)
-  doc.text(`Curso: ${nombreCurso.value}`, doc.internal.pageSize.width / 2, 25, { align: 'center' })
-
-  // Fecha de generación
-  doc.setFontSize(10)
-  doc.setTextColor(127, 140, 141)
-  doc.text(
-    `Generado el: ${new Date().toLocaleDateString('es-CL')}`,
-    doc.internal.pageSize.width - 15,
-    10,
-    { align: 'right' }
-  )
-
-  // Línea separadora
-  doc.setDrawColor(200, 200, 200)
-  doc.setLineWidth(0.1)
-  doc.line(15, 30, doc.internal.pageSize.width - 15, 30)
-
-  if (proyectoEje.value && planificacionesFiltradas.value?.length) {
-    // Primero, mostrar información del proyecto eje
-    autoTable(doc, {
-      head: [['PROYECTO EJE EN CURSO']],
-      body: [[proyectoEje.value.proyecto_eje]],
-      startY: 40,
-      theme: 'grid',
-      styles: {
-        fontSize: 14,
-        cellPadding: 8,
-        halign: 'center',
-        valign: 'middle',
-        lineWidth: 0.5,
-      },
-      headStyles: {
-        fillColor: [41, 128, 185],
-        textColor: 255,
-        fontSize: 16,
-        fontStyle: 'bold',
-      },
-      bodyStyles: {
-        fillColor: [235, 245, 251],
-        textColor: [44, 62, 80],
-        fontStyle: 'bold'
-      }
+    const doc = new jsPDF({
+      orientation: 'landscape',
+      unit: 'mm',
+      format: 'a4'
     })
 
-    // Luego, mostrar cada planificación diaria
-    planificacionesFiltradas.value.forEach((planificacion, index) => {
-      if (index > 0) {
-        doc.addPage()
-        // Repetir encabezado en nuevas páginas
-        doc.addImage(
-          'https://jhzweohhdshzyvjmkhce.supabase.co/storage/v1/object/public/Logo//telbook_logo.png',
-          'PNG',
-          15,
-          5,
-          33,
-          11
-        )
-        // Repetir información del proyecto eje en cada página
+    // Configuración de fuentes y colores
+    doc.setFont('helvetica')
+
+    // Agregar logo
+    doc.addImage(
+      'https://jhzweohhdshzyvjmkhce.supabase.co/storage/v1/object/public/Logo//telbook_logo.png',
+      'PNG',
+      15,
+      5,
+      33,
+      11
+    )
+
+    // Título principal centrado
+    doc.setFontSize(20)
+    doc.setTextColor(44, 62, 80)
+    doc.text('Historial de Planificaciones de Corto Plazo', doc.internal.pageSize.width / 2, 15, { align: 'center' })
+
+    // Subtítulo con información del curso
+    doc.setFontSize(14)
+    doc.setTextColor(52, 73, 94)
+    doc.text(`Curso: ${nombreCurso.value}`, doc.internal.pageSize.width / 2, 25, { align: 'center' })
+
+    // Fecha de generación
+    doc.setFontSize(10)
+    doc.setTextColor(127, 140, 141)
+    doc.text(
+      `Generado el: ${new Date().toLocaleDateString('es-CL')}`,
+      doc.internal.pageSize.width - 15,
+      10,
+      { align: 'right' }
+    )
+
+    // Línea separadora
+    doc.setDrawColor(200, 200, 200)
+    doc.setLineWidth(0.1)
+    doc.line(15, 30, doc.internal.pageSize.width - 15, 30)
+
+    if (planificacionesStore.planificaciones.length > 0) {
+      // Agrupar planificaciones por proyecto eje
+      const planificacionesPorProyecto = planificacionesStore.planificaciones.reduce((acc, plan) => {
+        if (!acc[plan.proyecto_eje]) {
+          acc[plan.proyecto_eje] = []
+        }
+        acc[plan.proyecto_eje].push(plan)
+        return acc
+      }, {} as Record<string, typeof planificacionesStore.planificaciones>)
+
+      // Iterar sobre cada proyecto eje
+      Object.entries(planificacionesPorProyecto).forEach(([proyectoEje, planificaciones], proyectoIndex) => {
+        if (proyectoIndex > 0) {
+          doc.addPage()
+          // Repetir encabezado en nuevas páginas
+          doc.addImage(
+            'https://jhzweohhdshzyvjmkhce.supabase.co/storage/v1/object/public/Logo//telbook_logo.png',
+            'PNG',
+            15,
+            5,
+            33,
+            11
+          )
+        }
+
+        // Mostrar información del proyecto eje
         autoTable(doc, {
-          head: [['PROYECTO EJE EN CURSO']],
-          body: [[proyectoEje.value!.proyecto_eje]],
+          head: [['PROYECTO EJE']],
+          body: [[proyectoEje]],
           startY: 40,
           theme: 'grid',
           styles: {
-            fontSize: 12,
-            cellPadding: 5,
+            fontSize: 14,
+            cellPadding: 8,
             halign: 'center',
+            valign: 'middle',
+            lineWidth: 0.5,
           },
           headStyles: {
             fillColor: [41, 128, 185],
             textColor: 255,
-            fontSize: 14,
+            fontSize: 16,
+            fontStyle: 'bold',
+          },
+          bodyStyles: {
+            fillColor: [235, 245, 251],
+            textColor: [44, 62, 80],
+            fontStyle: 'bold'
           }
         })
-      }
 
-      // Fecha de la planificación
+        // Mostrar cada planificación del proyecto
+        planificaciones.forEach((planificacion, index) => {
+          if (index > 0) {
+            doc.addPage()
+          }
+
+          // Fecha de la planificación
+          autoTable(doc, {
+            head: [['PLANIFICACIÓN DIARIA']],
+            body: [[`Fecha: ${new Date(planificacion.fecha_inicio).toLocaleDateString('es-CL')}`]],
+            startY: index === 0 ? doc.lastAutoTable.finalY + 10 : 40,
+            theme: 'grid',
+            styles: {
+              fontSize: 12,
+              cellPadding: 5,
+              halign: 'left',
+            },
+            headStyles: {
+              fillColor: [52, 152, 219],
+              textColor: 255,
+              fontSize: 14,
+            }
+          })
+
+          // Detalles de la planificación
+          autoTable(doc, {
+            body: [
+              ['Recursos', planificacion.recursos],
+              ['Instrumentos', planificacion.instrumentos_evaluacion],
+              ['Inicio, desarrollo y cierre', planificacion.inicio_desarrollo_cierre]
+            ],
+            startY: doc.lastAutoTable.finalY + 5,
+            styles: {
+              fontSize: 10,
+              cellPadding: 5
+            },
+            columnStyles: {
+              0: { fontStyle: 'bold', fillColor: [245, 247, 250], cellWidth: 40 },
+              1: { cellWidth: 'auto' }
+            }
+          })
+
+          // Objetivos de Aprendizaje
+          autoTable(doc, {
+            head: [['DETALLES DE LA PLANIFICACIÓN']],
+            body: [['']],
+            startY: doc.lastAutoTable.finalY + 5,
+            styles: {
+              fontSize: 12,
+              cellPadding: 5
+            },
+            headStyles: {
+              fillColor: [52, 152, 219],
+              textColor: 255,
+              fontSize: 14,
+              halign: 'center'
+            }
+          })
+
+          // Tabla con los detalles de los OAs
+          autoTable(doc, {
+            head: [['Ámbito y Núcleo', 'Descripción del Objetivo']],
+            body: [[
+              {
+                content: `${planificacion.descripcion_ambito}\n${planificacion.descripcion_nucleo}`,
+                styles: { fontStyle: 'bold' }
+              },
+              planificacion.descripcion_oa
+            ]],
+            startY: doc.lastAutoTable.finalY + 2,
+            styles: {
+              fontSize: 10,
+              cellPadding: 5,
+              valign: 'middle'
+            },
+            headStyles: {
+              fillColor: [52, 152, 219],
+              textColor: 255,
+              fontSize: 11,
+              halign: 'left'
+            },
+            columnStyles: {
+              0: { cellWidth: 70 },
+              1: { cellWidth: 'auto' }
+            },
+            margin: { left: 15 },
+            tableWidth: 'auto'
+          })
+        })
+      })
+    } else {
+      // Caso sin planificaciones
       autoTable(doc, {
-        head: [['PLANIFICACIÓN DIARIA']],
-        body: [[`Fecha: ${planificacion.fecha}`]],
-        startY: index === 0 ? doc.lastAutoTable.finalY + 10 : doc.lastAutoTable.finalY + 5,
-        theme: 'grid',
+        body: [['No hay planificaciones registradas en el historial']],
+        startY: 40,
         styles: {
           fontSize: 12,
           cellPadding: 5,
-          halign: 'left',
-        },
-        headStyles: {
-          fillColor: [52, 152, 219],
-          textColor: 255,
-          fontSize: 14,
-        }
-      })
-
-      // Detalles de la planificación
-      autoTable(doc, {
-        body: [
-          ['Recursos', planificacion.recursos],
-          ['Instrumentos', planificacion.instrumentos],
-          ['Inicio, desarrollo y cierre', planificacion.inicioDesarrolloCierre]
-        ],
-        startY: doc.lastAutoTable.finalY + 5,
-        styles: {
-          fontSize: 10,
-          cellPadding: 5
-        },
-        columnStyles: {
-          0: { fontStyle: 'bold', fillColor: [245, 247, 250], cellWidth: 40 },
-          1: { cellWidth: 'auto' }
-        }
-      })
-
-      // Objetivos de Aprendizaje
-      autoTable(doc, {
-        head: [['OBJETIVOS DE APRENDIZAJE']],
-        body: [['']],
-        startY: doc.lastAutoTable.finalY + 5,
-        styles: {
-          fontSize: 12,
-          cellPadding: 5
-        },
-        headStyles: {
-          fillColor: [52, 152, 219],
-          textColor: 255,
-          fontSize: 14,
           halign: 'center'
         }
       })
+    }
 
-      // Tabla con los detalles de los OAs
-      autoTable(doc, {
-        head: [['Ámbito y Núcleo', 'Descripción del Objetivo']],
-        body: planificacion.oas.map(oa => [
-          {
-            content: `${oa.descripcion_ambito}\n${oa.descripcion_nucleo}`,
-            styles: { fontStyle: 'bold' }
-          },
-          oa.descripcion_oa
-        ]),
-        startY: doc.lastAutoTable.finalY + 2,
-        styles: {
-          fontSize: 10,
-          cellPadding: 5,
-          valign: 'middle'
-        },
-        headStyles: {
-          fillColor: [52, 152, 219],
-          textColor: 255,
-          fontSize: 11,
-          halign: 'left'
-        },
-        columnStyles: {
-          0: { cellWidth: 70 },
-          1: { cellWidth: 'auto' }
-        },
-        margin: { left: 15 },
-        tableWidth: 'auto'
-      })
+    // Agregar pie de página con números de página
+    const pageCount = doc.internal.getNumberOfPages()
+    doc.setFontSize(8)
+    for (let i = 1; i <= pageCount; i++) {
+      doc.setPage(i)
+      doc.setDrawColor(200, 200, 200)
+      doc.setLineWidth(0.1)
+      doc.line(15, doc.internal.pageSize.height - 15, doc.internal.pageSize.width - 15, doc.internal.pageSize.height - 15)
+      doc.text(
+        `Página ${i} de ${pageCount}`,
+        doc.internal.pageSize.width / 2,
+        doc.internal.pageSize.height - 10,
+        { align: 'center' }
+      )
+    }
+
+    const nombreArchivo = `Historial_PlaCortoPlazo_${nombreCurso.value}_${new Date().toLocaleDateString('es-CL').replace(/\//g, '-')}`
+    doc.save(`${nombreArchivo}.pdf`)
+
+    // Mostrar mensaje de éxito
+    toast({
+      title: 'PDF generado',
+      description: 'El historial de planificaciones se ha descargado correctamente',
+      duration: 3000,
     })
-  } else {
-    // Caso sin planificaciones
-    autoTable(doc, {
-      body: [['No hay planificaciones registradas para este proyecto eje']],
-      startY: 40,
-      styles: {
-        fontSize: 12,
-        cellPadding: 5,
-        halign: 'center'
-      }
+  } catch (error) {
+    console.error('Error al generar el PDF:', error)
+    toast({
+      title: 'Error',
+      description: 'Hubo un error al generar el PDF de las planificaciones',
+      duration: 3000,
+      variant: 'destructive',
     })
   }
-
-  // Agregar pie de página con números de página
-  const pageCount = doc.internal.getNumberOfPages()
-  doc.setFontSize(8)
-  for (let i = 1; i <= pageCount; i++) {
-    doc.setPage(i)
-    doc.setDrawColor(200, 200, 200)
-    doc.setLineWidth(0.1)
-    doc.line(15, doc.internal.pageSize.height - 15, doc.internal.pageSize.width - 15, doc.internal.pageSize.height - 15)
-    doc.text(
-      `Página ${i} de ${pageCount}`,
-      doc.internal.pageSize.width / 2,
-      doc.internal.pageSize.height - 10,
-      { align: 'center' }
-    )
-  }
-
-  const nombreArchivo = `PlaCortoPlazo_${proyectoEje.value?.proyecto_eje.replace(/[^a-zA-Z0-9]/g, '_')}_${nombreCurso.value}_${new Date().toLocaleDateString('es-CL').replace(/\//g, '-')}`
-  doc.save(`${nombreArchivo}.pdf`)
 }
 
 /**
@@ -743,9 +777,36 @@ function descargarPlanificacionesFiltradas() {
   doc.save(`${nombreArchivo}.pdf`)
 }
 
+// Función para manejar la creación de planificación
+async function handlePlanificacionCreada() {
+  try {
+    // Actualizar las planificaciones normales
+    await fetchPlanificaciones()
+    // Actualizar el historial
+    await planificacionesStore.fetchPlanificacionesCortoPlazoHistorico(props.nivel, props.letra)
+
+    toast({
+      title: 'Planificación guardada',
+      description: 'La planificación se ha guardado correctamente',
+      duration: 3000,
+    })
+  } catch (error) {
+    console.error('Error al actualizar las planificaciones:', error)
+    toast({
+      title: 'Error',
+      description: 'Hubo un error al actualizar las planificaciones',
+      duration: 3000,
+      variant: 'destructive',
+    })
+  }
+}
+
 onMounted(async () => {
   await fetchProyectoEje()
   await fetchPlanificaciones()
+  // Cargar las planificaciones históricas
+  await planificacionesStore.fetchPlanificacionesCortoPlazoHistorico(props.nivel, props.letra)
+  inicializado.value = true
 })
 </script>
 
@@ -760,10 +821,10 @@ onMounted(async () => {
           <Button
             variant="outline"
             @click="descargarTodasLasPlanificaciones"
-            :disabled="!planificacionesFiltradas?.length"
+            :disabled="!planificacionesStore.planificaciones.length"
           >
             <Download class="mr-2 h-4 w-4" />
-            Descargar Reporte de Planificaciones de 5 días
+            Descargar Historial de Planificaciones
           </Button>
 
           <!-- Botón para descargar planificaciones filtradas -->
@@ -779,7 +840,7 @@ onMounted(async () => {
 
           <CortoPlazoDialogoAgregar
             :existe-proyecto-eje="!!proyectoEje"
-            @planificacion-creada="fetchPlanificaciones()"
+            @planificacion-creada="handlePlanificacionCreada"
           />
         </div>
       </CardTitle>
