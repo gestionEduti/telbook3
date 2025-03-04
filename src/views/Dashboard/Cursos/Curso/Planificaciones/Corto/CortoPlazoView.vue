@@ -147,21 +147,6 @@ async function eliminarPlanificacionDelDia(id: number) {
 // Modificar la función descargarTodasLasPlanificaciones
 async function descargarTodasLasPlanificaciones() {
   try {
-
-    await planificacionesStore.fetchPlanificacionesCortoPlazoHistorico(props.nivel, props.letra)
-
-    // Esperamos a que la carga termine
-    if (planificacionesStore.loading) {
-      toast({
-        title: 'Cargando',
-        description: 'Por favor espera mientras se cargan los datos',
-        duration: 3000,
-      })
-      return
-    }
-
-
-
     // Verificar si hay planificaciones
     if (planificacionesStore.planificaciones.length === 0) {
       toast({
@@ -172,6 +157,43 @@ async function descargarTodasLasPlanificaciones() {
       })
       return
     }
+
+    // Imprimir la estructura de una planificación para depuración
+    console.log('Estructura de planificación:', planificacionesStore.planificaciones[0])
+
+    // Crear una versión modificada de las planificaciones que agrupe los OAs
+    const planificacionesConOAs = planificacionesStore.planificaciones.reduce((acc, plan) => {
+      // Buscar si ya existe una planificación con el mismo ID
+      const existingPlan = acc.find(p =>
+        p.id_planificacion === plan.id_planificacion &&
+        p.fecha_inicio.getTime() === plan.fecha_inicio.getTime()
+      )
+
+      if (existingPlan) {
+        // Si existe, agregar el OA actual a la lista de OAs
+        existingPlan.oas = existingPlan.oas || []
+        existingPlan.oas.push({
+          codigo_oa: plan.codigo_oa,
+          descripcion_ambito: plan.descripcion_ambito,
+          descripcion_nucleo: plan.descripcion_nucleo,
+          descripcion_oa: plan.descripcion_oa
+        })
+      } else {
+        // Si no existe, crear una nueva entrada con el OA actual
+        const newPlan = { ...plan }
+        newPlan.oas = [{
+          codigo_oa: plan.codigo_oa,
+          descripcion_ambito: plan.descripcion_ambito,
+          descripcion_nucleo: plan.descripcion_nucleo,
+          descripcion_oa: plan.descripcion_oa
+        }]
+        acc.push(newPlan)
+      }
+
+      return acc
+    }, [] as any[])
+
+    console.log('Planificaciones agrupadas:', planificacionesConOAs)
 
     const doc = new jsPDF({
       orientation: 'landscape',
@@ -217,15 +239,15 @@ async function descargarTodasLasPlanificaciones() {
     doc.setLineWidth(0.1)
     doc.line(15, 30, doc.internal.pageSize.width - 15, 30)
 
-    if (planificacionesStore.planificaciones.length > 0) {
+    if (planificacionesConOAs.length > 0) {
       // Agrupar planificaciones por proyecto eje
-      const planificacionesPorProyecto = planificacionesStore.planificaciones.reduce((acc, plan) => {
+      const planificacionesPorProyecto = planificacionesConOAs.reduce((acc, plan) => {
         if (!acc[plan.proyecto_eje]) {
           acc[plan.proyecto_eje] = []
         }
         acc[plan.proyecto_eje].push(plan)
         return acc
-      }, {} as Record<string, typeof planificacionesStore.planificaciones>)
+      }, {} as Record<string, any[]>)
 
       // Iterar sobre cada proyecto eje
       Object.entries(planificacionesPorProyecto).forEach(([proyectoEje, planificaciones], proyectoIndex) => {
@@ -310,7 +332,7 @@ async function descargarTodasLasPlanificaciones() {
             }
           })
 
-          // Objetivos de Aprendizaje
+          // Objetivos de Aprendizaje - Una sola tabla para todos los OAs
           autoTable(doc, {
             head: [['OBJETIVOS DE APRENDIZAJE']],
             body: [['']],
@@ -327,16 +349,16 @@ async function descargarTodasLasPlanificaciones() {
             }
           })
 
-          // Tabla con los detalles de los OAs
+          // Tabla con todos los OAs
           autoTable(doc, {
             head: [['Ámbito y Núcleo', 'Descripción del Objetivo']],
-            body: [[
+            body: planificacion.oas.map((oa: any) => [
               {
-                content: `${planificacion.descripcion_ambito}\n${planificacion.descripcion_nucleo}`,
+                content: `${oa.descripcion_ambito}\n${oa.descripcion_nucleo}`,
                 styles: { fontStyle: 'bold' }
               },
-              planificacion.descripcion_oa
-            ]],
+              oa.descripcion_oa
+            ]),
             startY: doc.lastAutoTable.finalY + 2,
             styles: {
               fontSize: 10,
