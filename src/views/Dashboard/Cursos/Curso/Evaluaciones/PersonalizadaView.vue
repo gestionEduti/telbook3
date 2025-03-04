@@ -69,16 +69,52 @@ const diaActual = obtenerFechaActualComoYYYMMDD()
     </CardContent>
     <Table >
       <TableBody>
-        <TableRow  class="group flex min-h-20 items-center">
+        <TableRow  class="group flex min-h-20 ">
         <TableCell class="w-full">
-          <Card class=" 'border-green-500' : 'bg-gray-100'">
+          <Card class=" 'border-green-1000' : 'bg-gray-100'">
           <CardHeader>
             <CardTitle>
               <div class="flex justify-between items-center">
                 <span>Proyecto Eje: PRUEBA JP</span>
-              </div>
+                </div>
             </CardTitle>
+             <CardDescription>
+               <p>Planificación Fecha</p>
+               <p>Cantidad de semanas </p>
+             </CardDescription>
+               <div class="flex">
+                <Badge class="bg-green-600">
+                  Activa
+                </Badge>
+               </div>
           </CardHeader>
+
+
+            <CardContent>
+                <div class="flex flex-col gap-4">
+                  <p class="flex flex-col">
+                  <span class="font-bold "> Objetivos Generales </span>
+                    <span> AQUI VAN LOS OBJETIVOS PRINCIPALES </span>
+                  </p>
+
+                  <p class="flex flex-col">
+                    <span class="font-bold "> Estrategias para alcanzar el proyecto </span>
+                      <span> AQUI VAN LAS ESTRATEGIAS </span>
+                  </p>
+
+                  <p class="flex flex-col">
+                   <span class="font-bold">Cierre del Proyecto</span>
+                    <span> AQUI VAN LOS CIERRES DEL PROYECTO </span>
+                  </p>
+
+
+              <Accordion type="single" collapsible>
+                <AccordionItem title="Evaluaciones"> HAHAHHAHA</AccordionItem>
+
+
+              </Accordion>
+             </div>
+            </CardContent>
           </Card>
           </TableCell>
         </TableRow>
