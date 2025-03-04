@@ -147,6 +147,21 @@ async function eliminarPlanificacionDelDia(id: number) {
 // Modificar la función descargarTodasLasPlanificaciones
 async function descargarTodasLasPlanificaciones() {
   try {
+
+    await planificacionesStore.fetchPlanificacionesCortoPlazoHistorico(props.nivel, props.letra)
+
+    // Esperamos a que la carga termine
+    if (planificacionesStore.loading) {
+      toast({
+        title: 'Cargando',
+        description: 'Por favor espera mientras se cargan los datos',
+        duration: 3000,
+      })
+      return
+    }
+
+
+
     // Verificar si hay planificaciones
     if (planificacionesStore.planificaciones.length === 0) {
       toast({
@@ -297,7 +312,7 @@ async function descargarTodasLasPlanificaciones() {
 
           // Objetivos de Aprendizaje
           autoTable(doc, {
-            head: [['DETALLES DE LA PLANIFICACIÓN']],
+            head: [['OBJETIVOS DE APRENDIZAJE']],
             body: [['']],
             startY: doc.lastAutoTable.finalY + 5,
             styles: {
