@@ -244,7 +244,7 @@ onMounted(async () => {
                 label="Selecciona la fecha de incorporación"
                 name="fechaIncorporacion"
                 help="Esta sera la fecha de incorporación para todos los alumnos del PDF. "
-                :validation="`required|date_after_or_equal:${new Date().toISOString().split('T')[0]}`"
+                validation="required"
               />
               <FormKit
                 type="file"
